@@ -98,6 +98,9 @@ flutter:
     - family: triangle
       fonts:
         - asset: lib/system/fonts/triangle-iconfont.ttf
+    - family: bottomNavigationBar
+      fonts:
+        - asset: lib/portals/geotalk/fonts/bottom-nav-bar-iconfont.ttf
   assets:
     - lib/system/images/entrypoint_bk.jpg
     - lib/common/images/geochat_op.png

@@ -22,7 +22,7 @@ class _DesktopPageState extends State<DesktopPage> {
       body: Center(
         child: GestureDetector(
           onTap: () {
-            widget.context.forward('/message',
+            widget.context.forward('/workbench',
                 scene: 'geotalk', clearHistoryByPagePath: '.');
           },
           child: Text('这是桌面:${S.current.app_tile}'),

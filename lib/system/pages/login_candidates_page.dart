@@ -109,7 +109,7 @@ class _UserCandidatesPageState extends InertialLayout<UserCandidatesPage> {
           children: [
             InkWell(
               onTap: () {
-                widget.context.forward('/message',
+                widget.context.forward('/workbench',
                     clearHistoryByPagePath: '.', scene: 'geotalk');
               },
               child: Column(
@@ -147,7 +147,7 @@ class _UserCandidatesPageState extends InertialLayout<UserCandidatesPage> {
             ),
            InkWell(
              onTap: () {
-               widget.context.forward('/message',
+               widget.context.forward('/workbench',
                    clearHistoryByPagePath: '.', scene: 'geotalk');
              },
              child:  Column(

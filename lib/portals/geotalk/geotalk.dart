@@ -5,7 +5,7 @@ import 'package:framework/core_lib/_page_context.dart';
 import 'package:framework/core_lib/_portal.dart';
 import 'package:framework/core_lib/_theme.dart';
 import 'package:framework/core_lib/_ultimate.dart';
-import 'package:geochat_app/portals/geotalk/pages/message-page.dart';
+import 'package:geochat_app/portals/geotalk/workbench.dart';
 
 import 'styles/grey-styles.dart';
 
@@ -77,11 +77,11 @@ class GeotalkPortal {
       ],
       buildPages: (IServiceProvider site) => [
         LogicPage(
-          title: '聊天风格首页',
+          title: '聊天风格工作台',
           subtitle: '',
           icon: Icons.add,
-          url: '/message',
-          buildPage: (PageContext pageContext) => MessagePage(
+          url: '/workbench',
+          buildPage: (PageContext pageContext) => GeotalkWorkBench(
             context: pageContext,
           ),
         ),

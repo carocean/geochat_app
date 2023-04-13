@@ -36,7 +36,7 @@ class _EntrypointState extends State<Entrypoint> {
           widget.context.forward('/public/login/candidates', clearHistoryByPagePath: '.');
           break;
         default: //进入桌面
-          widget.context.forward('/message',
+          widget.context.forward('/workbench',
               clearHistoryByPagePath: '/public', scene: 'geotalk');
           break;
       }
