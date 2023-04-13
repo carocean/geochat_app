@@ -6,6 +6,7 @@ import 'package:geochat_app/system/pages/login_page.dart';
 import 'package:geochat_app/system/pages/entrypoint.dart';
 import 'package:geochat_app/system/pages/register_home_page.dart';
 import 'package:geochat_app/system/pages/login_user_page.dart';
+import 'package:geochat_app/system/pages/register_page.dart';
 import 'package:geochat_app/system/pages/welcome_page.dart';
 import 'package:geochat_app/system/parts/login/login_settings_more_dialog.dart';
 
@@ -148,8 +149,17 @@ List<LogicPage> buildPages(site) {
       title: '注册的主页',
       subtitle: '',
       icon: null,
-      url: '/public/register_home',
+      url: '/public/register/home',
       buildPage: (PageContext pageContext) => RegisterHomePage(
+        context: pageContext,
+      ),
+    ),
+    LogicPage(
+      title: '用户注册',
+      subtitle: '',
+      icon: null,
+      url: '/public/register',
+      buildPage: (PageContext pageContext) => RegisterPage(
         context: pageContext,
       ),
     ),

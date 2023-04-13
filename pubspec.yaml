@@ -93,6 +93,11 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+  fonts:
+    #三角形
+    - family: triangle
+      fonts:
+        - asset: lib/system/fonts/triangle-iconfont.ttf
   assets:
     - lib/system/images/entrypoint_bk.jpg
     - lib/common/images/geochat_op.png

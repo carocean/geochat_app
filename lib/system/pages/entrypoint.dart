@@ -23,7 +23,7 @@ class _EntrypointState extends State<Entrypoint> {
   }
 
   Future<void> _checkEntrypoint() async {
-    int _entrymode = 0; //0=welcome页（本地无用户）；1=本地有且仅有一个用户但令牌也过期了；2=进入本地多用户选择页（多个用户不论令牌是否有未过期的均列出）；3=进入桌面（本地有用户且令牌不过期）
+    int _entrymode = 3; //0=welcome页（本地无用户）；1=本地有且仅有一个用户但令牌也过期了；2=进入本地多用户选择页（多个用户不论令牌是否有未过期的均列出）；3=进入桌面（本地有用户且令牌不过期）
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       switch (_entrymode) {
         case 0: //本地无用户则跳到welcome

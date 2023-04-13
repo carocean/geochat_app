@@ -46,7 +46,7 @@ class RegisterHomePage extends StatelessWidget {
             children: [
               InkWell(
                 onTap: () {
-                  print('xxxx');
+                  this.context.forward('/public/register');
                 },
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,

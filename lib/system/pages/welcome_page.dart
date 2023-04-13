@@ -75,7 +75,7 @@ class _WelcomePageState extends InertialLayout2<WelcomePage> {
                             ),
                           ),
                           onPressed: () {
-                            widget.context.forward("/public/register_home");
+                            widget.context.forward("/public/register/home");
                           },
                         ),
                       ),
