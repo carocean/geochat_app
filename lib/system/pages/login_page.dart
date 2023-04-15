@@ -1,6 +1,4 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:framework/core_lib/_page_context.dart';
 import 'package:geochat_app/common/Inertial_layout.dart';
@@ -38,10 +36,8 @@ class LoginPage extends StatefulWidget {
 ///
 /// @see Geochat/LoginPage
 ///
-class _LoginPageState extends InertialLayout<LoginPage> {
-
+class _LoginPageState extends State<LoginPage> {
   late _LoginMethod __loginMethod = _LoginMethod.phone;
-
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +54,6 @@ class _LoginPageState extends InertialLayout<LoginPage> {
         ),
       ),
     );
-    var scrollViewHeight = super.scrollViewHeight(appBar);
 
     Widget? display;
     switch (__loginMethod) {
@@ -75,154 +70,140 @@ class _LoginPageState extends InertialLayout<LoginPage> {
     return Scaffold(
       // resizeToAvoidBottomInset: false,
       appBar: appBar,
-      body: SizedBox.expand(
-        child: SingleChildScrollView(
-          controller: scrollController,
-          physics: const AlwaysScrollableScrollPhysics(
-              parent: BouncingScrollPhysics()),
-          child: ConstrainedBox(
-            constraints: BoxConstraints(minHeight: scrollViewHeight),
-            child: Padding(
-              padding: const EdgeInsets.only(
-                left: 15,
-                right: 15,
-              ),
-              child: Stack(
-                fit: StackFit.passthrough,
-                children: [
-                  display!,
-                  Positioned(
-                    left: 15,
-                    right: 15,
-                    bottom: 0,
-                    child: Column(
-                      children: [
-                        __loginMethod == _LoginMethod.third
-                            ? const SizedBox.shrink()
-                            : Text(
-                                _getNote(),
-                                style: TextStyle(
-                                  color: Colors.grey[400],
-                                  fontSize: 12,
-                                ),
-                              ),
-                        __loginMethod == _LoginMethod.third
-                            ? const SizedBox.shrink()
-                            : const SizedBox(
-                                height: 15,
-                              ),
-                        __loginMethod == _LoginMethod.third
-                            ? const SizedBox.shrink()
-                            : ElevatedButton(
-                                onPressed: () {},
-                                style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(
-                                    Colors.green,
-                                  ),
-                                ),
-                                child: const Text(
-                                  '同意并继续',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                        const SizedBox(
-                          height: 40,
+      body: InertialLayoutWidget(
+        parentContext: context,
+        display: display!,
+        appBar: appBar,
+        isPushContentWhenKeyboardShow: true,
+        positioneds: [
+          Positioned(
+            left: 15,
+            right: 15,
+            bottom: 0,
+            child: Column(
+              children: [
+                __loginMethod == _LoginMethod.third
+                    ? const SizedBox.shrink()
+                    : Text(
+                        _getNote(),
+                        style: TextStyle(
+                          color: Colors.grey[400],
+                          fontSize: 12,
                         ),
-                        Column(
-                          children: [
-                            __loginMethod == _LoginMethod.third
-                                ? const SizedBox.shrink()
-                                : InkWell(
-                                    onTap: () {
-                                      if (mounted) {
-                                        setState(() {
-                                          __loginMethod = _LoginMethod.third;
-                                        });
-                                      }
-                                    },
-                                    child: const Text(
-                                      '用微信/支付宝登录',
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: Color(0xFF0061b0),
-                                      ),
-                                    ),
-                                  ),
-                            const SizedBox(
-                              height: 15,
+                      ),
+                __loginMethod == _LoginMethod.third
+                    ? const SizedBox.shrink()
+                    : const SizedBox(
+                        height: 15,
+                      ),
+                __loginMethod == _LoginMethod.third
+                    ? const SizedBox.shrink()
+                    : ElevatedButton(
+                        onPressed: () {},
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
+                            Colors.green,
+                          ),
+                        ),
+                        child: const Text(
+                          '同意并继续',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                const SizedBox(
+                  height: 40,
+                ),
+                Column(
+                  children: [
+                    __loginMethod == _LoginMethod.third
+                        ? const SizedBox.shrink()
+                        : InkWell(
+                            onTap: () {
+                              if (mounted) {
+                                setState(() {
+                                  __loginMethod = _LoginMethod.third;
+                                });
+                              }
+                            },
+                            child: const Text(
+                              '用微信/支付宝登录',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Color(0xFF0061b0),
+                              ),
                             ),
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: const [
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                    right: 10,
-                                  ),
-                                  child: Text(
-                                    '找回密码',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Color(0xFF0061b0),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 12,
-                                  child: VerticalDivider(
-                                    width: 1,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                    right: 10,
-                                    left: 10,
-                                  ),
-                                  child: Text(
-                                    '紧急冻结',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Color(0xFF0061b0),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 12,
-                                  child: VerticalDivider(
-                                    width: 1,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                    right: 10,
-                                    left: 10,
-                                  ),
-                                  child: Text(
-                                    '安全中心',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Color(0xFF0061b0),
-                                    ),
-                                  ),
-                                ),
-                              ],
+                          ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: const [
+                        Padding(
+                          padding: EdgeInsets.only(
+                            right: 10,
+                          ),
+                          child: Text(
+                            '找回密码',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Color(0xFF0061b0),
                             ),
-                            const SizedBox(
-                              height: 34,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 12,
+                          child: VerticalDivider(
+                            width: 1,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                            right: 10,
+                            left: 10,
+                          ),
+                          child: Text(
+                            '紧急冻结',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Color(0xFF0061b0),
                             ),
-                          ],
-                        )
+                          ),
+                        ),
+                        SizedBox(
+                          height: 12,
+                          child: VerticalDivider(
+                            width: 1,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                            right: 10,
+                            left: 10,
+                          ),
+                          child: Text(
+                            '安全中心',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Color(0xFF0061b0),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
-                  ),
-                ],
-              ),
+                    const SizedBox(
+                      height: 34,
+                    ),
+                  ],
+                )
+              ],
             ),
           ),
-        ),
+        ],
       ),
     );
   }

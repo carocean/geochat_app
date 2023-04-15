@@ -128,7 +128,7 @@ class _GeotalkWorkBenchState extends State<GeotalkWorkBench> {
             scrollHeight: 150,
             startEdgeSize: 100,
             endEdgeSize: 0,
-            beginOpacity: true,
+            beginIsOpacity: true,
             opacityEvent: (opacity) {
               if (mounted) {
                 setState(() {

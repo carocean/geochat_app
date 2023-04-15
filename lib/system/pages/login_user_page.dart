@@ -1,6 +1,4 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:framework/core_lib/_page_context.dart';
 import 'package:geochat_app/common/Inertial_layout.dart';
@@ -20,7 +18,7 @@ class UserLoginPage extends StatefulWidget {
   State<UserLoginPage> createState() => _UserLoginPageState();
 }
 
-class _UserLoginPageState extends InertialLayout<UserLoginPage> {
+class _UserLoginPageState extends State<UserLoginPage> {
   late _LoginMethod __loginMethod = _LoginMethod.password;
 
   @override
@@ -38,7 +36,6 @@ class _UserLoginPageState extends InertialLayout<UserLoginPage> {
         ),
       ),
     );
-    var scrollViewHeight = super.scrollViewHeight(appBar);
     Widget? display;
     switch (__loginMethod) {
       case _LoginMethod.password:
@@ -53,182 +50,163 @@ class _UserLoginPageState extends InertialLayout<UserLoginPage> {
     }
     return Scaffold(
       appBar: appBar,
-      body: SizedBox.expand(
-        child: SingleChildScrollView(
-          controller: scrollController,
-          physics: const AlwaysScrollableScrollPhysics(
-            parent: BouncingScrollPhysics(),
-          ),
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              minHeight: scrollViewHeight,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.only(
-                left: 15,
-                right: 15,
-              ),
-              child: Stack(
-                fit: StackFit.passthrough,
-                children: [
-                  display!,
-                  Positioned(
-                    left: 15,
-                    right: 15,
-                    bottom: 0,
-                    child: Column(
+      body: InertialLayoutWidget(
+        parentContext: context,
+        display: display!,
+        isPushContentWhenKeyboardShow: true,
+        appBar: appBar,
+        positioneds: [
+          Positioned(
+            left: 15,
+            right: 15,
+            bottom: 0,
+            child: Column(
+              children: [
+                __loginMethod == _LoginMethod.third
+                    ? const SizedBox.shrink()
+                    : SizedBox(
+                        width: 140,
+                        child: ElevatedButton(
+                          onPressed: () {},
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                              Colors.green,
+                            ),
+                          ),
+                          child: const Text(
+                            '登录',
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                __loginMethod == _LoginMethod.third
+                    ? const SizedBox.shrink()
+                    : const SizedBox(
+                        height: 40,
+                      ),
+                Column(
+                  children: [
+                    __loginMethod == _LoginMethod.third
+                        ? const SizedBox.shrink()
+                        : InkWell(
+                            onTap: () {
+                              if (mounted) {
+                                setState(() {
+                                  __loginMethod = _LoginMethod.third;
+                                });
+                              }
+                            },
+                            child: const Text(
+                              '用微信/支付宝登录',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Color(0xFF0061b0),
+                              ),
+                            ),
+                          ),
+                    __loginMethod == _LoginMethod.third
+                        ? const SizedBox.shrink()
+                        : const SizedBox(
+                            height: 15,
+                          ),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        __loginMethod == _LoginMethod.third
-                            ? const SizedBox.shrink()
-                            : SizedBox(
-                                width: 140,
-                                child: ElevatedButton(
-                                  onPressed: () {},
-                                  style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                      Colors.green,
-                                    ),
-                                  ),
-                                  child: const Text(
-                                    '登录',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                        __loginMethod == _LoginMethod.third
-                            ? const SizedBox.shrink()
-                            : const SizedBox(
-                                height: 40,
-                              ),
-                        Column(
-                          children: [
-                            __loginMethod == _LoginMethod.third
-                                ? const SizedBox.shrink()
-                                : InkWell(
-                                    onTap: () {
-                                      if (mounted) {
-                                        setState(() {
-                                          __loginMethod = _LoginMethod.third;
-                                        });
-                                      }
-                                    },
-                                    child: const Text(
-                                      '用微信/支付宝登录',
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: Color(0xFF0061b0),
-                                      ),
-                                    ),
-                                  ),
-                            __loginMethod == _LoginMethod.third
-                                ? const SizedBox.shrink()
-                                : const SizedBox(
-                                    height: 15,
-                                  ),
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(
-                                    right: 10,
-                                  ),
-                                  child: Text(
-                                    '找回密码',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Color(0xFF0061b0),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 12,
-                                  child: VerticalDivider(
-                                    width: 1,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                                const Padding(
-                                  padding: EdgeInsets.only(
-                                    right: 10,
-                                    left: 10,
-                                  ),
-                                  child: Text(
-                                    '紧急冻结',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Color(0xFF0061b0),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 12,
-                                  child: VerticalDivider(
-                                    width: 1,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                                InkWell(
-                                  onTap: () {
-                                    showModalBottomSheet(
-                                      context: context,
-                                      backgroundColor: Colors.transparent,
-                                      //不设为透明圆角出不来
-                                      builder: (context) {
-                                        return ClipRRect(
-                                          borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(15),
-                                            topRight: Radius.circular(15),
-                                          ),
-                                          child: widget.context.part(
-                                              '/public/login/user/more',
-                                              context)!,
-                                        );
-                                      },
-                                    ).then((value) {
-                                      if (value == null) {
-                                        return;
-                                      }
-                                      switch (value) {
-                                        case 'loginOtherAccount':
-                                          widget.context
-                                              .forward('/public/login');
-                                          break;
-                                        default:
-                                          break;
-                                      }
-                                    });
-                                  },
-                                  child: const Padding(
-                                    padding: EdgeInsets.only(
-                                      right: 10,
-                                      left: 10,
-                                    ),
-                                    child: Text(
-                                      '更多选项',
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: Color(0xFF0061b0),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
+                        const Padding(
+                          padding: EdgeInsets.only(
+                            right: 10,
+                          ),
+                          child: Text(
+                            '找回密码',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Color(0xFF0061b0),
                             ),
-                            const SizedBox(
-                              height: 34,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 12,
+                          child: VerticalDivider(
+                            width: 1,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.only(
+                            right: 10,
+                            left: 10,
+                          ),
+                          child: Text(
+                            '紧急冻结',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Color(0xFF0061b0),
                             ),
-                          ],
-                        )
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 12,
+                          child: VerticalDivider(
+                            width: 1,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            showModalBottomSheet(
+                              context: context,
+                              backgroundColor: Colors.transparent,
+                              //不设为透明圆角出不来
+                              builder: (context) {
+                                return ClipRRect(
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(15),
+                                    topRight: Radius.circular(15),
+                                  ),
+                                  child: widget.context.part(
+                                      '/public/login/user/more', context)!,
+                                );
+                              },
+                            ).then((value) {
+                              if (value == null) {
+                                return;
+                              }
+                              switch (value) {
+                                case 'loginOtherAccount':
+                                  widget.context.forward('/public/login');
+                                  break;
+                                default:
+                                  break;
+                              }
+                            });
+                          },
+                          child: const Padding(
+                            padding: EdgeInsets.only(
+                              right: 10,
+                              left: 10,
+                            ),
+                            child: Text(
+                              '更多选项',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Color(0xFF0061b0),
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
-                  ),
-                ],
-              ),
+                    const SizedBox(
+                      height: 34,
+                    ),
+                  ],
+                )
+              ],
             ),
           ),
-        ),
+        ],
       ),
     );
   }

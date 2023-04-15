@@ -25,6 +25,7 @@ class _RegisterPageState extends State<RegisterPage> {
       appBar: appBar,
       body: InertialLayoutWidget(
         parentContext: context,
+        isPushContentWhenKeyboardShow: true,
         appBar: appBar,
         display: Padding(
           padding: EdgeInsets.only(
