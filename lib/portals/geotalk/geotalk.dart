@@ -5,6 +5,10 @@ import 'package:framework/core_lib/_page_context.dart';
 import 'package:framework/core_lib/_portal.dart';
 import 'package:framework/core_lib/_theme.dart';
 import 'package:framework/core_lib/_ultimate.dart';
+import 'package:geochat_app/portals/geotalk/pages/contacts.dart';
+import 'package:geochat_app/portals/geotalk/pages/discoveries.dart';
+import 'package:geochat_app/portals/geotalk/pages/messages.dart';
+import 'package:geochat_app/portals/geotalk/pages/mines.dart';
 import 'package:geochat_app/portals/geotalk/workbench.dart';
 
 import 'styles/grey-styles.dart';
@@ -79,9 +83,40 @@ class GeotalkPortal {
         LogicPage(
           title: '聊天风格工作台',
           subtitle: '',
-          icon: Icons.add,
           url: '/workbench',
           buildPage: (PageContext pageContext) => GeotalkWorkBench(
+            context: pageContext,
+          ),
+        ),
+        LogicPage(
+          title: '消息列表',
+          subtitle: '',
+          url: '/messages',
+          buildPage: (PageContext pageContext) => MessagesPage(
+            context: pageContext,
+          ),
+        ),
+        LogicPage(
+          title: '通讯录',
+          subtitle: '',
+          url: '/contacts',
+          buildPage: (PageContext pageContext) => ContactsPage(
+            context: pageContext,
+          ),
+        ),
+        LogicPage(
+          title: '发现',
+          subtitle: '',
+          url: '/discoveries',
+          buildPage: (PageContext pageContext) => DiscoveriesPage(
+            context: pageContext,
+          ),
+        ),
+        LogicPage(
+          title: '发现',
+          subtitle: '',
+          url: '/mines',
+          buildPage: (PageContext pageContext) => MinesPage(
             context: pageContext,
           ),
         ),

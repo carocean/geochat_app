@@ -10,14 +10,15 @@ typedef BuildPages = List<LogicPage> Function(IServiceProvider site);
 class LogicPage {
   LogicPage({
     required this.title,
-    required this.icon,
+    this.icon,
     this.subtitle,
     this.previousTitle,
     this.desc,
     required this.url,
-     this.buildPage,
-     this.buildRoute,
-  })  ;
+    this.buildPage,
+    this.buildRoute,
+  });
+
   final String title;
   final IconData? icon;
   final String? subtitle;
@@ -33,7 +34,6 @@ class LogicPage {
 
   ///构建路由。如果使用自定义动画则必须使用buildRoute，两个方法必有一个非空；当二者均有实现时则优先buildRoute
   final BuildRoute? buildRoute;
-
 
   @override
   String toString() {

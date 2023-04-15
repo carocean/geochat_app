@@ -38,7 +38,7 @@ class RegisterHomePage extends StatelessWidget {
       child: Scaffold(
         appBar: appBar,
         backgroundColor: Colors.transparent,
-        body: InertialLayout3(
+        body: InertialLayoutWidget(
           parentContext: context,
           appBar: appBar,
           display: Column(
@@ -84,7 +84,7 @@ class RegisterHomePage extends StatelessWidget {
               ),
             ],
           ),
-          positionedList: [
+          positioneds: [
             Positioned(
               bottom: 34,
               left: 0,

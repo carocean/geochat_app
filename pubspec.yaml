@@ -41,6 +41,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   font_awesome_flutter: ^10.4.0
   easy_refresh: ^3.3.1
+  intl: ^0.17.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -101,9 +102,28 @@ flutter:
     - family: bottomNavigationBar
       fonts:
         - asset: lib/portals/geotalk/fonts/bottom-nav-bar-iconfont.ttf
+    - family: message
+      fonts:
+        - asset: lib/portals/geotalk/fonts/msg-iconfont.ttf
+    - family: mines
+      fonts:
+        - asset: lib/portals/geotalk/fonts/mines-iconfont.ttf
   assets:
     - lib/system/images/entrypoint_bk.jpg
     - lib/common/images/geochat_op.png
     - lib/system/images/avatar.jpg
     - lib/system/images/avatar1.jpg
     - lib/system/images/avatar2.jpg
+    - lib/portals/geotalk/images/examples/cat.jpeg
+    - lib/portals/geotalk/images/examples/dfbb.png
+    - lib/portals/geotalk/images/examples/futian.jpg
+    - lib/portals/geotalk/images/examples/group1.png
+    - lib/portals/geotalk/images/examples/hezou2.png
+    - lib/portals/geotalk/images/examples/hezuo.png
+    - lib/portals/geotalk/images/examples/huikeduo.jpeg
+    - lib/portals/geotalk/images/examples/jingxin.jpg
+    - lib/portals/geotalk/images/examples/jingxin2.jpeg
+    - lib/portals/geotalk/images/examples/lcai.png
+    - lib/portals/geotalk/images/examples/mevu.jpeg
+    - lib/portals/geotalk/images/examples/shandong.jpeg
+    - lib/portals/geotalk/images/examples/shandong.jpg

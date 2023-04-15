@@ -26,12 +26,12 @@ class _WelcomePageState extends InertialLayout2<WelcomePage> {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        body: InertialLayout3(
+        body: InertialLayoutWidget(
           parentContext: context,
           display: Container(
             height: 200,
           ),
-          positionedList: [
+          positioneds: [
             Positioned(
               left: 0,
               right: 0,

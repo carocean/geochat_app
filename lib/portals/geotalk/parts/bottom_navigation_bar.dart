@@ -22,7 +22,7 @@ class _GeoBottomNavigationBarState extends State<GeoBottomNavigationBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         border: Border(
           top: BorderSide(
             color: Color(0xFFececec),
@@ -58,8 +58,11 @@ class _GeoBottomNavigationBarState extends State<GeoBottomNavigationBar> {
       }
       items.add(
         InkWell(
+          splashColor: const Color(0xFFF2F1F6),
+          hoverColor: const Color(0xFFF2F1F6),
+          overlayColor: MaterialStateProperty.all(const Color(0xFFF2F1F6)),
           onTap: () {
-            if (mounted) {
+            if(mounted) {
               setState(() {
                 _selected = i;
                 if (widget.selectBottomNavigationBarItem != null) {
@@ -68,27 +71,33 @@ class _GeoBottomNavigationBarState extends State<GeoBottomNavigationBar> {
               });
             }
           },
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                item.icon,
-                size: 24,
-                color: Color(color),
-              ),
-              SizedBox(
-                height: 2,
-              ),
-              Text(
-                item.label,
-                style: TextStyle(
-                  fontSize: 10,
+          child: Padding(
+            padding: const EdgeInsets.only(
+              left: 15,
+              right: 15,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  item.icon,
+                  size: 24,
                   color: Color(color),
                 ),
-              ),
-            ],
+                const SizedBox(
+                  height: 2,
+                ),
+                Text(
+                  item.label,
+                  style: TextStyle(
+                    fontSize: 10,
+                    color: Color(color),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       );

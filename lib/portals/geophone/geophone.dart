@@ -6,7 +6,7 @@ import 'package:framework/core_lib/_portal.dart';
 import 'package:framework/core_lib/_theme.dart';
 import 'package:framework/core_lib/_ultimate.dart';
 import 'package:geochat_app/portals/geophone/pages/desktop.dart';
-import 'package:geochat_app/portals/geotalk/pages/message-page.dart';
+import 'package:geochat_app/portals/geotalk/pages/messages.dart';
 import 'package:localization/generated/l10n.dart';
 
 import 'styles/grey-styles.dart';

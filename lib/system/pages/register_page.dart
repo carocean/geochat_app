@@ -23,7 +23,7 @@ class _RegisterPageState extends State<RegisterPage> {
     );
     return Scaffold(
       appBar: appBar,
-      body: InertialLayout3(
+      body: InertialLayoutWidget(
         parentContext: context,
         appBar: appBar,
         display: Padding(
@@ -220,7 +220,7 @@ class _RegisterPageState extends State<RegisterPage> {
             ],
           ),
         ),
-        positionedList: [
+        positioneds: [
           Positioned(
             left: 0,
             right: 0,
