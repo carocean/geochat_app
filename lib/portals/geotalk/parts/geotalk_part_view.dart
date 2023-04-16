@@ -16,18 +16,21 @@ class GeotalkPartViewDelegate implements IDisposable {
   late List<GeotalkPartView> _views;
   PageController pageController;
   late int _current;
+  late List<Widget> _displays;
+  late List<GeoBottomNavigationBarItem> _bottoms;
 
   GeotalkPartView get current => _views[_current];
 
   GeotalkPartViewDelegate({required this.pageController}) {
     _current = pageController.initialPage;
     _views = [];
+    _bottoms = [];
+    _displays = [];
   }
 
-  List<Widget> get displays => _views.map((e) => e.display).toList();
+  List<Widget> get displays => _displays;
 
-  List<GeoBottomNavigationBarItem> get bottoms =>
-      _views.map((e) => e.bottom).toList();
+  List<GeoBottomNavigationBarItem> get bottoms => _bottoms;
 
   @override
   void dispose() {
@@ -39,7 +42,14 @@ class GeotalkPartViewDelegate implements IDisposable {
   void build(
       {required BuildContext context, required BuildPartViews buildPartViews}) {
     _views.clear();
-    _views.addAll(buildPartViews(context));
+    _bottoms.clear();
+    _displays.clear();
+    var views = buildPartViews(context);
+    _views = views;
+    for (var view in views) {
+      _displays.add(view.display);
+      _bottoms.add(view.bottom);
+    }
   }
 
   void jumpToPartView(int index) {

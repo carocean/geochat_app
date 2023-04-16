@@ -35,18 +35,10 @@ class GeotalkPortal {
           buildStyle: buildGreyStyles,
           buildTheme: (BuildContext context) {
             return ThemeData(
-              backgroundColor: const Color(0xFFF2F1F6),
               scaffoldBackgroundColor: const Color(0xFFF2F1F6),
               brightness: Brightness.light,
               appBarTheme: AppBarTheme.of(context).copyWith(
                 color: const Color(0xFFF2F1F6),
-                textTheme: TextTheme(
-                  titleMedium: TextStyle(
-                    color: Colors.grey[800],
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
                 actionsIconTheme: IconThemeData(
                   color: Colors.grey[700],
                   opacity: 1,
@@ -58,9 +50,20 @@ class GeotalkPortal {
                   size: 20,
                 ),
                 elevation: 1.0,
-                systemOverlayStyle: SystemUiOverlayStyle.dark,
-              ),
-              primarySwatch: const MaterialColor(
+                systemOverlayStyle: SystemUiOverlayStyle.dark, toolbarTextStyle: TextTheme(
+                  titleMedium: TextStyle(
+                    color: Colors.grey[800],
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ).bodyMedium, titleTextStyle: TextTheme(
+                  titleMedium: TextStyle(
+                    color: Colors.grey[800],
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ).titleLarge,
+              ), colorScheme: ColorScheme.fromSwatch(primarySwatch: const MaterialColor(
                 0xFFF5F5f5,
                 {
                   50: Color(0xFFFAFAFA),
@@ -74,7 +77,7 @@ class GeotalkPortal {
                   800: Color(0xFF424242),
                   900: Color(0xFF212121),
                 },
-              ),
+              )).copyWith(background: const Color(0xFFF2F1F6)),
             );
           },
         ),

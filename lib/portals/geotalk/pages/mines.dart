@@ -13,16 +13,50 @@ class MinesPage extends StatefulWidget {
   State<MinesPage> createState() => _MinesPageState();
 }
 
-class _MinesPageState extends State<MinesPage> with AutomaticKeepAliveClientMixin{
+class _MinesPageState extends State<MinesPage>
+    with AutomaticKeepAliveClientMixin {
+  double _opacity = 0.0;
+
   @override
   // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
+
   @override
   Widget build(BuildContext context) {
-    OpacityListener opacityListener=widget.context.partArgs['opacityListener'];
-    return InertialLayoutWidget(
+    return InertialSliverLayoutWidget(
       parentContext: context,
-      opacityListener: opacityListener,
+      opacityListener: OpacityListener(
+        opacityEvent: (opacity) {
+          if (mounted) {
+            setState(() {
+              _opacity = opacity;
+              print('******${_opacity}');
+            });
+          }
+        },
+        scrollHeight: 150,
+        startEdgeSize: 100,
+        endEdgeSize: 0,
+        beginIsOpacity: _opacity == 0 ? true : false,
+      ),
+      appBar: SliverAppBar(
+        pinned: true,
+        floating: true,
+        elevation: 0,
+        title: Opacity(
+          opacity: _opacity,
+          child: Text(
+            '大道至简',
+            style: TextStyle(
+              fontSize: 16,
+            ),
+          ),
+        ),
+        centerTitle: true,
+        backgroundColor: _opacity > 0.3
+            ? Theme.of(context).appBarTheme.backgroundColor
+            : Colors.transparent,
+      ),
       display: Column(
         children: [
           Container(
@@ -277,7 +311,7 @@ class _MinesPageState extends State<MinesPage> with AutomaticKeepAliveClientMixi
                     _renderItem(
                       image: Icon(
                         IconData(
-                        0xe659,
+                          0xe659,
                           fontFamily: 'mines',
                         ),
                         color: Color(0xFFd28b23),
@@ -297,7 +331,7 @@ class _MinesPageState extends State<MinesPage> with AutomaticKeepAliveClientMixi
                     _renderItem(
                       image: Icon(
                         IconData(
-                        0xee33,
+                          0xee33,
                           fontFamily: 'mines',
                         ),
                         color: Color(0xFFc94586),
@@ -335,7 +369,9 @@ class _MinesPageState extends State<MinesPage> with AutomaticKeepAliveClientMixi
               ],
             ),
           ),
-          SizedBox(height: 76,),
+          SizedBox(
+            height: 76,
+          ),
         ],
       ),
     );

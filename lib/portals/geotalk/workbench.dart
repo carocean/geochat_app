@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:framework/core_lib/_page_context.dart';
-import 'package:geochat_app/common/Inertial_layout.dart';
 import 'package:geochat_app/portals/geotalk/parts/bottom_navigation_bar.dart';
 import 'package:geochat_app/portals/geotalk/parts/geotalk_part_view.dart';
 
@@ -15,7 +14,6 @@ class GeotalkWorkBench extends StatefulWidget {
 
 class _GeotalkWorkBenchState extends State<GeotalkWorkBench> {
   late GeotalkPartViewDelegate _partViewDelegate;
-  double _opacity = 0;
 
   @override
   void initState() {
@@ -102,20 +100,6 @@ class _GeotalkWorkBenchState extends State<GeotalkWorkBench> {
         display: widget.context.part('/discoveries', context)!,
       ),
       GeotalkPartView(
-        appBar: AppBar(
-          title: Opacity(
-            opacity: _opacity,
-            child: Text(
-              '大道至简',
-              style: TextStyle(
-                fontSize: 16,
-              ),
-            ),
-          ),
-          centerTitle: true,
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-        ),
         bottom: GeoBottomNavigationBarItem(
           icon: const IconData(
             0xe8a0,
@@ -123,21 +107,7 @@ class _GeotalkWorkBenchState extends State<GeotalkWorkBench> {
           ),
           label: '我',
         ),
-        display: widget.context.part('/mines', context, arguments: {
-          'opacityListener': OpacityListener(
-            scrollHeight: 150,
-            startEdgeSize: 100,
-            endEdgeSize: 0,
-            beginIsOpacity: true,
-            opacityEvent: (opacity) {
-              if (mounted) {
-                setState(() {
-                  _opacity = opacity;
-                });
-              }
-            },
-          ),
-        })!,
+        display: widget.context.part('/mines', context)!,
       ),
     ];
   }
