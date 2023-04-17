@@ -3,7 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:framework/core_lib/_page_context.dart';
-import 'package:geochat_app/common/Inertial_layout.dart';
+import 'package:geochat_app/common/ballistic_layout.dart';
 
 class RegisterPage extends StatefulWidget {
   final PageContext context;
@@ -23,7 +23,7 @@ class _RegisterPageState extends State<RegisterPage> {
     );
     return Scaffold(
       appBar: appBar,
-      body: InertialLayoutWidget(
+      body: BallisticLayoutWidget(
         parentContext: context,
         isPushContentWhenKeyboardShow: true,
         appBar: appBar,

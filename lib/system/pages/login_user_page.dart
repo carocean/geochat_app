@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:framework/core_lib/_page_context.dart';
-import 'package:geochat_app/common/Inertial_layout.dart';
+import 'package:geochat_app/common/ballistic_layout.dart';
 
 enum _LoginMethod {
   password,
@@ -50,7 +50,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
     }
     return Scaffold(
       appBar: appBar,
-      body: InertialLayoutWidget(
+      body: BallisticLayoutWidget(
         parentContext: context,
         display: display!,
         isPushContentWhenKeyboardShow: true,

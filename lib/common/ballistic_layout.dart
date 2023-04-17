@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 ///惯性布局,需自己实现布局规则。如简单使用用InertialLayoutWidget
-abstract class InertialLayout<T extends StatefulWidget> extends State<T>
+abstract class BallisticLayout<T extends StatefulWidget> extends State<T>
     with WidgetsBindingObserver {
   double _bottom = 0.0;
   late ScrollController _scrollController;
@@ -148,7 +148,7 @@ class OpacityListener {
 }
 
 ///惯性布局，控件化。增加透明度事件
-class InertialLayoutWidget extends StatefulWidget {
+class BallisticLayoutWidget extends StatefulWidget {
   AppBar? appBar;
   final BuildContext parentContext;
   Widget display;
@@ -158,7 +158,7 @@ class InertialLayoutWidget extends StatefulWidget {
   ///当键盘在输入框聚焦弹出时，是否上推内容
   late bool? isPushContentWhenKeyboardShow;
 
-  InertialLayoutWidget({
+  BallisticLayoutWidget({
     Key? key,
     required this.parentContext,
     this.appBar,
@@ -171,10 +171,11 @@ class InertialLayoutWidget extends StatefulWidget {
   }
 
   @override
-  State<InertialLayoutWidget> createState() => _InertialLayoutWidgetState();
+  State<BallisticLayoutWidget> createState() => _BallisticLayoutWidgetState();
 }
 
-class _InertialLayoutWidgetState extends InertialLayout<InertialLayoutWidget> {
+class _BallisticLayoutWidgetState
+    extends BallisticLayout<BallisticLayoutWidget> {
   @override
   void initState() {
     super.initState();
@@ -189,7 +190,7 @@ class _InertialLayoutWidgetState extends InertialLayout<InertialLayoutWidget> {
   }
 
   @override
-  void didUpdateWidget(InertialLayoutWidget oldWidget) {
+  void didUpdateWidget(BallisticLayoutWidget oldWidget) {
     if (oldWidget.appBar != widget.appBar) {
       oldWidget.appBar = widget.appBar;
     }
@@ -238,7 +239,7 @@ typedef BuildPersistentHeader = Widget Function(
 );
 
 ///惯性布局,需自己实现布局规则。如简单使用用InertialLayoutWidget
-abstract class InertialSliverLayout<T extends StatefulWidget> extends State<T>
+abstract class BallisticSliverLayout<T extends StatefulWidget> extends State<T>
     with WidgetsBindingObserver {
   late ScrollController _scrollController;
   bool? isPushContentWhenKeyboardShow;
@@ -281,19 +282,19 @@ abstract class InertialSliverLayout<T extends StatefulWidget> extends State<T>
   }
 }
 
-class InertialSliverLayoutWidget extends StatefulWidget {
+class BallisticSliverLayoutWidget extends StatefulWidget {
   SliverAppBar? appBar;
   final BuildContext parentContext;
   Widget? upDisplay;
-  InertialSliverPersistentHeader? persistentHeader;
+  final BallisticSliverPersistentHeader? persistentHeader;
   Widget display;
   List<Positioned>? positioneds;
-  OpacityListener? opacityListener;
+  final OpacityListener? opacityListener;
 
   ///当键盘在输入框聚焦弹出时，是否上推内容
   late bool? isPushContentWhenKeyboardShow;
 
-  InertialSliverLayoutWidget({
+  BallisticSliverLayoutWidget({
     Key? key,
     required this.parentContext,
     this.appBar,
@@ -308,12 +309,12 @@ class InertialSliverLayoutWidget extends StatefulWidget {
   }
 
   @override
-  State<InertialSliverLayoutWidget> createState() =>
-      _InertialSliverLayoutWidgetState();
+  State<BallisticSliverLayoutWidget> createState() =>
+      _BallisticSliverLayoutWidgetState();
 }
 
-class _InertialSliverLayoutWidgetState
-    extends InertialSliverLayout<InertialSliverLayoutWidget> {
+class _BallisticSliverLayoutWidgetState
+    extends BallisticSliverLayout<BallisticSliverLayoutWidget> {
   @override
   void initState() {
     super.initState();
@@ -328,7 +329,7 @@ class _InertialSliverLayoutWidgetState
   }
 
   @override
-  void didUpdateWidget(InertialSliverLayoutWidget oldWidget) {
+  void didUpdateWidget(BallisticSliverLayoutWidget oldWidget) {
     if (oldWidget.appBar != widget.appBar) {
       oldWidget.appBar = widget.appBar;
     }
@@ -342,9 +343,12 @@ class _InertialSliverLayoutWidgetState
         oldWidget.positioneds!.length != widget.positioneds!.length) {
       oldWidget.positioneds = widget.positioneds;
     }
-    if(oldWidget.isPushContentWhenKeyboardShow!=widget.isPushContentWhenKeyboardShow) {
-      oldWidget.isPushContentWhenKeyboardShow=widget.isPushContentWhenKeyboardShow;
-      super.isPushContentWhenKeyboardShow = widget.isPushContentWhenKeyboardShow;
+    if (oldWidget.isPushContentWhenKeyboardShow !=
+        widget.isPushContentWhenKeyboardShow) {
+      oldWidget.isPushContentWhenKeyboardShow =
+          widget.isPushContentWhenKeyboardShow;
+      super.isPushContentWhenKeyboardShow =
+          widget.isPushContentWhenKeyboardShow;
     }
     super.didUpdateWidget(oldWidget);
   }
@@ -369,7 +373,7 @@ class _InertialSliverLayoutWidgetState
                   child: SizedBox.shrink(),
                 )
               : SliverPersistentHeader(
-                  delegate: InertialSliverPersistentHeaderDelegate(
+                  delegate: BallisticSliverPersistentHeaderDelegate(
                     buildPersistentHeader:
                         widget.persistentHeader!.buildPersistentHeader,
                     maxExtent: widget.persistentHeader!.maxExtent,
@@ -405,14 +409,14 @@ class _InertialSliverLayoutWidgetState
   }
 }
 
-class InertialSliverPersistentHeader {
+class BallisticSliverPersistentHeader {
   double? minExtent;
   double? maxExtent;
   bool? floating;
   bool? pinned;
   BuildPersistentHeader buildPersistentHeader;
 
-  InertialSliverPersistentHeader({
+  BallisticSliverPersistentHeader({
     this.minExtent,
     this.maxExtent,
     this.floating,
@@ -421,14 +425,14 @@ class InertialSliverPersistentHeader {
   });
 }
 
-class InertialSliverPersistentHeaderDelegate
+class BallisticSliverPersistentHeaderDelegate
     extends SliverPersistentHeaderDelegate {
   late double _minExtent;
 
   late double _maxExtent;
   BuildPersistentHeader buildPersistentHeader;
 
-  InertialSliverPersistentHeaderDelegate(
+  BallisticSliverPersistentHeaderDelegate(
       {double? minExtent,
       double? maxExtent,
       required this.buildPersistentHeader}) {
@@ -456,7 +460,7 @@ class InertialSliverPersistentHeaderDelegate
 
   @override
   bool shouldRebuild(
-      covariant InertialSliverPersistentHeaderDelegate oldDelegate) {
+      covariant BallisticSliverPersistentHeaderDelegate oldDelegate) {
     return false;
   }
 }

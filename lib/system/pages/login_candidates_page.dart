@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:framework/core_lib/_page_context.dart';
-import 'package:geochat_app/common/Inertial_layout.dart';
+import 'package:geochat_app/common/ballistic_layout.dart';
 
 class UserCandidatesPage extends StatefulWidget {
   final PageContext context;
@@ -15,7 +15,7 @@ class _UserCandidatesPageState extends State<UserCandidatesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: InertialLayoutWidget(
+      body: BallisticLayoutWidget(
         display: _renderContent(),
         parentContext: context,
         positioneds: [

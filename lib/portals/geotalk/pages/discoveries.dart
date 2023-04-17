@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:framework/core_lib/_page_context.dart';
-import 'package:geochat_app/common/Inertial_layout.dart';
+import 'package:geochat_app/common/ballistic_layout.dart';
 
 class DiscoveriesPage extends StatefulWidget {
   final PageContext context;
@@ -22,7 +22,7 @@ class _DiscoveriesPageState extends State<DiscoveriesPage>
 
   @override
   Widget build(BuildContext context) {
-    return InertialSliverLayoutWidget(
+    return BallisticSliverLayoutWidget(
       parentContext: context,
       opacityListener: OpacityListener(
           opacityEvent: (opacity) {
@@ -37,7 +37,7 @@ class _DiscoveriesPageState extends State<DiscoveriesPage>
         height: 120,
         color: Colors.red.withOpacity(_opacity),
       ),
-      persistentHeader: InertialSliverPersistentHeader(
+      persistentHeader: BallisticSliverPersistentHeader(
         pinned: true,
         maxExtent: 40,
         minExtent: 40,

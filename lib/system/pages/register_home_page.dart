@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:framework/core_lib/_page_context.dart';
 
-import '../../common/Inertial_layout.dart';
+import '../../common/ballistic_layout.dart';
 
 class RegisterHomePage extends StatelessWidget {
   final PageContext context;
@@ -38,7 +38,7 @@ class RegisterHomePage extends StatelessWidget {
       child: Scaffold(
         appBar: appBar,
         backgroundColor: Colors.transparent,
-        body: InertialLayoutWidget(
+        body: BallisticLayoutWidget(
           parentContext: context,
           appBar: appBar,
           display: Column(

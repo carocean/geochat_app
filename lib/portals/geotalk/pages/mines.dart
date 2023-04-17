@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:framework/core_lib/_page_context.dart';
-import 'package:geochat_app/common/Inertial_layout.dart';
+import 'package:geochat_app/common/ballistic_layout.dart';
 
 class MinesPage extends StatefulWidget {
   final PageContext context;
@@ -23,7 +23,7 @@ class _MinesPageState extends State<MinesPage>
 
   @override
   Widget build(BuildContext context) {
-    return InertialSliverLayoutWidget(
+    return BallisticSliverLayoutWidget(
       parentContext: context,
       opacityListener: OpacityListener(
         opacityEvent: (opacity) {
