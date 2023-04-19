@@ -1,4 +1,3 @@
-
 /// 封装以下flutter组件改为弹性组件
 /// SingleChildScrollView, which is a scrollable widget that has a single child.
 /// ListView, which is a commonly used ScrollView that displays a scrolling, linear list of child widgets.
@@ -11,14 +10,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
-///惯性布局,需自己实现布局规则。如简单使用用InertialLayoutWidget
+///惯性布局,需自己实现布局规则；键盘弹出上推；
 abstract class BallisticLayout<T extends StatefulWidget> extends State<T>
     with WidgetsBindingObserver {
-  double _bottom = 0.0;
+  double _keyboardHeight = 0.0;
   late ScrollController _scrollController;
   bool? isPushContentWhenKeyboardShow;
 
-  double get bottom => _bottom;
+  double get keyboardHeight => _keyboardHeight;
 
   ScrollController get scrollController => _scrollController;
 
@@ -45,8 +44,8 @@ abstract class BallisticLayout<T extends StatefulWidget> extends State<T>
     //对于非sliver组件只能用此计算高度，sliver组件则采用另外一套机制：SliverLayoutBuilder。这是因为LayoutBuilder中的约束不能得到组件可绘高度
     // 键盘高度
     final double viewInsetsBottom = EdgeInsets.fromWindowPadding(
-        WidgetsBinding.instance.window.viewInsets,
-        WidgetsBinding.instance.window.devicePixelRatio)
+            WidgetsBinding.instance.window.viewInsets,
+            WidgetsBinding.instance.window.devicePixelRatio)
         .bottom;
 
     // if (kDebugMode) {
@@ -55,7 +54,7 @@ abstract class BallisticLayout<T extends StatefulWidget> extends State<T>
 
     if (mounted) {
       setState(() {
-        _bottom = viewInsetsBottom;
+        _keyboardHeight = viewInsetsBottom;
         SchedulerBinding.instance.addPostFrameCallback((_) {
           //build完成后的回调
           _scrollController.animateTo(
@@ -69,18 +68,23 @@ abstract class BallisticLayout<T extends StatefulWidget> extends State<T>
   }
 
   double scrollViewHeight(AppBar? appBar, {BuildContext? parentContext}) {
+    return scrollViewHeightBy(appBar?.preferredSize.height);
+  }
+
+  ///这里除去了状态栏、和键盘，但如有标题栏和底部导航栏则要除去。
+  double scrollViewHeightBy(double? size, {BuildContext? parentContext}) {
     var context = parentContext ?? this.context;
-    double appBarHeight = appBar?.preferredSize.height ?? 0.0;
+    size ??= 0.0;
     var scrollViewHeight = MediaQuery.of(context).size.height -
         MediaQuery.of(context).padding.top -
-        appBarHeight -
-        _bottom;
+        MediaQuery.of(context).padding.bottom -
+        size -
+        _keyboardHeight;
     return scrollViewHeight;
   }
 }
 
-
-///惯性布局,需自己实现布局规则。如简单使用用InertialLayoutWidget
+///惯性布局,需自己实现布局规则；键盘弹出上推；透明度；
 abstract class BallisticSliverLayout<T extends StatefulWidget> extends State<T>
     with WidgetsBindingObserver {
   late ScrollController _scrollController;

@@ -13,6 +13,7 @@ class ContactsPage extends StatefulWidget {
 class _ContactsPageState extends State<ContactsPage>
     with AutomaticKeepAliveClientMixin {
   double _opacity = 1;
+  Axis? _scrollDirection;
 
   @override
   // TODO: implement wantKeepAlive
@@ -22,6 +23,10 @@ class _ContactsPageState extends State<ContactsPage>
   Widget build(BuildContext context) {
     return BallisticIndicatorSingleChildScrollView(
       parentContext: context,
+      isPushContentWhenKeyboardShow: true,
+      scrollDirection: _scrollDirection,
+      appBarHeight: 80,
+      navBarHeight: 50,
       opacityListener: OpacityListener(
           opacityEvent: (opacity) {
             if (mounted) {
@@ -56,24 +61,40 @@ class _ContactsPageState extends State<ContactsPage>
 
   _rendText() {
     List<Widget> items = [];
-    items.add(TextField(
-      decoration: InputDecoration(
-        hintText: '输入',
-      ),
+    items.add(SizedBox(
+      height: 40,
     ));
-    for (int i = 0; i < 60; i++) {
-      items.add(
-        Container(
-          color: Colors.red.withOpacity(_opacity),
-          child: Text('是一行:$i'),
-        )
-      );
+    items.add(
+      InkWell(
+        onTap: () {
+          setState(() {
+            _scrollDirection = _scrollDirection == Axis.vertical
+                ? Axis.horizontal
+                : Axis.vertical;
+          });
+        },
+        child: Text('排列：${_scrollDirection == Axis.vertical ? '垂直' : '水平'}'),
+      ),
+    );
+    items.add(SizedBox(
+      height: 40,
+    ));
+    for (int i = 0; i < 10; i++) {
+      items.add(Container(
+        color: Colors.red.withOpacity(_opacity),
+        child: Text('是一行:$i'),
+      ));
     }
-    items.add(TextField(
-      decoration: InputDecoration(
-        hintText: '输入',
+    items.add(
+      SizedBox(
+        width: 200,
+        child: TextField(
+          decoration: InputDecoration(
+            hintText: '输入',
+          ),
+        ),
       ),
-    ));
+    );
     items.add(Container(
       height: 40,
       color: Colors.grey,

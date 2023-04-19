@@ -72,6 +72,7 @@ class _BallisticSingleChildScrollViewState
           constraints: BoxConstraints(
             minHeight: scrollViewHeight(widget.appBar,
                 parentContext: widget.parentContext),
+            minWidth: MediaQuery.of(context).size.width,
           ),
           child: Stack(
             fit: StackFit.passthrough,
