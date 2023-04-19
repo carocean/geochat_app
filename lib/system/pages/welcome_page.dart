@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:framework/core_lib/_page_context.dart';
-import 'package:geochat_app/common/ballistic_layout.dart';
+import 'package:framework/framework.dart';
 
 class WelcomePage extends StatefulWidget {
   final PageContext context;
@@ -26,7 +25,7 @@ class _WelcomePageState extends State<WelcomePage> {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        body: BallisticLayoutWidget(
+        body: BallisticSingleChildScrollView(
           parentContext: context,
           display: Container(
             height: 200,

@@ -10,3 +10,8 @@ export 'core_lib/_principal.dart';
 export 'core_lib/_theme.dart';
 export 'core_lib/_system.dart';
 export 'core_lib/_exceptions.dart';
+
+export 'widgets/_ballistic_layout.dart';
+export 'widgets/_ballistic_custom_scroll_view.dart';
+export 'widgets/_ballistic_single_child_scroll_view.dart';
+export 'widgets/_opacity_listener.dart';

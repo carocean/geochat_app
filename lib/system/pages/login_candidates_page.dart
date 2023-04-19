@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:framework/core_lib/_page_context.dart';
-import 'package:geochat_app/common/ballistic_layout.dart';
+import 'package:framework/framework.dart';
 
 class UserCandidatesPage extends StatefulWidget {
   final PageContext context;
@@ -15,7 +14,7 @@ class _UserCandidatesPageState extends State<UserCandidatesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BallisticLayoutWidget(
+      body: BallisticSingleChildScrollView(
         display: _renderContent(),
         parentContext: context,
         positioneds: [
@@ -82,7 +81,10 @@ class _UserCandidatesPageState extends State<UserCandidatesPage> {
           height: 70,
         ),
         Container(
-          padding: const EdgeInsets.only(left: 20,right: 20,),
+          padding: const EdgeInsets.only(
+            left: 20,
+            right: 20,
+          ),
           child: Wrap(
             spacing: 80,
             runSpacing: 25,
@@ -101,7 +103,7 @@ class _UserCandidatesPageState extends State<UserCandidatesPage> {
                       width: 70,
                       child: CircleAvatar(
                         backgroundImage:
-                        AssetImage('lib/system/images/avatar.jpg'),
+                            AssetImage('lib/system/images/avatar.jpg'),
                       ),
                     ),
                     SizedBox(
@@ -139,7 +141,7 @@ class _UserCandidatesPageState extends State<UserCandidatesPage> {
                       width: 70,
                       child: CircleAvatar(
                         backgroundImage:
-                        AssetImage('lib/system/images/avatar1.jpg'),
+                            AssetImage('lib/system/images/avatar1.jpg'),
                       ),
                     ),
                     SizedBox(
@@ -176,7 +178,7 @@ class _UserCandidatesPageState extends State<UserCandidatesPage> {
                       width: 70,
                       child: CircleAvatar(
                         backgroundImage:
-                        AssetImage('lib/system/images/avatar2.jpg'),
+                            AssetImage('lib/system/images/avatar2.jpg'),
                       ),
                     ),
                     SizedBox(

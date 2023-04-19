@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:framework/core_lib/_page_context.dart';
-import 'package:geochat_app/common/ballistic_layout.dart';
+import 'package:framework/framework.dart';
 
 enum _LoginMethod {
   phone,
@@ -70,7 +69,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       // resizeToAvoidBottomInset: false,
       appBar: appBar,
-      body: BallisticLayoutWidget(
+      body: BallisticSingleChildScrollView(
         parentContext: context,
         display: display!,
         appBar: appBar,

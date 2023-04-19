@@ -1,7 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:framework/core_lib/_page_context.dart';
-import 'package:geochat_app/common/ballistic_layout.dart';
+import 'package:framework/framework.dart';
 
 class DiscoveriesPage extends StatefulWidget {
   final PageContext context;
@@ -22,17 +20,18 @@ class _DiscoveriesPageState extends State<DiscoveriesPage>
 
   @override
   Widget build(BuildContext context) {
-    return BallisticSliverLayoutWidget(
+    return BallisticCustomScrollView(
       parentContext: context,
       opacityListener: OpacityListener(
           opacityEvent: (opacity) {
-            if(mounted) {
+            if (mounted) {
               setState(() {
                 _opacity = opacity;
               });
             }
           },
-          scrollHeight: 96,beginIsOpacity: _opacity==1?false:true),
+          scrollHeight: 96,
+          beginIsOpacity: _opacity == 1 ? false : true),
       upDisplay: Container(
         height: 120,
         color: Colors.red.withOpacity(_opacity),

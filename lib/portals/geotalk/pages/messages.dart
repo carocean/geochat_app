@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:framework/core_lib/_page_context.dart';
-import 'package:geochat_app/common/ballistic_layout.dart';
+import 'package:framework/framework.dart';
 import 'package:intl/intl.dart';
 
 import '../../../common/message_session.dart';
@@ -16,14 +14,15 @@ class MessagesPage extends StatefulWidget {
   State<MessagesPage> createState() => _MessagesPageState();
 }
 
-class _MessagesPageState extends State<MessagesPage>with AutomaticKeepAliveClientMixin {
+class _MessagesPageState extends State<MessagesPage>
+    with AutomaticKeepAliveClientMixin {
   @override
   // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
+
   @override
   Widget build(BuildContext context) {
-
-    return BallisticLayoutWidget(
+    return BallisticSingleChildScrollView(
       parentContext: context,
       display: Column(
         children: [
