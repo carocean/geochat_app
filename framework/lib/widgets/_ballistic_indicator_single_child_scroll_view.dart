@@ -1,11 +1,9 @@
-
 import 'package:flutter/material.dart';
 
 import '_ballistic_layout.dart';
 import '_opacity_listener.dart';
 
-///惯性布局，控件化。增加透明度事件
-class BallisticSingleChildScrollView extends StatefulWidget {
+class BallisticIndicatorSingleChildScrollView extends StatefulWidget {
   AppBar? appBar;
   final BuildContext parentContext;
   Widget display;
@@ -15,7 +13,7 @@ class BallisticSingleChildScrollView extends StatefulWidget {
   ///当键盘在输入框聚焦弹出时，是否上推内容
   late bool? isPushContentWhenKeyboardShow;
 
-  BallisticSingleChildScrollView({
+  BallisticIndicatorSingleChildScrollView({
     Key? key,
     required this.parentContext,
     this.appBar,
@@ -23,15 +21,15 @@ class BallisticSingleChildScrollView extends StatefulWidget {
     this.positioneds = const <Positioned>[],
     this.opacityListener,
     this.isPushContentWhenKeyboardShow = false,
-  }) : super(key: key) ;
+  }) : super(key: key);
 
   @override
-  State<BallisticSingleChildScrollView> createState() =>
-      _BallisticSingleChildScrollViewState();
+  State<BallisticIndicatorSingleChildScrollView> createState() =>
+      _BallisticIndicatorSingleChildScrollViewState();
 }
 
-class _BallisticSingleChildScrollViewState
-    extends BallisticLayout<BallisticSingleChildScrollView> {
+class _BallisticIndicatorSingleChildScrollViewState
+    extends BallisticLayout<BallisticIndicatorSingleChildScrollView> {
   @override
   void initState() {
     super.initState();
@@ -46,7 +44,7 @@ class _BallisticSingleChildScrollViewState
   }
 
   @override
-  void didUpdateWidget(BallisticSingleChildScrollView oldWidget) {
+  void didUpdateWidget(BallisticIndicatorSingleChildScrollView oldWidget) {
     if (oldWidget.appBar != widget.appBar) {
       oldWidget.appBar = widget.appBar;
     }
