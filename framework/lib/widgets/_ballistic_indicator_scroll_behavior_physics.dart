@@ -37,6 +37,7 @@ class IndicatorScrollPhysics extends ScrollPhysics {
   final HeaderNotifier headerNotifier;
   final FooterNotifier footerNotifier;
   final ValueNotifier<bool> userOffsetNotifier;
+
   /// Used to determine parameters for friction simulations.
   final ScrollDecelerationRate decelerationRate;
 
@@ -111,41 +112,55 @@ class IndicatorScrollPhysics extends ScrollPhysics {
 
   @override
   double applyBoundaryConditions(ScrollMetrics position, double value) {
-    if (position.pixels <= -headerNotifier.reservePixels) {
-      if (value < position.pixels &&
-          position.pixels <= position.minScrollExtent) {
+    if (userOffsetNotifier.value &&
+        (headerNotifier.isForbidScroll ||
+            position.pixels < -headerNotifier.reservePixels)) {
+      if (value < position.pixels && position.pixels <= position.minScrollExtent)  {
         // Underscroll.
+        headerNotifier.updatePosition(position, ScrollState.underScrolling);
         return value - position.pixels;
       }
     }
     if (value < position.minScrollExtent &&
         position.minScrollExtent < position.pixels) {
       // Hit top edge. 就是下滑的时候手指已经离开凭惯性在下滑的过程中顶部到达的边界
+      headerNotifier.updatePosition(position, ScrollState.hitTopEdge);
       return value - position.minScrollExtent;
     }
     // print(
     //     '::::pixels=${position.pixels}::minScrollExtent=${position.minScrollExtent}::maxScrollExtent=${position.maxScrollExtent}');
-    if (position.pixels - position.maxScrollExtent >=
-        footerNotifier.reservePixels) {
-      if (position.maxScrollExtent <= position.pixels &&
-          position.pixels < value) {
+    if (userOffsetNotifier.value &&
+        (footerNotifier.isForbidScroll ||
+            position.pixels >
+                position.maxScrollExtent + footerNotifier.reservePixels)) {
+      if (position.maxScrollExtent <= position.pixels && position.pixels < value)  {
         // Overscroll.
+        headerNotifier.updatePosition(position, ScrollState.overScrolling);
         return value - position.pixels;
       }
     }
     if (position.pixels < position.maxScrollExtent &&
         position.maxScrollExtent < value) {
       // Hit bottom edge. 就是上滑的时候手指已经离开凭惯性在下滑的过程中低部到达的边界
+      headerNotifier.updatePosition(position, ScrollState.hitBottomEdge);
       return value - position.maxScrollExtent;
     }
+    headerNotifier.updatePosition(position, ScrollState.sliding);
     return 0.0;
   }
 
   @override
   Simulation? createBallisticSimulation(
       ScrollMetrics position, double velocity) {
+    // print(
+    //     '::velocity=${velocity}::pixels=${position.pixels}::minScrollExtent=${position.minScrollExtent}::maxScrollExtent=${position.maxScrollExtent}');
     userOffsetNotifier.value = false;
     // 返回null则没有回弹动画，也没有内容区的惯性滚动
+    if (position.pixels == -headerNotifier.reservePixels ||
+        position.pixels ==
+            position.maxScrollExtent + footerNotifier.reservePixels) {
+      return null;
+    }
     final Tolerance tolerance = this.tolerance;
     if (!position.outOfRange) {
       if (velocity.abs() < tolerance.velocity) {
@@ -163,11 +178,7 @@ class IndicatorScrollPhysics extends ScrollPhysics {
         tolerance: tolerance,
       );
     }
-    if (position.pixels <= -headerNotifier.reservePixels ||
-        (position.pixels - position.maxScrollExtent >=
-            footerNotifier.reservePixels)) {
-      return null;
-    }
+
     double constantDeceleration;
     switch (decelerationRate) {
       case ScrollDecelerationRate.fast:
@@ -177,6 +188,32 @@ class IndicatorScrollPhysics extends ScrollPhysics {
         constantDeceleration = 0;
         break;
     }
+
+    if (position.pixels < -headerNotifier.reservePixels) {
+      return BouncingScrollSimulation(
+        spring: spring,
+        position: position.pixels,
+        velocity: velocity,
+        leadingExtent: -headerNotifier.reservePixels,
+        trailingExtent: position.maxScrollExtent,
+        tolerance: tolerance,
+        constantDeceleration: constantDeceleration,
+      );
+    }
+
+    if (position.pixels >
+        position.maxScrollExtent + footerNotifier.reservePixels) {
+      return BouncingScrollSimulation(
+        spring: spring,
+        position: position.pixels,
+        velocity: velocity,
+        leadingExtent: position.minScrollExtent,
+        trailingExtent: position.maxScrollExtent + footerNotifier.reservePixels,
+        tolerance: tolerance,
+        constantDeceleration: constantDeceleration,
+      );
+    }
+
     return BouncingScrollSimulation(
       spring: spring,
       position: position.pixels,

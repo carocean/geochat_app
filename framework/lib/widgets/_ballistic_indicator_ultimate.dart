@@ -96,23 +96,132 @@ class _IndicatorListenable<T extends IndicatorNotifier>
   T get value => _indicatorNotifier;
 }
 
+enum ScrollState {
+  sliding,
+  underScrolling,
+  hitTopEdge,
+  overScrolling,
+  hitBottomEdge,
+  expandScrolling,
+  hitExpandEdge,
+}
+
 class HeaderNotifier extends IndicatorNotifier {
   double _reservePixels;
+  double? _expandPixels;
+  ScrollMetrics? _position;
+  bool _isForbidScroll;
+  ScrollState? _scrollState;
+  double _value;
+
+  HeaderNotifier({
+    double reservePixels = 0.0,
+    double value = 0.0,
+    ScrollState? scrollState,
+    double? expandPixels,
+    bool isForbidScroll = false,
+    ScrollMetrics? position,
+  })  : _reservePixels = reservePixels,
+        _expandPixels = expandPixels,
+        _isForbidScroll = isForbidScroll,
+        _scrollState = scrollState,
+        _value = value,
+        _position = position;
+
+  double? get expandPixels => _expandPixels;
+
+  set expandPixels(double? value) {
+    _expandPixels = value;
+    listenable();
+  }
+
+  ScrollState? get scrollState => _scrollState;
+
+  set scrollState(ScrollState? value) {
+    _scrollState = value;
+    listenable();
+  }
+
+  double get value => _value;
+
+  set value(double value) {
+    _value = value;
+    listenable();
+  }
 
   double get reservePixels => _reservePixels;
 
-  HeaderNotifier({double reservePixels = 0.0}) : _reservePixels = reservePixels;
-
   set reservePixels(double value) {
     _reservePixels = value;
+    listenable();
+  }
+
+  ScrollMetrics? get position => _position;
+
+  set position(ScrollMetrics? value) {
+    _position = value;
+    listenable();
+  }
+
+  bool get isForbidScroll => _isForbidScroll;
+
+  set isForbidScroll(bool value) {
+    _isForbidScroll = value;
     listenable();
   }
 
   ValueListenable<HeaderNotifier> listenable() => _IndicatorListenable(this);
+
+  void updatePosition(ScrollMetrics position, ScrollState scrollState) {
+    _position=position;
+    _scrollState=scrollState;
+    listenable();
+  }
+
 }
 
 class FooterNotifier extends IndicatorNotifier {
-  double _reservePixels = 0.0;
+  double _reservePixels;
+  double? _expandPixels;
+  ScrollMetrics? _position;
+  bool _isForbidScroll;
+  ScrollState? _scrollState;
+  double _value;
+
+  FooterNotifier({
+    double reservePixels = 0.0,
+    double value = 0.0,
+    ScrollState? scrollState,
+    double? expandPixels,
+    bool isForbidScroll = false,
+    ScrollMetrics? position,
+  })  : _reservePixels = reservePixels,
+        _expandPixels = expandPixels,
+        _isForbidScroll = isForbidScroll,
+        _scrollState = scrollState,
+        _value = value,
+        _position = position;
+
+  double? get expandPixels => _expandPixels;
+
+  set expandPixels(double? value) {
+    _expandPixels = value;
+    listenable();
+  }
+
+  ScrollState? get scrollState => _scrollState;
+
+  set scrollState(ScrollState? value) {
+    _scrollState = value;
+    listenable();
+  }
+
+  double get value => _value;
+
+  set value(double value) {
+    _value = value;
+    listenable();
+  }
 
   double get reservePixels => _reservePixels;
 
@@ -121,7 +230,24 @@ class FooterNotifier extends IndicatorNotifier {
     listenable();
   }
 
-  FooterNotifier({double reservePixels = 0.0}) : _reservePixels = reservePixels;
+  ScrollMetrics? get position => _position;
+
+  set position(ScrollMetrics? value) {
+    _position = value;
+    listenable();
+  }
+
+  bool get isForbidScroll => _isForbidScroll;
+
+  set isForbidScroll(bool value) {
+    _isForbidScroll = value;
+    listenable();
+  }
+  void updatePosition(ScrollMetrics position, ScrollState scrollState) {
+    _position=position;
+    _scrollState=scrollState;
+    listenable();
+  }
 
   ValueListenable<FooterNotifier> listenable() => _IndicatorListenable(this);
 }

@@ -14,12 +14,13 @@ abstract class BallisticIndicatorLayout<T extends StatefulWidget>
   late IndicatorSettings _indicatorSettings;
 
   IndicatorSettings get indicatorSettings => _indicatorSettings;
+
   @override
   void initState() {
     final scrollController = createScrollController();
     final headerNotifier = createHeaderNotifier(scrollController);
     final footerNotifier = createFooterNotifier(scrollController);
-    final userOffsetNotifier=ValueNotifier<bool>(false);
+    final userOffsetNotifier = ValueNotifier<bool>(false);
     _indicatorSettings = IndicatorSettings(
       scrollController: scrollController,
       headerNotifier: headerNotifier,
@@ -40,16 +41,26 @@ abstract class BallisticIndicatorLayout<T extends StatefulWidget>
     FooterNotifier footerNotifier = _indicatorSettings.footerNotifier;
 
     ScrollPosition position = scrollController.position;
-    if (position.pixels <= -headerNotifier.reservePixels) {
-      scrollController.jumpTo(-headerNotifier.reservePixels);
-      return;
-    }
-    //要求触摸的才向下定位到边界，用于排除键盘收起过程其下代码与收起过程的向低滚动的冲突。
-    if (_indicatorSettings.userOffsetNotifier.value&&position.pixels - position.maxScrollExtent >=
-        footerNotifier.reservePixels) {
-      scrollController
-          .jumpTo(position.maxScrollExtent + footerNotifier.reservePixels);
-    }
+
+    // if ((headerNotifier.expandPixels ?? 0.0) >= headerNotifier.reservePixels) {
+    //   //有扩展
+    //   // headerNotifier.updatePosition(position, ScrollState.expandScrolling);
+    //   scrollController.animateTo(-(headerNotifier.expandPixels ?? 0.0),
+    //       duration: Duration(milliseconds: 400), curve: Curves.easeIn).then((value) {
+    //     headerNotifier.updatePosition(position, ScrollState.hitExpandEdge);
+    //   });
+    //   return;
+    // }
+    // if ((footerNotifier.expandPixels ?? 0.0) >= footerNotifier.reservePixels) {
+    //   //有扩展
+    //   // footerNotifier.updatePosition(position, ScrollState.expandScrolling);
+    //   scrollController.animateTo(position.maxScrollExtent+(footerNotifier.expandPixels ?? 0.0),
+    //       duration: Duration(milliseconds: 400), curve: Curves.easeIn).then((value) {
+    //     footerNotifier.updatePosition(position, ScrollState.hitExpandEdge);
+    //   });
+    //   return;
+    // }
+
   }
 
   @protected
@@ -106,7 +117,7 @@ abstract class BallisticIndicatorLayout<T extends StatefulWidget>
         _keyboardHeight = viewInsetsBottom;
         SchedulerBinding.instance.addPostFrameCallback((_) {
           //build完成后的回调
-          var scrollController=_indicatorSettings.scrollController;
+          var scrollController = _indicatorSettings.scrollController;
           scrollController.animateTo(
             scrollController.position.maxScrollExtent,
             //滚动到底部
@@ -160,6 +171,7 @@ abstract class BallisticIndicatorLayout<T extends StatefulWidget>
             top: 0,
             left: 0,
             right: 0,
+            height: value.reservePixels,
             child: Container(
               color: Colors.red,
               height: value.reservePixels,
@@ -175,6 +187,7 @@ abstract class BallisticIndicatorLayout<T extends StatefulWidget>
           top: 0,
           left: 0,
           bottom: 0,
+          width: value.reservePixels,
           child: Container(
             color: Colors.red,
             width: value.reservePixels,
@@ -193,6 +206,7 @@ abstract class BallisticIndicatorLayout<T extends StatefulWidget>
             bottom: 0,
             left: 0,
             right: 0,
+            height: value.reservePixels,
             child: Container(
               color: Colors.red,
               height: value.reservePixels,
@@ -208,6 +222,7 @@ abstract class BallisticIndicatorLayout<T extends StatefulWidget>
           bottom: 0,
           right: 0,
           top: 0,
+          width: value.reservePixels,
           child: Container(
             color: Colors.red,
             width: value.reservePixels,

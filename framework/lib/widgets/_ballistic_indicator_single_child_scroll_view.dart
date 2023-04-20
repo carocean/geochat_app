@@ -72,15 +72,15 @@ class _BallisticIndicatorSingleChildScrollViewState
   }
 
   @override
-  FooterNotifier createFooterNotifier(ScrollController scrollController) {
-    // TODO: implement createFooterNotifier
-    return FooterNotifier(reservePixels: 34.00);
+  HeaderNotifier createHeaderNotifier(ScrollController scrollController) {
+    // TODO: implement createHeaderNotifier
+    return HeaderNotifier(reservePixels: 96.00, isForbidScroll: false,);
   }
 
   @override
-  HeaderNotifier createHeaderNotifier(ScrollController scrollController) {
-    // TODO: implement createHeaderNotifier
-    return HeaderNotifier(reservePixels: 96.00);
+  FooterNotifier createFooterNotifier(ScrollController scrollController) {
+    // TODO: implement createFooterNotifier
+    return FooterNotifier(reservePixels: 34.00, isForbidScroll: false);
   }
 
   @override
