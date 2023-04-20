@@ -79,7 +79,7 @@ class _ContactsPageState extends State<ContactsPage>
     items.add(SizedBox(
       height: 40,
     ));
-    for (int i = 0; i < 50; i++) {
+    for (int i = 0; i < 10; i++) {
       items.add(Container(
         color: Colors.red.withOpacity(_opacity),
         child: Text('是一行:$i'),

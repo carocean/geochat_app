@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -115,7 +116,8 @@ class IndicatorScrollPhysics extends ScrollPhysics {
     if (userOffsetNotifier.value &&
         (headerNotifier.isForbidScroll ||
             position.pixels < -headerNotifier.reservePixels)) {
-      if (value < position.pixels && position.pixels <= position.minScrollExtent)  {
+      if (value < position.pixels &&
+          position.pixels <= position.minScrollExtent) {
         // Underscroll.
         headerNotifier.updatePosition(position, ScrollState.underScrolling);
         return value - position.pixels;
@@ -133,19 +135,21 @@ class IndicatorScrollPhysics extends ScrollPhysics {
         (footerNotifier.isForbidScroll ||
             position.pixels >
                 position.maxScrollExtent + footerNotifier.reservePixels)) {
-      if (position.maxScrollExtent <= position.pixels && position.pixels < value)  {
+      if (position.maxScrollExtent <= position.pixels &&
+          position.pixels < value) {
         // Overscroll.
-        headerNotifier.updatePosition(position, ScrollState.overScrolling);
+        footerNotifier.updatePosition(position, ScrollState.overScrolling);
         return value - position.pixels;
       }
     }
     if (position.pixels < position.maxScrollExtent &&
         position.maxScrollExtent < value) {
       // Hit bottom edge. 就是上滑的时候手指已经离开凭惯性在下滑的过程中低部到达的边界
-      headerNotifier.updatePosition(position, ScrollState.hitBottomEdge);
+      footerNotifier.updatePosition(position, ScrollState.hitBottomEdge);
       return value - position.maxScrollExtent;
     }
     headerNotifier.updatePosition(position, ScrollState.sliding);
+    footerNotifier.updatePosition(position, ScrollState.sliding);
     return 0.0;
   }
 
@@ -156,9 +160,13 @@ class IndicatorScrollPhysics extends ScrollPhysics {
     //     '::velocity=${velocity}::pixels=${position.pixels}::minScrollExtent=${position.minScrollExtent}::maxScrollExtent=${position.maxScrollExtent}');
     userOffsetNotifier.value = false;
     // 返回null则没有回弹动画，也没有内容区的惯性滚动
-    if (position.pixels == -headerNotifier.reservePixels ||
-        position.pixels ==
-            position.maxScrollExtent + footerNotifier.reservePixels) {
+    if (position.pixels == -headerNotifier.reservePixels) {
+      headerNotifier.updatePosition(position, ScrollState.underScrollEnd);
+      return null;
+    }
+    if (position.pixels ==
+        position.maxScrollExtent + footerNotifier.reservePixels) {
+      footerNotifier.updatePosition(position, ScrollState.overScrollEnd);
       return null;
     }
     final Tolerance tolerance = this.tolerance;

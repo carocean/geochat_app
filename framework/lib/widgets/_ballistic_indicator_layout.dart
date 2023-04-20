@@ -29,39 +29,10 @@ abstract class BallisticIndicatorLayout<T extends StatefulWidget>
       scrollDirection: Axis.vertical,
     ).build(createScrollBehavior);
 
-    scrollController.addListener(_checkEdge);
     WidgetsBinding.instance.addObserver(this);
     super.initState();
   }
 
-  void _checkEdge() {
-    ///由于惯性，无论上滑还是下滑均会超出边界一部分，因此通过scrollController再让其回到预定的边界
-    ScrollController scrollController = _indicatorSettings.scrollController;
-    HeaderNotifier headerNotifier = _indicatorSettings.headerNotifier;
-    FooterNotifier footerNotifier = _indicatorSettings.footerNotifier;
-
-    ScrollPosition position = scrollController.position;
-
-    // if ((headerNotifier.expandPixels ?? 0.0) >= headerNotifier.reservePixels) {
-    //   //有扩展
-    //   // headerNotifier.updatePosition(position, ScrollState.expandScrolling);
-    //   scrollController.animateTo(-(headerNotifier.expandPixels ?? 0.0),
-    //       duration: Duration(milliseconds: 400), curve: Curves.easeIn).then((value) {
-    //     headerNotifier.updatePosition(position, ScrollState.hitExpandEdge);
-    //   });
-    //   return;
-    // }
-    // if ((footerNotifier.expandPixels ?? 0.0) >= footerNotifier.reservePixels) {
-    //   //有扩展
-    //   // footerNotifier.updatePosition(position, ScrollState.expandScrolling);
-    //   scrollController.animateTo(position.maxScrollExtent+(footerNotifier.expandPixels ?? 0.0),
-    //       duration: Duration(milliseconds: 400), curve: Curves.easeIn).then((value) {
-    //     footerNotifier.updatePosition(position, ScrollState.hitExpandEdge);
-    //   });
-    //   return;
-    // }
-
-  }
 
   @protected
   ScrollController createScrollController() {
@@ -167,6 +138,7 @@ abstract class BallisticIndicatorLayout<T extends StatefulWidget>
       return ValueListenableBuilder(
         valueListenable: indicatorSettings.headerNotifier.listenable(),
         builder: (BuildContext context, value, Widget? child) {
+          print("header::::${value.scrollState}");
           return Positioned(
             top: 0,
             left: 0,
@@ -202,6 +174,7 @@ abstract class BallisticIndicatorLayout<T extends StatefulWidget>
       return ValueListenableBuilder(
         valueListenable: indicatorSettings.footerNotifier.listenable(),
         builder: (BuildContext context, value, Widget? child) {
+          print("footer::::${value.scrollState}");
           return Positioned(
             bottom: 0,
             left: 0,
