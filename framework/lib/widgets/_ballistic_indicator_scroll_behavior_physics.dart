@@ -36,7 +36,7 @@ class IndicatorScrollBehavior extends ScrollBehavior {
 class IndicatorScrollPhysics extends ScrollPhysics {
   final HeaderNotifier headerNotifier;
   final FooterNotifier footerNotifier;
-
+  final ValueNotifier<bool> userOffsetNotifier;
   /// Used to determine parameters for friction simulations.
   final ScrollDecelerationRate decelerationRate;
 
@@ -45,6 +45,7 @@ class IndicatorScrollPhysics extends ScrollPhysics {
     this.decelerationRate = ScrollDecelerationRate.normal,
     required this.headerNotifier,
     required this.footerNotifier,
+    required this.userOffsetNotifier,
   }) : super(parent: parent);
 
   double frictionFactor(double overscrollFraction) {
@@ -62,12 +63,14 @@ class IndicatorScrollPhysics extends ScrollPhysics {
       parent: buildParent(ancestor),
       headerNotifier: headerNotifier,
       footerNotifier: footerNotifier,
+      userOffsetNotifier: userOffsetNotifier,
       decelerationRate: decelerationRate,
     );
   }
 
   @override
   double applyPhysicsToUserOffset(ScrollMetrics position, double offset) {
+    userOffsetNotifier.value = true;
     if (!position.outOfRange) {
       return offset;
     }
@@ -141,6 +144,7 @@ class IndicatorScrollPhysics extends ScrollPhysics {
   @override
   Simulation? createBallisticSimulation(
       ScrollMetrics position, double velocity) {
+    userOffsetNotifier.value = false;
     // 返回null则没有回弹动画，也没有内容区的惯性滚动
     final Tolerance tolerance = this.tolerance;
     if (!position.outOfRange) {

@@ -14,17 +14,17 @@ abstract class BallisticIndicatorLayout<T extends StatefulWidget>
   late IndicatorSettings _indicatorSettings;
 
   IndicatorSettings get indicatorSettings => _indicatorSettings;
-
   @override
   void initState() {
     final scrollController = createScrollController();
     final headerNotifier = createHeaderNotifier(scrollController);
     final footerNotifier = createFooterNotifier(scrollController);
-
+    final userOffsetNotifier=ValueNotifier<bool>(false);
     _indicatorSettings = IndicatorSettings(
       scrollController: scrollController,
       headerNotifier: headerNotifier,
       footerNotifier: footerNotifier,
+      userOffsetNotifier: userOffsetNotifier,
       scrollDirection: Axis.vertical,
     ).build(createScrollBehavior);
 
@@ -42,8 +42,10 @@ abstract class BallisticIndicatorLayout<T extends StatefulWidget>
     ScrollPosition position = scrollController.position;
     if (position.pixels <= -headerNotifier.reservePixels) {
       scrollController.jumpTo(-headerNotifier.reservePixels);
+      return;
     }
-    if (position.pixels - position.maxScrollExtent >=
+    //要求触摸的才向下定位到边界，用于排除键盘收起过程其下代码与收起过程的向低滚动的冲突。
+    if (_indicatorSettings.userOffsetNotifier.value&&position.pixels - position.maxScrollExtent >=
         footerNotifier.reservePixels) {
       scrollController
           .jumpTo(position.maxScrollExtent + footerNotifier.reservePixels);
@@ -70,6 +72,7 @@ abstract class BallisticIndicatorLayout<T extends StatefulWidget>
     var scrollPhysices = IndicatorScrollPhysics(
       headerNotifier: settings.headerNotifier,
       footerNotifier: settings.footerNotifier,
+      userOffsetNotifier: settings.userOffsetNotifier,
     );
     return IndicatorScrollBehavior(scrollPhysices);
   }
@@ -103,8 +106,9 @@ abstract class BallisticIndicatorLayout<T extends StatefulWidget>
         _keyboardHeight = viewInsetsBottom;
         SchedulerBinding.instance.addPostFrameCallback((_) {
           //build完成后的回调
-          _indicatorSettings.scrollController.animateTo(
-            _indicatorSettings.scrollController.position.maxScrollExtent,
+          var scrollController=_indicatorSettings.scrollController;
+          scrollController.animateTo(
+            scrollController.position.maxScrollExtent,
             //滚动到底部
             duration: const Duration(milliseconds: 300),
             curve: Curves.easeOut,
@@ -131,7 +135,8 @@ abstract class BallisticIndicatorLayout<T extends StatefulWidget>
         //没弹出键盘
         scrollViewHeight = MediaQuery.of(context).size.height -
             MediaQuery.of(context).padding.top -
-            appBarHeight-navBarHeight;
+            appBarHeight -
+            navBarHeight;
       }
       return scrollViewHeight;
     }
@@ -139,7 +144,7 @@ abstract class BallisticIndicatorLayout<T extends StatefulWidget>
     scrollViewHeight = (MediaQuery.of(context).size.height + 50) -
         MediaQuery.of(context).padding.top -
         MediaQuery.of(context).padding.bottom -
-        appBarHeight-
+        appBarHeight -
         navBarHeight -
         _keyboardHeight;
 

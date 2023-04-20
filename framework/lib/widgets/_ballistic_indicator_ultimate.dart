@@ -17,7 +17,7 @@ class IndicatorSettings implements IDisposable {
 
   /// Footer status data and responsive
   final FooterNotifier footerNotifier;
-
+  final ValueNotifier<bool> userOffsetNotifier;
   final ScrollController scrollController;
   Axis scrollDirection;
   late ScrollBehavior _scrollBehavior;
@@ -28,6 +28,7 @@ class IndicatorSettings implements IDisposable {
     required this.scrollController,
     required this.headerNotifier,
     required this.footerNotifier,
+    required this.userOffsetNotifier,
     required this.scrollDirection,
   });
 
