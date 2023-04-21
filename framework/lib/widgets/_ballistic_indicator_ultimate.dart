@@ -35,6 +35,8 @@ class IndicatorSettings implements IDisposable {
   @override
   void dispose() {
     scrollController?.dispose();
+    headerNotifier.dispose();
+    footerNotifier.dispose();
   }
 
   IndicatorSettings build(CreateScrollBehavior createScrollBehavior) {
@@ -58,7 +60,9 @@ class IndicatorInheritedWidget extends InheritedWidget {
 }
 
 ///指示器通知器。借助ChangeNotifier机制通知局部组件的状态更新
-class IndicatorNotifier extends ChangeNotifier {}
+class IndicatorNotifier extends ChangeNotifier {
+  ValueListenable<IndicatorNotifier> listenable() => _IndicatorListenable(this);
+}
 
 class _IndicatorListenable<T extends IndicatorNotifier>
     extends ValueListenable<T> {
@@ -107,129 +111,45 @@ enum ScrollState {
 }
 
 class HeaderNotifier extends IndicatorNotifier {
-  double _reservePixels;
-  ScrollMetrics? _position;
-  bool _isForbidScroll;
-  ScrollState? _scrollState;
-  double _value;
+  double reservePixels;
+  ScrollMetrics? position;
+  bool isForbidScroll;
+  ScrollState? scrollState;
+  double value;
 
   HeaderNotifier({
-    double reservePixels = 0.0,
-    double value = 0.0,
-    ScrollState? scrollState,
-    bool isForbidScroll = false,
-    ScrollMetrics? position,
-  })  : _reservePixels = reservePixels,
-        _isForbidScroll = isForbidScroll,
-        _scrollState = scrollState,
-        _value = value,
-        _position = position;
-
-
-  ScrollState? get scrollState => _scrollState;
-
-  set scrollState(ScrollState? value) {
-    _scrollState = value;
-    listenable();
-  }
-
-  double get value => _value;
-
-  set value(double value) {
-    _value = value;
-    listenable();
-  }
-
-  double get reservePixels => _reservePixels;
-
-  set reservePixels(double value) {
-    _reservePixels = value;
-    listenable();
-  }
-
-  ScrollMetrics? get position => _position;
-
-  set position(ScrollMetrics? value) {
-    _position = value;
-    listenable();
-  }
-
-  bool get isForbidScroll => _isForbidScroll;
-
-  set isForbidScroll(bool value) {
-    _isForbidScroll = value;
-    listenable();
-  }
-
-  ValueListenable<HeaderNotifier> listenable() => _IndicatorListenable(this);
+    this.reservePixels = 0.0,
+    this.value = 0.0,
+    this.scrollState,
+    this.isForbidScroll = false,
+    this.position,
+  });
 
   void updatePosition(ScrollMetrics position, ScrollState scrollState) {
-    _position=position;
-    _scrollState=scrollState;
-    listenable();
+    this.position = position;
+    this.scrollState = scrollState;
+    notifyListeners();
   }
-
 }
 
 class FooterNotifier extends IndicatorNotifier {
-  double _reservePixels;
-  ScrollMetrics? _position;
-  bool _isForbidScroll;
-  ScrollState? _scrollState;
-  double _value;
+  double reservePixels;
+  ScrollMetrics? position;
+  bool isForbidScroll;
+  ScrollState? scrollState;
+  double value;
 
   FooterNotifier({
-    double reservePixels = 0.0,
-    double value = 0.0,
-    ScrollState? scrollState,
-    bool isForbidScroll = false,
-    ScrollMetrics? position,
-  })  : _reservePixels = reservePixels,
-        _isForbidScroll = isForbidScroll,
-        _scrollState = scrollState,
-        _value = value,
-        _position = position;
+    this. reservePixels = 0.0,
+    this. value = 0.0,
+    this. scrollState,
+    this. isForbidScroll = false,
+    this. position,
+  })  ;
 
-
-  ScrollState? get scrollState => _scrollState;
-
-  set scrollState(ScrollState? value) {
-    _scrollState = value;
-    listenable();
-  }
-
-  double get value => _value;
-
-  set value(double value) {
-    _value = value;
-    listenable();
-  }
-
-  double get reservePixels => _reservePixels;
-
-  set reservePixels(double value) {
-    _reservePixels = value;
-    listenable();
-  }
-
-  ScrollMetrics? get position => _position;
-
-  set position(ScrollMetrics? value) {
-    _position = value;
-    listenable();
-  }
-
-  bool get isForbidScroll => _isForbidScroll;
-
-  set isForbidScroll(bool value) {
-    _isForbidScroll = value;
-    listenable();
-  }
   void updatePosition(ScrollMetrics position, ScrollState scrollState) {
-    _position=position;
-    _scrollState=scrollState;
-    listenable();
+    this.position = position;
+    this.scrollState = scrollState;
+    notifyListeners();
   }
-
-  ValueListenable<FooterNotifier> listenable() => _IndicatorListenable(this);
 }

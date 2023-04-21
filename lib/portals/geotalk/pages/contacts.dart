@@ -13,7 +13,7 @@ class ContactsPage extends StatefulWidget {
 class _ContactsPageState extends State<ContactsPage>
     with AutomaticKeepAliveClientMixin {
   double _opacity = 1;
-  Axis? _scrollDirection;
+  Axis? _scrollDirection=Axis.vertical;
 
   @override
   // TODO: implement wantKeepAlive

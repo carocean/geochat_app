@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:framework/widgets/_ballistic_indicator_scroll_behavior_physics.dart';
@@ -32,7 +34,6 @@ abstract class BallisticIndicatorLayout<T extends StatefulWidget>
     WidgetsBinding.instance.addObserver(this);
     super.initState();
   }
-
 
   @protected
   ScrollController createScrollController() {
@@ -138,15 +139,21 @@ abstract class BallisticIndicatorLayout<T extends StatefulWidget>
       return ValueListenableBuilder(
         valueListenable: indicatorSettings.headerNotifier.listenable(),
         builder: (BuildContext context, value, Widget? child) {
-          print("header::::${value.scrollState}");
+          value as HeaderNotifier;
+          var pixels = value.position?.pixels ?? 0.0;
+          var reservePixels=value.reservePixels;
+          var height = max(reservePixels/2,pixels.abs());
+          var tips=pixels.abs()>=reservePixels?'达到滑动边界':'正在下拉..';
           return Positioned(
             top: 0,
             left: 0,
             right: 0,
-            height: value.reservePixels,
+            height: height,
             child: Container(
               color: Colors.red,
-              height: value.reservePixels,
+              child: Center(
+                child: Text(tips),
+              ),
             ),
           );
         },
@@ -155,14 +162,20 @@ abstract class BallisticIndicatorLayout<T extends StatefulWidget>
     return ValueListenableBuilder(
       valueListenable: indicatorSettings.headerNotifier.listenable(),
       builder: (BuildContext context, value, Widget? child) {
+        value as HeaderNotifier;
+        var pixels = value.position?.pixels ?? 0.0;
+        var reservePixels=value.reservePixels;
+        var width = max(reservePixels/2,pixels.abs());
+        var tips=pixels.abs()>=reservePixels?'达到滑动边界':'正在右拉..';
         return Positioned(
           top: 0,
           left: 0,
           bottom: 0,
-          width: value.reservePixels,
+          width: width,
           child: Container(
             color: Colors.red,
-            width: value.reservePixels,
+            alignment: Alignment.center,
+            child:Text(tips),
           ),
         );
       },
@@ -174,15 +187,21 @@ abstract class BallisticIndicatorLayout<T extends StatefulWidget>
       return ValueListenableBuilder(
         valueListenable: indicatorSettings.footerNotifier.listenable(),
         builder: (BuildContext context, value, Widget? child) {
-          print("footer::::${value.scrollState}");
+          value as FooterNotifier;
+          var pixels = value.position?.pixels ?? 0.0;
+          var reservePixels=value.reservePixels;
+          var height = max(reservePixels/2,pixels.abs());
+          var tips=pixels.abs()>=reservePixels?'达到滑动边界':'正在上拉..';
           return Positioned(
             bottom: 0,
             left: 0,
             right: 0,
-            height: value.reservePixels,
+            height:height,
             child: Container(
               color: Colors.red,
-              height: value.reservePixels,
+              child: Center(
+                child: Text(tips),
+              ),
             ),
           );
         },
@@ -191,14 +210,21 @@ abstract class BallisticIndicatorLayout<T extends StatefulWidget>
     return ValueListenableBuilder(
       valueListenable: indicatorSettings.footerNotifier.listenable(),
       builder: (BuildContext context, value, Widget? child) {
+        value as FooterNotifier;
+        var pixels = value.position?.pixels ?? 0.0;
+        var reservePixels=value.reservePixels;
+        var width = max(reservePixels/2,pixels.abs());
+        var tips=pixels.abs()>=reservePixels?'达到滑动边界':'正在左拉..';
         return Positioned(
           bottom: 0,
           right: 0,
           top: 0,
-          width: value.reservePixels,
+          width: width,
           child: Container(
             color: Colors.red,
-            width: value.reservePixels,
+            child: Center(
+              child: Text(tips),
+            ),
           ),
         );
       },
