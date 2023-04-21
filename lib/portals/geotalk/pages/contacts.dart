@@ -31,9 +31,20 @@ class _ContactsPageState extends State<ContactsPage>
       headerSettings: HeaderSettings(
         scrollMode: IndicatorScrollMode.interact,
         reservePixels: 40,
-        // buildChild: (settings, notify) {
+        // buildChild: (settings, notify,scrollDirection) {
         //   return const Text('我来了');
         // },
+        buildChild: (settings, notify, scrollDirection) {
+          return DotHeaderView(
+            textStyle: TextStyle(
+              color: Colors.grey[400],
+              fontSize: 12,
+            ),
+            scrollDirection: scrollDirection,
+            headerSettings: settings,
+            headerNotifier: notify,
+          );
+        },
         onRefresh: () async {
           await Future.delayed(
             const Duration(

@@ -8,7 +8,7 @@ import 'package:framework/core_lib/_ultimate.dart';
 import '_ballistic_indicator_scroll_behavior_physics.dart';
 
 typedef BuildHeaderChild = Widget Function(
-    HeaderSettings? settings, HeaderNotifier headerNotifier);
+    HeaderSettings? settings, HeaderNotifier headerNotifier,Axis scrollDirection);
 
 enum IndicatorScrollMode {
   ///边界固定不动
@@ -68,7 +68,7 @@ class HeaderSettings
 }
 
 typedef BuildFooterChild = Widget Function(
-    FooterSettings? settings, FooterNotifier footerNotifier);
+    FooterSettings? settings, FooterNotifier footerNotifier,Axis scrollDirection);
 
 class FooterSettings
     implements IEqualable<FooterSettings>, ICopyable<FooterSettings> {
@@ -121,7 +121,7 @@ class FootView {
 }
 
 /// 指示器构建器
-class IndicatorSettings implements IDisposable {
+class IndicatorSettings implements IDisposable, IEqualable<IndicatorSettings> {
   /// Header status data and responsive
   late HeaderNotifier headerNotifier;
 
@@ -137,6 +137,15 @@ class IndicatorSettings implements IDisposable {
   ScrollBehavior get scrollBehavior => _scrollBehavior;
 
   IndicatorSettings() : userOffsetNotifier = ValueNotifier<bool>(false);
+
+  @override
+  bool equalsTo(IndicatorSettings? obj) {
+    return scrollDirection != obj?.scrollDirection &&
+        !(headerSettings != null &&
+            headerSettings!.equalsTo(obj?.headerSettings)) &&
+        !(footerSettings != null &&
+            footerSettings!.equalsTo(obj?.footerSettings));
+  }
 
   @override
   void dispose() {
