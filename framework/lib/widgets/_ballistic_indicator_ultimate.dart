@@ -189,6 +189,10 @@ class HeaderNotifier extends IndicatorNotifier {
 
   void updatePosition(
       ScrollMetrics position, ScrollState scrollState, double value) {
+    //如果在用户触屏时还在加载则什么也不做
+    if(userOffsetNotifier.value&&this.scrollState==ScrollState.underScrollRefreshing) {
+      return;
+    }
     this.position = position;
     this.value = value;
     if (userOffsetNotifier.value) {
@@ -258,6 +262,10 @@ class FooterNotifier extends IndicatorNotifier {
 
   void updatePosition(
       ScrollMetrics position, ScrollState scrollState, double value) {
+    //如果在用户触屏时还在加载则什么也不做
+    if(userOffsetNotifier.value&&this.scrollState==ScrollState.overScrollLoading) {
+      return;
+    }
     this.position = position;
     this.value = value;
     if (userOffsetNotifier.value) {
