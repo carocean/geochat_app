@@ -7,30 +7,40 @@ import 'package:framework/core_lib/_ultimate.dart';
 
 import '_ballistic_indicator_scroll_behavior_physics.dart';
 
+typedef BuildHeaderChild = Widget Function(
+    HeaderSettings? settings, HeaderNotifier headerNotifier);
+
 class HeaderSettings {
-  double reservePixcels;
-  double? expandPixcels;
-  Widget? child;
+  bool isForbidScroll;
+  double reservePixels;
+  double? expandPixels;
+  BuildHeaderChild? buildChild;
   HeaderOnRefresh? onRefresh;
 
   HeaderSettings({
-    this.reservePixcels = 50.00,
-    this.expandPixcels,
-    this.child,
+    this.isForbidScroll = false,
+    this.reservePixels = 50.00,
+    this.expandPixels,
+    this.buildChild,
     this.onRefresh,
   });
 }
 
+typedef BuildFooterChild = Widget Function(
+    FooterSettings? settings, FooterNotifier footerNotifier);
+
 class FooterSettings {
-  double reservePixcels;
-  double? expandPixcels;
-  Widget? child;
+  double reservePixels;
+  double? expandPixels;
+  BuildFooterChild? buildChild;
   FooterOnLoad? onLoad;
+  bool isForbidScroll;
 
   FooterSettings({
-    this.reservePixcels = 50.00,
-    this.expandPixcels,
-    this.child,
+    this.isForbidScroll = false,
+    this.reservePixels = 50.00,
+    this.expandPixels,
+    this.buildChild,
     this.onLoad,
   });
 }
@@ -42,51 +52,70 @@ class FootView {
 /// 指示器构建器
 class IndicatorSettings implements IDisposable {
   /// Header status data and responsive
-  final HeaderNotifier headerNotifier;
+  late HeaderNotifier headerNotifier;
 
   /// Footer status data and responsive
-  final FooterNotifier footerNotifier;
+  late FooterNotifier footerNotifier;
   final ValueNotifier<bool> userOffsetNotifier;
-  final ScrollController scrollController;
-  Axis scrollDirection;
+  late ScrollController scrollController;
+  late Axis scrollDirection;
   late ScrollBehavior _scrollBehavior;
   HeaderSettings? headerSettings;
   FooterSettings? footerSettings;
 
   ScrollBehavior get scrollBehavior => _scrollBehavior;
 
-  IndicatorSettings({
-    required this.scrollController,
-    required this.headerNotifier,
-    required this.footerNotifier,
-    required this.userOffsetNotifier,
-    required this.scrollDirection,
-  });
+  IndicatorSettings() : userOffsetNotifier = ValueNotifier<bool>(false);
 
   @override
   void dispose() {
-    scrollController?.dispose();
+    scrollController.dispose();
     headerNotifier.dispose();
     footerNotifier.dispose();
   }
 
-  IndicatorSettings bindScrollBehavior(
-      CreateScrollBehavior createScrollBehavior) {
-    _scrollBehavior = createScrollBehavior(this);
-    return this;
-  }
-
   IndicatorSettings bindHeaderSettings(HeaderSettings? headerSettings) {
     this.headerSettings = headerSettings;
-    headerNotifier.onRefresh = headerSettings?.onRefresh;
-    headerNotifier.reservePixels = headerSettings?.reservePixcels ?? 40.00;
     return this;
   }
 
   IndicatorSettings bindFooterSettings(FooterSettings? footerSettings) {
     this.footerSettings = footerSettings;
-    footerNotifier.onLoad = footerSettings?.onLoad;
-    footerNotifier.reservePixels = footerSettings?.reservePixcels ?? 50.00;
+    return this;
+  }
+
+  IndicatorSettings bindScrollDirection(Axis? scrollDirection) {
+    this.scrollDirection = scrollDirection ?? Axis.vertical;
+    return this;
+  }
+
+  IndicatorSettings build(ScrollController? scrollController) {
+    this.scrollController = scrollController ?? ScrollController();
+
+    headerNotifier = HeaderNotifier(
+      reservePixels: headerSettings?.reservePixels ?? 50.00,
+      isForbidScroll: headerSettings?.isForbidScroll ?? false,
+      scrollController: this.scrollController,
+      userOffsetNotifier: userOffsetNotifier,
+      onRefresh: headerSettings?.onRefresh,
+      scrollState: ScrollState.underScrollInit,
+    );
+
+    footerNotifier = FooterNotifier(
+      reservePixels: footerSettings?.reservePixels ?? 50.00,
+      isForbidScroll: footerSettings?.isForbidScroll ?? false,
+      scrollController: this.scrollController,
+      userOffsetNotifier: userOffsetNotifier,
+      onLoad: footerSettings?.onLoad,
+      scrollState: ScrollState.overScrollInit,
+    );
+
+    var scrollPhysics = IndicatorScrollPhysics(
+      headerNotifier: headerNotifier,
+      footerNotifier: footerNotifier,
+      userOffsetNotifier: userOffsetNotifier,
+    );
+    _scrollBehavior = IndicatorScrollBehavior(scrollPhysics);
     return this;
   }
 }
@@ -148,6 +177,7 @@ class _IndicatorListenable<T extends IndicatorNotifier>
 
 enum ScrollState {
   sliding,
+  underScrollInit,
   underScrolling,
   underScrollEnd,
   underScrollRefreshing,
@@ -155,6 +185,7 @@ enum ScrollState {
   underScrollCollapsing,
   underScrollCollapseDone,
   hitTopEdge,
+  overScrollInit,
   overScrolling,
   overScrollEnd,
   overScrollLoading,
@@ -167,13 +198,13 @@ enum ScrollState {
 typedef HeaderOnRefresh = Future<void> Function();
 
 class HeaderNotifier extends IndicatorNotifier {
-  double reservePixels;
+  final double reservePixels;
   ScrollMetrics? position;
-  bool isForbidScroll;
+  final bool isForbidScroll;
   ScrollState? scrollState;
   double value;
-  HeaderOnRefresh? onRefresh;
-  ScrollController? scrollController;
+  final HeaderOnRefresh? onRefresh;
+  final ScrollController? scrollController;
   final ValueNotifier<bool> userOffsetNotifier;
 
   HeaderNotifier({
@@ -190,7 +221,8 @@ class HeaderNotifier extends IndicatorNotifier {
   void updatePosition(
       ScrollMetrics position, ScrollState scrollState, double value) {
     //如果在用户触屏时还在加载则什么也不做
-    if(userOffsetNotifier.value&&this.scrollState==ScrollState.underScrollRefreshing) {
+    if (userOffsetNotifier.value &&
+        this.scrollState == ScrollState.underScrollRefreshing) {
       return;
     }
     this.position = position;
@@ -219,7 +251,7 @@ class HeaderNotifier extends IndicatorNotifier {
         this.scrollState = ScrollState.underScrollCollapsing;
         notifyListeners();
         await scrollController?.animateTo(
-          position?.minScrollExtent ?? 0.0,
+          position.minScrollExtent,
           curve: Curves.bounceInOut,
           duration: const Duration(milliseconds: 400),
         );
@@ -240,13 +272,13 @@ class HeaderNotifier extends IndicatorNotifier {
 typedef FooterOnLoad = Future<void> Function();
 
 class FooterNotifier extends IndicatorNotifier {
-  double reservePixels;
+  final double reservePixels;
   ScrollMetrics? position;
-  bool isForbidScroll;
+  final bool isForbidScroll;
   ScrollState? scrollState;
   double value;
-  FooterOnLoad? onLoad;
-  ScrollController? scrollController;
+  final FooterOnLoad? onLoad;
+  final ScrollController? scrollController;
   final ValueNotifier<bool> userOffsetNotifier;
 
   FooterNotifier({
@@ -263,7 +295,8 @@ class FooterNotifier extends IndicatorNotifier {
   void updatePosition(
       ScrollMetrics position, ScrollState scrollState, double value) {
     //如果在用户触屏时还在加载则什么也不做
-    if(userOffsetNotifier.value&&this.scrollState==ScrollState.overScrollLoading) {
+    if (userOffsetNotifier.value &&
+        this.scrollState == ScrollState.overScrollLoading) {
       return;
     }
     this.position = position;

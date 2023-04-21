@@ -6,6 +6,7 @@ import '_opacity_listener.dart';
 
 class BallisticIndicatorSingleChildScrollView extends StatefulWidget {
   final BuildContext parentContext;
+  ScrollController? scrollController;
   Widget display;
   List<Positioned>? positioneds;
   OpacityListener? opacityListener;
@@ -25,6 +26,7 @@ class BallisticIndicatorSingleChildScrollView extends StatefulWidget {
   BallisticIndicatorSingleChildScrollView({
     Key? key,
     required this.parentContext,
+    this.scrollController,
     this.appBarHeight,
     this.navBarHeight,
     required this.display,
@@ -47,8 +49,11 @@ class _BallisticIndicatorSingleChildScrollViewState
   void initState() {
     super.initState();
     indicatorSettings
+        .bindHeaderSettings(widget.headerSettings)
         .bindFooterSettings(widget.footerSettings)
-        .bindHeaderSettings(widget.headerSettings);
+        .bindScrollDirection(widget.scrollDirection)
+        .build(widget.scrollController);
+
     super.isPushContentWhenKeyboardShow = widget.isPushContentWhenKeyboardShow;
     widget.opacityListener
         ?.setScrollController(indicatorSettings.scrollController);
@@ -65,6 +70,12 @@ class _BallisticIndicatorSingleChildScrollViewState
     if (oldWidget.appBarHeight != widget.appBarHeight) {
       oldWidget.appBarHeight = widget.appBarHeight;
     }
+    if (oldWidget.headerSettings == widget.headerSettings) {
+      oldWidget.headerSettings = widget.headerSettings;
+    }
+    if (oldWidget.footerSettings == widget.footerSettings) {
+      oldWidget.footerSettings = widget.footerSettings;
+    }
     if (oldWidget.display != widget.display) {
       oldWidget.display = widget.display;
     }
@@ -76,29 +87,6 @@ class _BallisticIndicatorSingleChildScrollViewState
       oldWidget.positioneds = widget.positioneds;
     }
     super.didUpdateWidget(oldWidget);
-  }
-
- @override
-  HeaderNotifier createHeaderNotifier(ScrollController scrollController, ValueNotifier<bool> userOffsetNotifier) {
-    // TODO: implement createHeaderNotifier
-   return HeaderNotifier(
-     reservePixels: 96.00,
-     isForbidScroll: false,
-     scrollController: scrollController,
-     userOffsetNotifier: userOffsetNotifier,
-   );
-  }
-
-  @override
-  FooterNotifier createFooterNotifier(ScrollController scrollController,
-      ValueNotifier<bool> userOffsetNotifier) {
-    // TODO: implement createFooterNotifier
-    return FooterNotifier(
-      reservePixels: 34.00,
-      isForbidScroll: false,
-      scrollController: scrollController,
-      userOffsetNotifier: userOffsetNotifier,
-    );
   }
 
   @override

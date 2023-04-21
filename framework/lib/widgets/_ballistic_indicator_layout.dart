@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:framework/widgets/_ballistic_indicator_scroll_behavior_physics.dart';
 import 'package:framework/widgets/_ballistic_indicator_ultimate.dart';
 
 ///惯性布局;键盘上推；刷新指示器；抽屉；
@@ -19,53 +18,10 @@ abstract class BallisticIndicatorLayout<T extends StatefulWidget>
 
   @override
   void initState() {
-    final scrollController = createScrollController();
-    final userOffsetNotifier = ValueNotifier<bool>(false);
-    final headerNotifier =
-        createHeaderNotifier(scrollController, userOffsetNotifier);
-    final footerNotifier =
-        createFooterNotifier(scrollController, userOffsetNotifier);
-    _indicatorSettings = IndicatorSettings(
-      scrollController: scrollController,
-      headerNotifier: headerNotifier,
-      footerNotifier: footerNotifier,
-      userOffsetNotifier: userOffsetNotifier,
-      scrollDirection: Axis.vertical,
-    ).bindScrollBehavior(createScrollBehavior);
+    _indicatorSettings = IndicatorSettings();
 
     WidgetsBinding.instance.addObserver(this);
     super.initState();
-  }
-
-  @protected
-  ScrollController createScrollController() {
-    return ScrollController();
-  }
-
-  @protected
-  HeaderNotifier createHeaderNotifier(ScrollController scrollController,
-      ValueNotifier<bool> userOffsetNotifier) {
-    return HeaderNotifier(
-        scrollController: scrollController,
-        userOffsetNotifier: userOffsetNotifier);
-  }
-
-  @protected
-  FooterNotifier createFooterNotifier(ScrollController scrollController,
-      ValueNotifier<bool> userOffsetNotifier) {
-    return FooterNotifier(
-        scrollController: scrollController,
-        userOffsetNotifier: userOffsetNotifier);
-  }
-
-  @protected
-  ScrollBehavior createScrollBehavior(settings) {
-    var scrollPhysices = IndicatorScrollPhysics(
-      headerNotifier: settings.headerNotifier,
-      footerNotifier: settings.footerNotifier,
-      userOffsetNotifier: settings.userOffsetNotifier,
-    );
-    return IndicatorScrollBehavior(scrollPhysices);
   }
 
   @override
@@ -178,21 +134,27 @@ abstract class BallisticIndicatorLayout<T extends StatefulWidget>
               tips = '...';
               break;
           }
+          var builder = indicatorSettings.headerSettings?.buildChild;
+          Widget childWidget;
+          if (builder != null) {
+            childWidget = builder(indicatorSettings.headerSettings, value);
+          } else {
+            childWidget = Center(
+              child: Text(
+                tips,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey[400],
+                ),
+              ),
+            );
+          }
           return Positioned(
             top: 0,
             left: 0,
             right: 0,
             height: height,
-            child: indicatorSettings.headerSettings?.child ??
-                Center(
-                  child: Text(
-                    tips,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[400],
-                    ),
-                  ),
-                ),
+            child: childWidget,
           );
         },
       );
@@ -231,24 +193,30 @@ abstract class BallisticIndicatorLayout<T extends StatefulWidget>
             tips = '...';
             break;
         }
+        var builder = indicatorSettings.headerSettings?.buildChild;
+        Widget childWidget;
+        if (builder != null) {
+          childWidget = builder(indicatorSettings.headerSettings, value);
+        } else {
+          childWidget = Center(
+            child: SizedBox(
+              width: 10,
+              child: Text(
+                tips,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey[400],
+                ),
+              ),
+            ),
+          );
+        }
         return Positioned(
           top: 0,
           left: 0,
           bottom: 0,
           width: width,
-          child: indicatorSettings.headerSettings?.child ??
-              Center(
-                child: SizedBox(
-                  width: 10,
-                  child: Text(
-                    tips,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[400],
-                    ),
-                  ),
-                ),
-              ),
+          child: childWidget,
         );
       },
     );
@@ -292,21 +260,27 @@ abstract class BallisticIndicatorLayout<T extends StatefulWidget>
               tips = '...';
               break;
           }
+          var builder = indicatorSettings.footerSettings?.buildChild;
+          Widget childWidget;
+          if (builder != null) {
+            childWidget = builder(indicatorSettings.footerSettings, value);
+          } else {
+            childWidget = Center(
+              child: Text(
+                tips,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey[400],
+                ),
+              ),
+            );
+          }
           return Positioned(
             bottom: 0,
             left: 0,
             right: 0,
             height: height,
-            child: indicatorSettings.footerSettings?.child ??
-                Center(
-                  child: Text(
-                    tips,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[400],
-                    ),
-                  ),
-                ),
+            child: childWidget,
           );
         },
       );
@@ -345,25 +319,31 @@ abstract class BallisticIndicatorLayout<T extends StatefulWidget>
             tips = '...';
             break;
         }
+        var builder = indicatorSettings.footerSettings?.buildChild;
+        Widget childWidget;
+        if (builder != null) {
+          childWidget = builder(indicatorSettings.footerSettings, value);
+        } else {
+          childWidget = Center(
+            child: SizedBox(
+              width: 12,
+              child: Text(
+                tips,
+                style: TextStyle(
+                  fontSize: 10,
+                  color: Colors.grey[400],
+                ),
+              ),
+            ),
+          );
+        }
         return Positioned(
           bottom: 0,
           right: 0,
           top: 0,
           width: width,
           child: Container(
-            child: indicatorSettings.footerSettings?.child ??
-                Center(
-                  child: SizedBox(
-                    width: 12,
-                    child: Text(
-                      tips,
-                      style: TextStyle(
-                        fontSize: 10,
-                        color: Colors.grey[400],
-                      ),
-                    ),
-                  ),
-                ),
+            child: childWidget,
           ),
         );
       },

@@ -14,7 +14,7 @@ class ContactsPage extends StatefulWidget {
 class _ContactsPageState extends State<ContactsPage>
     with AutomaticKeepAliveClientMixin {
   double _opacity = 1;
-  Axis? _scrollDirection=Axis.vertical;
+  Axis? _scrollDirection = Axis.vertical;
 
   @override
   // TODO: implement wantKeepAlive
@@ -29,18 +29,36 @@ class _ContactsPageState extends State<ContactsPage>
       appBarHeight: 80,
       navBarHeight: 50,
       headerSettings: HeaderSettings(
-        onRefresh: ()async{
-          await Future.delayed(Duration(milliseconds: 4000,),).then((value) {
+        isForbidScroll: false,
+        reservePixels: 40,
+        // buildChild: (settings, notify) {
+        //   return const Text('我来了');
+        // },
+        onRefresh: () async {
+          await Future.delayed(
+            const Duration(
+              milliseconds: 4000,
+            ),
+          ).then((value) {
             print('========header refresh done.');
           });
-        }
+        },
       ),
       footerSettings: FooterSettings(
-        onLoad: ()async{
-          await Future.delayed(Duration(milliseconds: 4000,),).then((value) {
+        isForbidScroll: false,
+        reservePixels: 40,
+        // buildChild: (settings, notify) {
+        //   return const Text('我来了');
+        // },
+        onLoad: () async {
+          await Future.delayed(
+            Duration(
+              milliseconds: 4000,
+            ),
+          ).then((value) {
             print('========footer load done.');
           });
-        }
+        },
       ),
       opacityListener: OpacityListener(
           opacityEvent: (opacity) {
