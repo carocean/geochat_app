@@ -10,7 +10,8 @@ import '_ballistic_indicator_scroll_behavior_physics.dart';
 typedef BuildHeaderChild = Widget Function(
     HeaderSettings? settings, HeaderNotifier headerNotifier);
 
-class HeaderSettings {
+class HeaderSettings
+    implements IEqualable<HeaderSettings>, ICopyable<HeaderSettings> {
   bool isForbidScroll;
   double reservePixels;
   double? expandPixels;
@@ -24,12 +25,42 @@ class HeaderSettings {
     this.buildChild,
     this.onRefresh,
   });
+
+  @override
+  bool equalsTo(HeaderSettings? obj) {
+    if (obj == null) {
+      return false;
+    }
+    if (obj != this) {
+      return false;
+    }
+    return reservePixels == obj.reservePixels &&
+            expandPixels == obj.expandPixels &&
+            buildChild == obj.buildChild &&
+            onRefresh == obj.onRefresh &&
+            isForbidScroll == obj.isForbidScroll
+        ? true
+        : false;
+  }
+
+  @override
+  void copyFrom(HeaderSettings? obj) {
+    if (obj == null) {
+      return;
+    }
+    reservePixels = obj.reservePixels;
+    expandPixels = obj.expandPixels;
+    buildChild = obj.buildChild;
+    onRefresh = obj.onRefresh;
+    isForbidScroll = obj.isForbidScroll;
+  }
 }
 
 typedef BuildFooterChild = Widget Function(
     FooterSettings? settings, FooterNotifier footerNotifier);
 
-class FooterSettings {
+class FooterSettings
+    implements IEqualable<FooterSettings>, ICopyable<FooterSettings> {
   double reservePixels;
   double? expandPixels;
   BuildFooterChild? buildChild;
@@ -43,6 +74,35 @@ class FooterSettings {
     this.buildChild,
     this.onLoad,
   });
+
+  @override
+  bool equalsTo(obj) {
+    if (obj == null) {
+      return false;
+    }
+    if (obj != this) {
+      return false;
+    }
+    return reservePixels == obj.reservePixels &&
+            expandPixels == obj.expandPixels &&
+            buildChild == obj.buildChild &&
+            onLoad == obj.onLoad &&
+            isForbidScroll == obj.isForbidScroll
+        ? true
+        : false;
+  }
+
+  @override
+  void copyFrom(FooterSettings? obj) {
+    if (obj == null) {
+      return;
+    }
+    reservePixels = obj.reservePixels;
+    expandPixels = obj.expandPixels;
+    buildChild = obj.buildChild;
+    onLoad = obj.onLoad;
+    isForbidScroll = obj.isForbidScroll;
+  }
 }
 
 class FootView {
@@ -94,6 +154,7 @@ class IndicatorSettings implements IDisposable {
 
     headerNotifier = HeaderNotifier(
       reservePixels: headerSettings?.reservePixels ?? 50.00,
+      expandPixels: headerSettings?.expandPixels,
       isForbidScroll: headerSettings?.isForbidScroll ?? false,
       scrollController: this.scrollController,
       userOffsetNotifier: userOffsetNotifier,
@@ -103,6 +164,7 @@ class IndicatorSettings implements IDisposable {
 
     footerNotifier = FooterNotifier(
       reservePixels: footerSettings?.reservePixels ?? 50.00,
+      expandPixels: footerSettings?.expandPixels,
       isForbidScroll: footerSettings?.isForbidScroll ?? false,
       scrollController: this.scrollController,
       userOffsetNotifier: userOffsetNotifier,
@@ -117,6 +179,26 @@ class IndicatorSettings implements IDisposable {
     );
     _scrollBehavior = IndicatorScrollBehavior(scrollPhysics);
     return this;
+  }
+
+  void updateHeaderSettings(HeaderSettings? headerSettings) {
+    if (headerSettings == null) {
+      return;
+    }
+    this.headerSettings?.copyFrom(headerSettings);
+    headerNotifier.updateFromSettings(headerSettings);
+  }
+
+  void updateFooterSettings(FooterSettings? footerSettings) {
+    if (footerSettings == null) {
+      return;
+    }
+    this.footerSettings?.copyFrom(footerSettings);
+    footerNotifier.updateFromSettings(footerSettings);
+  }
+
+  void updateScrollDirection(Axis? scrollDirection) {
+    this.scrollDirection = scrollDirection ?? Axis.vertical;
   }
 }
 
@@ -198,17 +280,19 @@ enum ScrollState {
 typedef HeaderOnRefresh = Future<void> Function();
 
 class HeaderNotifier extends IndicatorNotifier {
-  final double reservePixels;
+  double reservePixels;
+  double? expandPixels;
   ScrollMetrics? position;
-  final bool isForbidScroll;
+  bool isForbidScroll;
   ScrollState? scrollState;
   double value;
-  final HeaderOnRefresh? onRefresh;
+  HeaderOnRefresh? onRefresh;
   final ScrollController? scrollController;
   final ValueNotifier<bool> userOffsetNotifier;
 
   HeaderNotifier({
     this.reservePixels = 0.0,
+    this.expandPixels,
     this.value = 0.0,
     this.scrollState,
     this.isForbidScroll = false,
@@ -267,22 +351,31 @@ class HeaderNotifier extends IndicatorNotifier {
     }
     await onRefresh!();
   }
+
+  void updateFromSettings(HeaderSettings headerSettings) {
+    isForbidScroll = headerSettings.isForbidScroll;
+    onRefresh = headerSettings.onRefresh;
+    reservePixels = headerSettings.reservePixels;
+    expandPixels = headerSettings.expandPixels;
+  }
 }
 
 typedef FooterOnLoad = Future<void> Function();
 
 class FooterNotifier extends IndicatorNotifier {
-  final double reservePixels;
+  double reservePixels;
+  double? expandPixels;
   ScrollMetrics? position;
-  final bool isForbidScroll;
+  bool isForbidScroll;
   ScrollState? scrollState;
   double value;
-  final FooterOnLoad? onLoad;
+  FooterOnLoad? onLoad;
   final ScrollController? scrollController;
   final ValueNotifier<bool> userOffsetNotifier;
 
   FooterNotifier({
     this.reservePixels = 0.0,
+    this.expandPixels,
     this.value = 0.0,
     this.scrollState,
     this.isForbidScroll = false,
@@ -342,5 +435,12 @@ class FooterNotifier extends IndicatorNotifier {
       return;
     }
     await onLoad!();
+  }
+
+  void updateFromSettings(FooterSettings footerSettings) {
+    reservePixels = footerSettings.reservePixels;
+    isForbidScroll = footerSettings.isForbidScroll;
+    onLoad = footerSettings.onLoad;
+    expandPixels = footerSettings.expandPixels;
   }
 }

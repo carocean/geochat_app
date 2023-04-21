@@ -17,7 +17,12 @@ mixin IServiceBuilder {
 mixin IDisposable {
   void dispose();
 }
-
+mixin IEqualable<T>{
+  bool equalsTo(T? obj);
+}
+mixin ICopyable<T>{
+  void copyFrom(T? obj);
+}
 mixin StringUtil {
   static bool isEmpty(String? qs) {
     return qs?.isEmpty??true;

@@ -76,11 +76,20 @@ class _BallisticIndicatorSingleChildScrollViewState
     if (oldWidget.footerSettings == widget.footerSettings) {
       oldWidget.footerSettings = widget.footerSettings;
     }
+    if (widget.headerSettings != null &&
+        !widget.headerSettings!.equalsTo(indicatorSettings.headerSettings)) {
+      indicatorSettings.updateHeaderSettings(widget.headerSettings);
+    }
+    if (widget.footerSettings != null &&
+        !widget.footerSettings!.equalsTo(indicatorSettings.footerSettings)) {
+      indicatorSettings.updateFooterSettings(widget.footerSettings);
+    }
     if (oldWidget.display != widget.display) {
       oldWidget.display = widget.display;
     }
     if (oldWidget.scrollDirection != widget.scrollDirection) {
       oldWidget.scrollDirection = widget.scrollDirection;
+      indicatorSettings.updateScrollDirection(widget.scrollDirection);
     }
     if (oldWidget.positioneds != widget.positioneds ||
         oldWidget.positioneds!.length != widget.positioneds!.length) {
@@ -91,8 +100,6 @@ class _BallisticIndicatorSingleChildScrollViewState
 
   @override
   Widget build(BuildContext context) {
-    indicatorSettings.scrollDirection = widget.scrollDirection ?? Axis.vertical;
-
     List<Widget> children = [];
     Widget content = buildContent();
     Widget header = buildHeaderView();
