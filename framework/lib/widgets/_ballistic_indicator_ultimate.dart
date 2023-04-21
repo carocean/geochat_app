@@ -10,16 +10,27 @@ import '_ballistic_indicator_scroll_behavior_physics.dart';
 typedef BuildHeaderChild = Widget Function(
     HeaderSettings? settings, HeaderNotifier headerNotifier);
 
+enum IndicatorScrollMode {
+  ///边界固定不动
+  fixed,
+
+  ///边界弹性滑动，但没有交互
+  bouncing,
+
+  ///边界产生用户交互。如需刷新或加载需使用此值
+  interact,
+}
+
 class HeaderSettings
     implements IEqualable<HeaderSettings>, ICopyable<HeaderSettings> {
-  bool isForbidScroll;
+  IndicatorScrollMode? scrollMode;
   double reservePixels;
   double? expandPixels;
   BuildHeaderChild? buildChild;
   HeaderOnRefresh? onRefresh;
 
   HeaderSettings({
-    this.isForbidScroll = false,
+    this.scrollMode = IndicatorScrollMode.interact,
     this.reservePixels = 50.00,
     this.expandPixels,
     this.buildChild,
@@ -38,7 +49,7 @@ class HeaderSettings
             expandPixels == obj.expandPixels &&
             buildChild == obj.buildChild &&
             onRefresh == obj.onRefresh &&
-            isForbidScroll == obj.isForbidScroll
+            scrollMode == obj.scrollMode
         ? true
         : false;
   }
@@ -52,7 +63,7 @@ class HeaderSettings
     expandPixels = obj.expandPixels;
     buildChild = obj.buildChild;
     onRefresh = obj.onRefresh;
-    isForbidScroll = obj.isForbidScroll;
+    scrollMode = obj.scrollMode;
   }
 }
 
@@ -65,10 +76,10 @@ class FooterSettings
   double? expandPixels;
   BuildFooterChild? buildChild;
   FooterOnLoad? onLoad;
-  bool isForbidScroll;
+  IndicatorScrollMode? scrollMode;
 
   FooterSettings({
-    this.isForbidScroll = false,
+    this.scrollMode = IndicatorScrollMode.interact,
     this.reservePixels = 50.00,
     this.expandPixels,
     this.buildChild,
@@ -87,7 +98,7 @@ class FooterSettings
             expandPixels == obj.expandPixels &&
             buildChild == obj.buildChild &&
             onLoad == obj.onLoad &&
-            isForbidScroll == obj.isForbidScroll
+            scrollMode == obj.scrollMode
         ? true
         : false;
   }
@@ -101,7 +112,7 @@ class FooterSettings
     expandPixels = obj.expandPixels;
     buildChild = obj.buildChild;
     onLoad = obj.onLoad;
-    isForbidScroll = obj.isForbidScroll;
+    scrollMode = obj.scrollMode;
   }
 }
 
@@ -155,7 +166,7 @@ class IndicatorSettings implements IDisposable {
     headerNotifier = HeaderNotifier(
       reservePixels: headerSettings?.reservePixels ?? 50.00,
       expandPixels: headerSettings?.expandPixels,
-      isForbidScroll: headerSettings?.isForbidScroll ?? false,
+      scrollMode: headerSettings?.scrollMode ?? IndicatorScrollMode.interact,
       scrollController: this.scrollController,
       userOffsetNotifier: userOffsetNotifier,
       onRefresh: headerSettings?.onRefresh,
@@ -165,7 +176,7 @@ class IndicatorSettings implements IDisposable {
     footerNotifier = FooterNotifier(
       reservePixels: footerSettings?.reservePixels ?? 50.00,
       expandPixels: footerSettings?.expandPixels,
-      isForbidScroll: footerSettings?.isForbidScroll ?? false,
+      scrollMode: footerSettings?.scrollMode ?? IndicatorScrollMode.interact,
       scrollController: this.scrollController,
       userOffsetNotifier: userOffsetNotifier,
       onLoad: footerSettings?.onLoad,
@@ -283,7 +294,7 @@ class HeaderNotifier extends IndicatorNotifier {
   double reservePixels;
   double? expandPixels;
   ScrollMetrics? position;
-  bool isForbidScroll;
+  IndicatorScrollMode? scrollMode;
   ScrollState? scrollState;
   double value;
   HeaderOnRefresh? onRefresh;
@@ -295,7 +306,7 @@ class HeaderNotifier extends IndicatorNotifier {
     this.expandPixels,
     this.value = 0.0,
     this.scrollState,
-    this.isForbidScroll = false,
+    this.scrollMode = IndicatorScrollMode.interact,
     this.position,
     this.onRefresh,
     this.scrollController,
@@ -353,7 +364,7 @@ class HeaderNotifier extends IndicatorNotifier {
   }
 
   void updateFromSettings(HeaderSettings headerSettings) {
-    isForbidScroll = headerSettings.isForbidScroll;
+    scrollMode = headerSettings.scrollMode;
     onRefresh = headerSettings.onRefresh;
     reservePixels = headerSettings.reservePixels;
     expandPixels = headerSettings.expandPixels;
@@ -366,7 +377,7 @@ class FooterNotifier extends IndicatorNotifier {
   double reservePixels;
   double? expandPixels;
   ScrollMetrics? position;
-  bool isForbidScroll;
+  IndicatorScrollMode? scrollMode;
   ScrollState? scrollState;
   double value;
   FooterOnLoad? onLoad;
@@ -378,7 +389,7 @@ class FooterNotifier extends IndicatorNotifier {
     this.expandPixels,
     this.value = 0.0,
     this.scrollState,
-    this.isForbidScroll = false,
+    this.scrollMode = IndicatorScrollMode.interact,
     this.position,
     this.onLoad,
     this.scrollController,
@@ -439,7 +450,7 @@ class FooterNotifier extends IndicatorNotifier {
 
   void updateFromSettings(FooterSettings footerSettings) {
     reservePixels = footerSettings.reservePixels;
-    isForbidScroll = footerSettings.isForbidScroll;
+    scrollMode = footerSettings.scrollMode;
     onLoad = footerSettings.onLoad;
     expandPixels = footerSettings.expandPixels;
   }

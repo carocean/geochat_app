@@ -99,6 +99,13 @@ abstract class BallisticIndicatorLayout<T extends StatefulWidget>
   }
 
   Widget buildHeaderView() {
+    if(indicatorSettings.headerSettings?.scrollMode==IndicatorScrollMode.interact){
+      return _buildHeaderView();
+    }else{
+      return const SizedBox.shrink();
+    }
+  }
+  Widget _buildHeaderView(){
     if (indicatorSettings.scrollDirection == Axis.vertical) {
       return ValueListenableBuilder(
         valueListenable: indicatorSettings.headerNotifier.listenable(),
@@ -221,8 +228,14 @@ abstract class BallisticIndicatorLayout<T extends StatefulWidget>
       },
     );
   }
-
   Widget buildFooterView() {
+    if(indicatorSettings.footerSettings?.scrollMode==IndicatorScrollMode.interact){
+      return _buildFooterView();
+    }else{
+      return const SizedBox.shrink();
+    }
+  }
+  Widget _buildFooterView(){
     if (indicatorSettings.scrollDirection == Axis.vertical) {
       return ValueListenableBuilder(
         valueListenable: indicatorSettings.footerNotifier.listenable(),
@@ -232,7 +245,7 @@ abstract class BallisticIndicatorLayout<T extends StatefulWidget>
           var reservePixels = value.reservePixels;
           var maxScrollExtent = (value.position?.maxScrollExtent ?? 0.0).abs();
           var height =
-              max(reservePixels / 2, (pixels.abs() - maxScrollExtent).abs());
+          max(reservePixels / 2, (pixels.abs() - maxScrollExtent).abs());
           var tips = '';
           switch (value.scrollState) {
             case ScrollState.overScrolling:

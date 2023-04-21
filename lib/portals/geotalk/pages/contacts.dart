@@ -29,7 +29,7 @@ class _ContactsPageState extends State<ContactsPage>
       appBarHeight: 80,
       navBarHeight: 50,
       headerSettings: HeaderSettings(
-        isForbidScroll: true,
+        scrollMode: IndicatorScrollMode.interact,
         reservePixels: 40,
         // buildChild: (settings, notify) {
         //   return const Text('我来了');
@@ -45,7 +45,7 @@ class _ContactsPageState extends State<ContactsPage>
         },
       ),
       footerSettings: FooterSettings(
-        isForbidScroll: false,
+        // scrollMode: IndicatorScrollMode.bouncing,
         reservePixels: 40,
         // buildChild: (settings, notify) {
         //   return const Text('我来了');

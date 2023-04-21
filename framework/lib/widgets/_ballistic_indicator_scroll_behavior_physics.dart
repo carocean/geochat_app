@@ -114,46 +114,59 @@ class IndicatorScrollPhysics extends ScrollPhysics {
   @override
   double applyBoundaryConditions(ScrollMetrics position, double value) {
     if (userOffsetNotifier.value &&
-        (headerNotifier.isForbidScroll ||
+        (headerNotifier.scrollMode == IndicatorScrollMode.fixed ||
             position.pixels < -headerNotifier.reservePixels)) {
       if (value < position.pixels &&
           position.pixels <= position.minScrollExtent) {
         // Underscroll.
-        var v=value - position.pixels;
-        headerNotifier.updatePosition(position, ScrollState.underScrolling,v);
+        var v = value - position.pixels;
+        if (headerNotifier.scrollMode == IndicatorScrollMode.interact) {
+          headerNotifier.updatePosition(
+              position, ScrollState.underScrolling, v);
+        }
         return v;
       }
     }
     if (value < position.minScrollExtent &&
         position.minScrollExtent < position.pixels) {
       // Hit top edge. 就是下滑的时候手指已经离开凭惯性在下滑的过程中顶部到达的边界
-      var v=value - position.minScrollExtent;
-      headerNotifier.updatePosition(position, ScrollState.hitTopEdge,v);
+      var v = value - position.minScrollExtent;
+      if (headerNotifier.scrollMode == IndicatorScrollMode.interact) {
+        headerNotifier.updatePosition(position, ScrollState.hitTopEdge, v);
+      }
       return v;
     }
     // print(
     //     '::::pixels=${position.pixels}::minScrollExtent=${position.minScrollExtent}::maxScrollExtent=${position.maxScrollExtent}');
     if (userOffsetNotifier.value &&
-        (footerNotifier.isForbidScroll ||
+        (footerNotifier.scrollMode == IndicatorScrollMode.fixed ||
             position.pixels >
                 position.maxScrollExtent + footerNotifier.reservePixels)) {
       if (position.maxScrollExtent <= position.pixels &&
           position.pixels < value) {
         // Overscroll.
-        var v=value - position.pixels;
-        footerNotifier.updatePosition(position, ScrollState.overScrolling,v);
+        var v = value - position.pixels;
+        if (footerNotifier.scrollMode == IndicatorScrollMode.interact) {
+          footerNotifier.updatePosition(position, ScrollState.overScrolling, v);
+        }
         return v;
       }
     }
     if (position.pixels < position.maxScrollExtent &&
         position.maxScrollExtent < value) {
       // Hit bottom edge. 就是上滑的时候手指已经离开凭惯性在下滑的过程中低部到达的边界
-      var v=value - position.maxScrollExtent;
-      footerNotifier.updatePosition(position, ScrollState.hitBottomEdge,v);
+      var v = value - position.maxScrollExtent;
+      if (footerNotifier.scrollMode == IndicatorScrollMode.interact) {
+        footerNotifier.updatePosition(position, ScrollState.hitBottomEdge, v);
+      }
       return v;
     }
-    headerNotifier.updatePosition(position, ScrollState.sliding,value);
-    footerNotifier.updatePosition(position, ScrollState.sliding,value);
+    if (headerNotifier.scrollMode == IndicatorScrollMode.interact) {
+      headerNotifier.updatePosition(position, ScrollState.sliding, value);
+    }
+    if (footerNotifier.scrollMode == IndicatorScrollMode.interact) {
+      footerNotifier.updatePosition(position, ScrollState.sliding, value);
+    }
     return 0.0;
   }
 
@@ -164,13 +177,17 @@ class IndicatorScrollPhysics extends ScrollPhysics {
     //     '::velocity=${velocity}::pixels=${position.pixels}::minScrollExtent=${position.minScrollExtent}::maxScrollExtent=${position.maxScrollExtent}');
     userOffsetNotifier.value = false;
     // 返回null则没有回弹动画，也没有内容区的惯性滚动
-    if (position.pixels == -headerNotifier.reservePixels) {
-      headerNotifier.updatePosition(position, ScrollState.underScrollEnd,position.pixels);
+    if (headerNotifier.scrollMode == IndicatorScrollMode.interact &&
+        position.pixels == -headerNotifier.reservePixels) {
+      headerNotifier.updatePosition(
+          position, ScrollState.underScrollEnd, position.pixels);
       return null;
     }
-    if (position.pixels ==
-        position.maxScrollExtent + footerNotifier.reservePixels) {
-      footerNotifier.updatePosition(position, ScrollState.overScrollEnd,position.pixels);
+    if (footerNotifier.scrollMode == IndicatorScrollMode.interact &&
+        position.pixels ==
+            position.maxScrollExtent + footerNotifier.reservePixels) {
+      footerNotifier.updatePosition(
+          position, ScrollState.overScrollEnd, position.pixels);
       return null;
     }
     final Tolerance tolerance = this.tolerance;
@@ -201,7 +218,8 @@ class IndicatorScrollPhysics extends ScrollPhysics {
         break;
     }
 
-    if (position.pixels < -headerNotifier.reservePixels) {
+    if (headerNotifier.scrollMode == IndicatorScrollMode.interact &&
+        position.pixels < -headerNotifier.reservePixels) {
       return BouncingScrollSimulation(
         spring: spring,
         position: position.pixels,
@@ -213,8 +231,9 @@ class IndicatorScrollPhysics extends ScrollPhysics {
       );
     }
 
-    if (position.pixels >
-        position.maxScrollExtent + footerNotifier.reservePixels) {
+    if (footerNotifier.scrollMode == IndicatorScrollMode.interact &&
+        position.pixels >
+            position.maxScrollExtent + footerNotifier.reservePixels) {
       return BouncingScrollSimulation(
         spring: spring,
         position: position.pixels,
