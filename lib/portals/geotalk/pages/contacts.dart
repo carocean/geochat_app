@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:framework/framework.dart';
+import 'package:framework/widgets/_ballistic_indicator_ultimate.dart';
 
 class ContactsPage extends StatefulWidget {
   final PageContext context;
@@ -27,6 +28,20 @@ class _ContactsPageState extends State<ContactsPage>
       scrollDirection: _scrollDirection,
       appBarHeight: 80,
       navBarHeight: 50,
+      headerSettings: HeaderSettings(
+        onRefresh: ()async{
+          await Future.delayed(Duration(milliseconds: 4000,),).then((value) {
+            print('========header refresh done.');
+          });
+        }
+      ),
+      footerSettings: FooterSettings(
+        onLoad: ()async{
+          await Future.delayed(Duration(milliseconds: 4000,),).then((value) {
+            print('========footer load done.');
+          });
+        }
+      ),
       opacityListener: OpacityListener(
           opacityEvent: (opacity) {
             if (mounted) {

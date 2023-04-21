@@ -9,6 +9,8 @@ class BallisticIndicatorSingleChildScrollView extends StatefulWidget {
   Widget display;
   List<Positioned>? positioneds;
   OpacityListener? opacityListener;
+  HeaderSettings? headerSettings;
+  FooterSettings? footerSettings;
 
   ///标题栏高度
   double? appBarHeight;
@@ -30,6 +32,8 @@ class BallisticIndicatorSingleChildScrollView extends StatefulWidget {
     this.positioneds = const <Positioned>[],
     this.opacityListener,
     this.isPushContentWhenKeyboardShow = false,
+    this.headerSettings,
+    this.footerSettings,
   }) : super(key: key);
 
   @override
@@ -42,6 +46,9 @@ class _BallisticIndicatorSingleChildScrollViewState
   @override
   void initState() {
     super.initState();
+    indicatorSettings
+        .bindFooterSettings(widget.footerSettings)
+        .bindHeaderSettings(widget.headerSettings);
     super.isPushContentWhenKeyboardShow = widget.isPushContentWhenKeyboardShow;
     widget.opacityListener
         ?.setScrollController(indicatorSettings.scrollController);
@@ -71,16 +78,27 @@ class _BallisticIndicatorSingleChildScrollViewState
     super.didUpdateWidget(oldWidget);
   }
 
-  @override
-  HeaderNotifier createHeaderNotifier(ScrollController scrollController) {
+ @override
+  HeaderNotifier createHeaderNotifier(ScrollController scrollController, ValueNotifier<bool> userOffsetNotifier) {
     // TODO: implement createHeaderNotifier
-    return HeaderNotifier(reservePixels: 96.00, isForbidScroll: false,);
+   return HeaderNotifier(
+     reservePixels: 96.00,
+     isForbidScroll: false,
+     scrollController: scrollController,
+     userOffsetNotifier: userOffsetNotifier,
+   );
   }
 
   @override
-  FooterNotifier createFooterNotifier(ScrollController scrollController) {
+  FooterNotifier createFooterNotifier(ScrollController scrollController,
+      ValueNotifier<bool> userOffsetNotifier) {
     // TODO: implement createFooterNotifier
-    return FooterNotifier(reservePixels: 34.00, isForbidScroll: false);
+    return FooterNotifier(
+      reservePixels: 34.00,
+      isForbidScroll: false,
+      scrollController: scrollController,
+      userOffsetNotifier: userOffsetNotifier,
+    );
   }
 
   @override
