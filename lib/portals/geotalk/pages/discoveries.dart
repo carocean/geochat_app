@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:framework/framework.dart';
+import 'package:framework/widgets/_ballistic_indicator_ultimate.dart';
 
 class DiscoveriesPage extends StatefulWidget {
   final PageContext context;
@@ -20,9 +21,28 @@ class _DiscoveriesPageState extends State<DiscoveriesPage>
 
   @override
   Widget build(BuildContext context) {
-    return BallisticNestedScrollView(
+    return BallisticIndicatorNestedScrollView(
       parentContext: context,
       isPushContentWhenKeyboardShow: true,
+      // scrollDirection: Axis.horizontal,
+      headerSettings: HeaderSettings(
+          reservePixels: 40.00,
+          scrollMode: IndicatorScrollMode.interact,
+          onRefresh: () async {
+            await Future.delayed(Duration(milliseconds: 4000)).then((value) {
+              print('::::head refreshed.');
+            });
+          },
+          buildChild: (settings, notify, scrollDirection) {
+            return DotHeaderView(
+              headerSettings: settings,
+              headerNotifier: notify,
+              scrollDirection: scrollDirection,
+            );
+          }),
+      footerSettings: FooterSettings(
+        reservePixels: 40.00,
+      ),
       opacityListener: OpacityListener(
           opacityEvent: (opacity) {
             if (mounted) {
@@ -73,21 +93,31 @@ class _DiscoveriesPageState extends State<DiscoveriesPage>
 
   _rendText() {
     List<Widget> items = [];
-    items.add(TextField(
-      decoration: InputDecoration(
-        hintText: '输入',
+    items.add(
+      SizedBox(
+        width: 100,
+        child: TextField(
+          decoration: InputDecoration(
+            hintText: '输入',
+          ),
+        ),
       ),
-    ));
+    );
     for (int i = 0; i < 10; i++) {
       items.add(
         Text('是一行:$i'),
       );
     }
-    items.add(TextField(
-      decoration: InputDecoration(
-        hintText: '输入',
+    items.add(
+      SizedBox(
+        width: 100,
+        child: TextField(
+          decoration: InputDecoration(
+            hintText: '输入',
+          ),
+        ),
       ),
-    ));
+    );
     items.add(Container(
       height: 40,
       color: Colors.grey,
