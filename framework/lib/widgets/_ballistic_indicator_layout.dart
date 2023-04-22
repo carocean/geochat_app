@@ -108,7 +108,9 @@ abstract class BallisticIndicatorLayout<T extends StatefulWidget>
       return const SizedBox.shrink();
     }
   }
-
+  Widget _empty(){
+    return const Positioned(child: SizedBox.shrink());
+  }
   Widget _buildHeaderView() {
     if (indicatorSettings.scrollDirection == Axis.vertical) {
       return ValueListenableBuilder(
@@ -116,6 +118,9 @@ abstract class BallisticIndicatorLayout<T extends StatefulWidget>
         builder: (BuildContext context, value, Widget? child) {
           value as HeaderNotifier;
           var pixels = value.position?.pixels ?? 0.0;
+          if(pixels>=(value.position?.maxScrollExtent??0.0)){
+            return _empty();
+          }
           var reservePixels = value.reservePixels;
           var height = max(reservePixels / 2, pixels.abs());
           var builder = indicatorSettings.headerSettings?.buildChild;
@@ -148,6 +153,9 @@ abstract class BallisticIndicatorLayout<T extends StatefulWidget>
       builder: (BuildContext context, value, Widget? child) {
         value as HeaderNotifier;
         var pixels = value.position?.pixels ?? 0.0;
+        if(pixels>=(value.position?.maxScrollExtent??0.0)){
+          return _empty();
+        }
         var reservePixels = value.reservePixels;
         var width = max(reservePixels / 2, pixels.abs());
 
@@ -193,6 +201,9 @@ abstract class BallisticIndicatorLayout<T extends StatefulWidget>
         builder: (BuildContext context, value, Widget? child) {
           value as FooterNotifier;
           var pixels = value.position?.pixels ?? 0.0;
+          if(pixels<=0) {
+            return _empty();
+          }
           var reservePixels = value.reservePixels;
           var maxScrollExtent = (value.position?.maxScrollExtent ?? 0.0).abs();
           var height =
@@ -228,6 +239,9 @@ abstract class BallisticIndicatorLayout<T extends StatefulWidget>
       builder: (BuildContext context, value, Widget? child) {
         value as FooterNotifier;
         var pixels = value.position?.pixels ?? 0.0;
+        if(pixels<=0) {
+          return _empty();
+        }
         var reservePixels = value.reservePixels;
         var width = max(reservePixels / 2, pixels.abs());
         var builder = indicatorSettings.footerSettings?.buildChild;

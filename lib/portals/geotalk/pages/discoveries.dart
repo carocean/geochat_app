@@ -41,15 +41,15 @@ class _DiscoveriesPageState extends State<DiscoveriesPage>
             );
           }),
       footerSettings: FooterSettings(
-        reservePixels: 30.00,
+        reservePixels: 40.00,
         scrollMode: IndicatorScrollMode.interact,
-        buildChild: (settings, notify, scrollDirection) {
-          return DotFooterView(
-            scrollDirection: scrollDirection,
-            footerNotifier: notify,
-            footerSettings: settings,
-          );
-        },
+        // buildChild: (settings, notify, scrollDirection) {
+        //   return DotFooterView(
+        //     scrollDirection: scrollDirection,
+        //     footerNotifier: notify,
+        //     footerSettings: settings,
+        //   );
+        // },
         onLoad: () async {
           await Future.delayed(
             Duration(
@@ -120,7 +120,7 @@ class _DiscoveriesPageState extends State<DiscoveriesPage>
         ),
       ),
     );
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 80; i++) {
       items.add(
         Text('是一行:$i'),
       );
