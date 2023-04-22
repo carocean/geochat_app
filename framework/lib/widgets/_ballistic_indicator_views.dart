@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:framework/widgets/_ballistic_indicator_ultimate.dart';
 
 class _IndicatorHeaderView extends InheritedWidget {
@@ -202,76 +204,159 @@ class SimpleFooterView extends StatelessWidget {
 }
 
 class DotHeaderView extends StatelessWidget {
-  const DotHeaderView(
+  DotHeaderView(
       {Key? key,
-      this.textStyle,
       this.headerNotifier,
       this.headerSettings,
       this.scrollDirection})
-      : super(key: key);
+      : _color = ValueNotifier(Colors.grey[400]!),
+        super(key: key);
 
   final Axis? scrollDirection;
-  final TextStyle? textStyle;
 
   final HeaderSettings? headerSettings;
   final HeaderNotifier? headerNotifier;
+
+  ValueNotifier<Color> _color;
+
+  _startChangeColor() {
+    Timer.periodic(
+        const Duration(
+          milliseconds: 200,
+        ), (v) {
+      if (headerNotifier?.scrollState != ScrollState.underScrollRefreshing) {
+        v.cancel();
+        return;
+      }
+      _color.value = (_color.value == Colors.grey[400]
+          ? Colors.grey[200]
+          : Colors.grey[400])!;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     Widget child;
     if (scrollDirection == Axis.vertical) {
-      child = Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: _renderDotItems(),
+      var dots = _renderDots();
+      var currentSize = 25 + _calcDotLength(dotMinSize: 0, dotMaxSize: 6) * 2;
+      child = Center(
+        child: Container(
+          height: 20,
+          width: 60,
+          // color: Colors.blueGrey,
+          child: Stack(
+            alignment: Alignment.center,
+            fit: StackFit.loose,
+            children: [
+              dots['middle']!,
+              Positioned(
+                left: currentSize,
+                child: dots['first']!,
+              ),
+              Positioned(
+                right: currentSize,
+                child: dots['last']!,
+              ),
+            ],
+          ),
+        ),
       );
     } else {
-      child = Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: _renderDotItems(),
+      var dots = _renderDots();
+      var currentSize = 25 + _calcDotLength(dotMinSize: 0, dotMaxSize: 6) * 2;
+      child = Center(
+        child: Container(
+          height: 60,
+          width: 20,
+          // color: Colors.blueGrey,
+          child: Stack(
+            alignment: Alignment.center,
+            fit: StackFit.loose,
+            children: [
+              dots['middle']!,
+              Positioned(
+                top: currentSize,
+                child: dots['first']!,
+              ),
+              Positioned(
+                bottom: currentSize,
+                child: dots['last']!,
+              ),
+            ],
+          ),
+        ),
       );
     }
-    return _IndicatorHeaderView(
-      headerSettings: headerSettings,
-      headerNotifier: headerNotifier,
-      textStyle: textStyle,
-      child: child,
-    );
+    return child;
   }
 
-  List<Widget> _renderDotItems() {
-    var items = <Widget>[];
-
-    // print('::::$currentSize');
+  Map<String, Widget> _renderDots() {
     Widget first;
     Widget middle;
     Widget last;
     switch (headerNotifier?.scrollState) {
       case ScrollState.underScrollRefreshing:
+        _startChangeColor();
+        HapticFeedback.heavyImpact();
+        first = _renderDot(dotMinSize: 0, dotMaxSize: 6);
+        middle = _renderDot(dotMinSize: 1, dotMaxSize: 6);
+        last = _renderDot(dotMinSize: 0, dotMaxSize: 6);
+        break;
       case ScrollState.underScrollRefreshDone:
+        HapticFeedback.heavyImpact();
+        first = _renderDot(dotMinSize: 0, dotMaxSize: 6);
+        middle = _renderDot(dotMinSize: 1, dotMaxSize: 6);
+        last = _renderDot(dotMinSize: 0, dotMaxSize: 6);
+        break;
       case ScrollState.underScrollCollapsing:
       case ScrollState.underScrollCollapseDone:
-        first = _renderDot(dotMinSize: 2, dotMaxSize: 8);
-        middle = _renderDot(dotMinSize: 2, dotMaxSize: 8);
-        last = _renderDot(dotMinSize: 2, dotMaxSize: 8);
+        first = _renderDot(dotMinSize: 0, dotMaxSize: 6);
+        middle = _renderDot(dotMinSize: 1, dotMaxSize: 6);
+        last = _renderDot(dotMinSize: 0, dotMaxSize: 6);
         break;
       case ScrollState.underScrolling:
       case ScrollState.underScrollEnd:
       case ScrollState.sliding:
       default:
-        first = _renderDot(dotMinSize: 2, dotMaxSize: 5);
-        middle = _renderDot(dotMinSize: 2, dotMaxSize: 8);
-        last = _renderDot(dotMinSize: 2, dotMaxSize: 5);
+        first = _renderDot(dotMinSize: 0, dotMaxSize: 4);
+        middle = _renderDot(dotMinSize: 1, dotMaxSize: 8);
+        last = _renderDot(dotMinSize: 0, dotMaxSize: 4);
         break;
     }
-    items.add(first);
-    items.add(middle);
-    items.add(last);
-    return items;
+    return {
+      'first': first,
+      'last': last,
+      'middle': middle,
+    };
   }
 
   Widget _renderDot({double dotMinSize = 2.0, double dotMaxSize = 10.0}) {
+    var currentSize =
+        _calcDotLength(dotMaxSize: dotMaxSize, dotMinSize: dotMinSize);
+    return ValueListenableBuilder(
+      valueListenable: _color,
+      builder: (context, value, child) {
+        return Padding(
+          padding: EdgeInsets.only(
+            left: scrollDirection == Axis.vertical ? currentSize : 0.0,
+            right: scrollDirection == Axis.vertical ? currentSize : 0.0,
+            top: scrollDirection == Axis.horizontal ? currentSize : 0.0,
+            bottom: scrollDirection == Axis.horizontal ? currentSize : 0.0,
+          ),
+          child: SizedBox(
+            width: currentSize,
+            height: currentSize,
+            child: CircleAvatar(
+              backgroundColor: value,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  double _calcDotLength({double dotMinSize = 2.0, double dotMaxSize = 10.0}) {
     var currentSize = dotMinSize;
 
     ScrollMetrics? position = headerNotifier?.position;
@@ -280,120 +365,173 @@ class DotHeaderView extends StatelessWidget {
     var factor = (dotMaxSize - dotMinSize) /
         (headerNotifier?.reservePixels ?? 40.00).abs();
     currentSize = dotMinSize + currentPos.abs() * factor;
-
-    return Padding(
-      padding: EdgeInsets.only(
-        left: scrollDirection == Axis.vertical ? currentSize : 0.0,
-        right: scrollDirection == Axis.vertical ? currentSize : 0.0,
-        top: scrollDirection == Axis.horizontal ? currentSize : 0.0,
-        bottom: scrollDirection == Axis.horizontal ? currentSize : 0.0,
-      ),
-      child: SizedBox(
-        width: currentSize,
-        height: currentSize,
-        child: CircleAvatar(
-          backgroundColor: Colors.grey[400],
-        ),
-      ),
-    );
+    return currentSize;
   }
 }
 
-
 class DotFooterView extends StatelessWidget {
-  const DotFooterView(
+  DotFooterView(
       {Key? key,
-        this.textStyle,
-        this.footerSettings,
-        this.footerNotifier,
-        this.scrollDirection})
-      : super(key: key);
+      this.footerSettings,
+      this.footerNotifier,
+      this.scrollDirection})
+      : _color = ValueNotifier(Colors.grey[400]!),
+        super(key: key);
 
   final Axis? scrollDirection;
-  final TextStyle? textStyle;
 
   final FooterSettings? footerSettings;
   final FooterNotifier? footerNotifier;
+
+  ValueNotifier<Color> _color;
+
+  _startChangeColor() {
+    Timer.periodic(
+        const Duration(
+          milliseconds: 200,
+        ), (v) {
+      if (footerNotifier?.scrollState != ScrollState.overScrollLoading) {
+        v.cancel();
+        return;
+      }
+      _color.value = (_color.value == Colors.grey[400]
+          ? Colors.grey[200]
+          : Colors.grey[400])!;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     Widget child;
     if (scrollDirection == Axis.vertical) {
-      child = Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: _renderDotItems(),
+      var dots = _renderDots();
+      var currentSize = 25 + _calcDotLength(dotMinSize: 0, dotMaxSize: 6) * 2;
+      child = Center(
+        child: Container(
+          height: 20,
+          width: 60,
+          // color: Colors.blueGrey,
+          child: Stack(
+            alignment: Alignment.center,
+            fit: StackFit.loose,
+            children: [
+              dots['middle']!,
+              Positioned(
+                left: currentSize,
+                child: dots['first']!,
+              ),
+              Positioned(
+                right: currentSize,
+                child: dots['last']!,
+              ),
+            ],
+          ),
+        ),
       );
     } else {
-      child = Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: _renderDotItems(),
+      var dots = _renderDots();
+      var currentSize = 25 + _calcDotLength(dotMinSize: 0, dotMaxSize: 6) * 2;
+      child = Center(
+        child: Container(
+          height: 60,
+          width: 20,
+          // color: Colors.blueGrey,
+          child: Stack(
+            alignment: Alignment.center,
+            fit: StackFit.loose,
+            children: [
+              dots['middle']!,
+              Positioned(
+                top: currentSize,
+                child: dots['first']!,
+              ),
+              Positioned(
+                bottom: currentSize,
+                child: dots['last']!,
+              ),
+            ],
+          ),
+        ),
       );
     }
-    return _IndicatorFooterView(
-      footerNotifier: footerNotifier,
-      footerSettings: footerSettings,
-      textStyle: textStyle,
-      child: child,
-    );
+    return child;
   }
 
-  List<Widget> _renderDotItems() {
-    var items = <Widget>[];
-
-    // print('::::$currentSize');
+  Map<String, Widget> _renderDots() {
     Widget first;
     Widget middle;
     Widget last;
     switch (footerNotifier?.scrollState) {
-      case ScrollState.underScrollRefreshing:
-      case ScrollState.underScrollRefreshDone:
-      case ScrollState.underScrollCollapsing:
-      case ScrollState.underScrollCollapseDone:
-        first = _renderDot(dotMinSize: 2, dotMaxSize: 8);
-        middle = _renderDot(dotMinSize: 2, dotMaxSize: 8);
-        last = _renderDot(dotMinSize: 2, dotMaxSize: 8);
+      case ScrollState.overScrollLoading:
+        _startChangeColor();
+        HapticFeedback.heavyImpact();
+        first = _renderDot(dotMinSize: 0, dotMaxSize: 6);
+        middle = _renderDot(dotMinSize: 1, dotMaxSize: 6);
+        last = _renderDot(dotMinSize: 0, dotMaxSize: 6);
         break;
-      case ScrollState.underScrolling:
-      case ScrollState.underScrollEnd:
+      case ScrollState.overScrollLoadDone:
+        HapticFeedback.heavyImpact();
+        first = _renderDot(dotMinSize: 0, dotMaxSize: 6);
+        middle = _renderDot(dotMinSize: 1, dotMaxSize: 6);
+        last = _renderDot(dotMinSize: 0, dotMaxSize: 6);
+        break;
+      case ScrollState.overScrollCollapsing:
+      case ScrollState.overScrollCollapseDone:
+        first = _renderDot(dotMinSize: 0, dotMaxSize: 6);
+        middle = _renderDot(dotMinSize: 1, dotMaxSize: 6);
+        last = _renderDot(dotMinSize: 0, dotMaxSize: 6);
+        break;
+      case ScrollState.overScrolling:
+      case ScrollState.overScrollEnd:
       case ScrollState.sliding:
       default:
-        first = _renderDot(dotMinSize: 2, dotMaxSize: 5);
-        middle = _renderDot(dotMinSize: 2, dotMaxSize: 8);
-        last = _renderDot(dotMinSize: 2, dotMaxSize: 5);
+        first = _renderDot(dotMinSize: 0, dotMaxSize: 4);
+        middle = _renderDot(dotMinSize: 1, dotMaxSize: 8);
+        last = _renderDot(dotMinSize: 0, dotMaxSize: 4);
         break;
     }
-    items.add(first);
-    items.add(middle);
-    items.add(last);
-    return items;
+    return {
+      'first': first,
+      'last': last,
+      'middle': middle,
+    };
   }
 
   Widget _renderDot({double dotMinSize = 2.0, double dotMaxSize = 10.0}) {
+    var currentSize =
+        _calcDotLength(dotMaxSize: dotMaxSize, dotMinSize: dotMinSize);
+    return ValueListenableBuilder(
+      valueListenable: _color,
+      builder: (context, value, child) {
+        return Padding(
+          padding: EdgeInsets.only(
+            left: scrollDirection == Axis.vertical ? currentSize : 0.0,
+            right: scrollDirection == Axis.vertical ? currentSize : 0.0,
+            top: scrollDirection == Axis.horizontal ? currentSize : 0.0,
+            bottom: scrollDirection == Axis.horizontal ? currentSize : 0.0,
+          ),
+          child: SizedBox(
+            width: currentSize,
+            height: currentSize,
+            child: CircleAvatar(
+              backgroundColor: value,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  double _calcDotLength({double dotMinSize = 2.0, double dotMaxSize = 10.0}) {
     var currentSize = dotMinSize;
 
     ScrollMetrics? position = footerNotifier?.position;
-    double currentPos = min((position?.pixels ?? 0.0).abs(),
+    var maxScrollExtent=position?.maxScrollExtent??0.0;
+    double currentPos = min(((position?.pixels ?? 0.0)-maxScrollExtent).abs(),
         footerNotifier?.reservePixels ?? 40.00);
     var factor = (dotMaxSize - dotMinSize) /
         (footerNotifier?.reservePixels ?? 40.00).abs();
     currentSize = dotMinSize + currentPos.abs() * factor;
-
-    return Padding(
-      padding: EdgeInsets.only(
-        left: scrollDirection == Axis.vertical ? currentSize : 0.0,
-        right: scrollDirection == Axis.vertical ? currentSize : 0.0,
-        top: scrollDirection == Axis.horizontal ? currentSize : 0.0,
-        bottom: scrollDirection == Axis.horizontal ? currentSize : 0.0,
-      ),
-      child: SizedBox(
-        width: currentSize,
-        height: currentSize,
-        child: CircleAvatar(
-          backgroundColor: Colors.grey[400],
-        ),
-      ),
-    );
+    return currentSize;
   }
 }

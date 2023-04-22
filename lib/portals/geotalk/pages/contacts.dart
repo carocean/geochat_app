@@ -36,10 +36,6 @@ class _ContactsPageState extends State<ContactsPage>
         // },
         buildChild: (settings, notify, scrollDirection) {
           return DotHeaderView(
-            textStyle: TextStyle(
-              color: Colors.grey[400],
-              fontSize: 12,
-            ),
             scrollDirection: scrollDirection,
             headerSettings: settings,
             headerNotifier: notify,
@@ -61,6 +57,13 @@ class _ContactsPageState extends State<ContactsPage>
         // buildChild: (settings, notify) {
         //   return const Text('我来了');
         // },
+        buildChild: (settings, notify, scrollDirection) {
+          return DotFooterView(
+            scrollDirection: scrollDirection,
+            footerNotifier: notify,
+            footerSettings: settings,
+          );
+        },
         onLoad: () async {
           await Future.delayed(
             Duration(
