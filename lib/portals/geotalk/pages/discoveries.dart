@@ -41,7 +41,24 @@ class _DiscoveriesPageState extends State<DiscoveriesPage>
             );
           }),
       footerSettings: FooterSettings(
-        reservePixels: 40.00,
+        reservePixels: 30.00,
+        scrollMode: IndicatorScrollMode.interact,
+        buildChild: (settings, notify, scrollDirection) {
+          return DotFooterView(
+            scrollDirection: scrollDirection,
+            footerNotifier: notify,
+            footerSettings: settings,
+          );
+        },
+        onLoad: () async {
+          await Future.delayed(
+            Duration(
+              milliseconds: 4000,
+            ),
+          ).then((value) {
+            print('========footer load done.');
+          });
+        },
       ),
       opacityListener: OpacityListener(
           opacityEvent: (opacity) {
