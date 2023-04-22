@@ -62,6 +62,13 @@ class _BallisticIndicatorNestedScrollViewState
     indicatorSettings.scrollController.addListener(() {
       //内容不足屏时有冲突，没容出屏时正常，当上拉加载时整屏上移了，导致内容区域变化，下边界触不到，一种可设高上边界，一种可在此设置手热触摸才上滚：indicatorSettings.userOffsetNotifier
       ///触不到下边界的原因是：当到顶时触发了下面的jumpTo又回去，所以界触失效，如果内容满是没此问题的。如果在吸顶后不再执行jumpTo也可以，但再下拉时如何判断
+      var indicatorPosition = indicatorSettings.scrollController.position;
+      //正常吸顶后继续上滑，v取值区间在0到indicatorSettings.footerSettings?.reservePixels之间，但由于惯性v值会超出indicatorSettings.footerSettings?.reservePixels一点点。
+      //因此v值判断大于0即可。即吸顶后上滑不再jumpTo
+      var v = indicatorPosition.pixels - indicatorPosition.maxScrollExtent;
+      if (v > 0) {
+        return;
+      }
       _nestedScrollController
           ?.jumpTo(indicatorSettings.scrollController.offset);
     });
