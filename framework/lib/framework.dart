@@ -13,6 +13,7 @@ export 'core_lib/_exceptions.dart';
 
 export 'widgets/_ballistic_layout.dart';
 export 'widgets/_ballistic_custom_scroll_view.dart';
+export 'widgets/_ballistic_nested_scroll_view.dart';
 export 'widgets/_ballistic_single_child_scroll_view.dart';
 export 'widgets/_opacity_listener.dart';
 export 'widgets/_ballistic_indicator_single_child_scroll_view.dart';

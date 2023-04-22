@@ -20,8 +20,9 @@ class _DiscoveriesPageState extends State<DiscoveriesPage>
 
   @override
   Widget build(BuildContext context) {
-    return BallisticCustomScrollView(
+    return BallisticNestedScrollView(
       parentContext: context,
+      isPushContentWhenKeyboardShow: true,
       opacityListener: OpacityListener(
           opacityEvent: (opacity) {
             if (mounted) {
@@ -77,7 +78,7 @@ class _DiscoveriesPageState extends State<DiscoveriesPage>
         hintText: '输入',
       ),
     ));
-    for (int i = 0; i < 60; i++) {
+    for (int i = 0; i < 10; i++) {
       items.add(
         Text('是一行:$i'),
       );

@@ -120,7 +120,7 @@ abstract class BallisticSliverLayout<T extends StatefulWidget> extends State<T>
           _scrollController.animateTo(
             _scrollController.position.maxScrollExtent, //滚动到底部
             duration: const Duration(milliseconds: 300),
-            curve: Curves.easeOut,
+            curve: Curves.bounceInOut,
           );
         });
       });
