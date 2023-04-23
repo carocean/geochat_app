@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import '_ballistic_layout.dart';
@@ -6,11 +5,12 @@ import '_opacity_listener.dart';
 
 ///惯性布局，控件化。增加透明度事件
 class BallisticSingleChildScrollView extends StatefulWidget {
-  AppBar? appBar;
   final BuildContext parentContext;
   Widget display;
   List<Positioned>? positioneds;
   OpacityListener? opacityListener;
+  double? appBarHeight;
+  double? navBarHeight;
 
   ///当键盘在输入框聚焦弹出时，是否上推内容
   late bool? isPushContentWhenKeyboardShow;
@@ -18,12 +18,13 @@ class BallisticSingleChildScrollView extends StatefulWidget {
   BallisticSingleChildScrollView({
     Key? key,
     required this.parentContext,
-    this.appBar,
+    this.appBarHeight,
+    this.navBarHeight,
     required this.display,
     this.positioneds = const <Positioned>[],
     this.opacityListener,
     this.isPushContentWhenKeyboardShow = false,
-  }) : super(key: key) ;
+  }) : super(key: key);
 
   @override
   State<BallisticSingleChildScrollView> createState() =>
@@ -47,8 +48,11 @@ class _BallisticSingleChildScrollViewState
 
   @override
   void didUpdateWidget(BallisticSingleChildScrollView oldWidget) {
-    if (oldWidget.appBar != widget.appBar) {
-      oldWidget.appBar = widget.appBar;
+    if (oldWidget.appBarHeight != widget.appBarHeight) {
+      oldWidget.appBarHeight = widget.appBarHeight;
+    }
+    if (oldWidget.navBarHeight != widget.navBarHeight) {
+      oldWidget.navBarHeight = widget.navBarHeight;
     }
     if (oldWidget.display != widget.display) {
       oldWidget.display = widget.display;
@@ -70,7 +74,8 @@ class _BallisticSingleChildScrollViewState
             parent: BouncingScrollPhysics()),
         child: ConstrainedBox(
           constraints: BoxConstraints(
-            minHeight: scrollViewHeight(widget.appBar,
+            minHeight: scrollViewHeight(
+                widget.appBarHeight, widget.navBarHeight,
                 parentContext: widget.parentContext),
             minWidth: MediaQuery.of(context).size.width,
           ),

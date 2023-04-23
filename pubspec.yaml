@@ -108,6 +108,9 @@ flutter:
     - family: mines
       fonts:
         - asset: lib/portals/geotalk/fonts/mines-iconfont.ttf
+    - family: discoveries
+      fonts:
+        - asset: lib/portals/geotalk/fonts/discoveries-iconfont.ttf
   assets:
     - lib/system/images/entrypoint_bk.jpg
     - lib/common/images/geochat_op.png

@@ -67,19 +67,36 @@ abstract class BallisticLayout<T extends StatefulWidget> extends State<T>
     }
   }
 
-  double scrollViewHeight(AppBar? appBar, {BuildContext? parentContext}) {
-    return scrollViewHeightBy(appBar?.preferredSize.height);
-  }
-
   ///这里除去了状态栏、和键盘，但如有标题栏和底部导航栏则要除去。
-  double scrollViewHeightBy(double? size, {BuildContext? parentContext}) {
+  double scrollViewHeight(double? appBarHeight, double? navBarHeight,
+      {BuildContext? parentContext}) {
     var context = parentContext ?? this.context;
-    size ??= 0.0;
-    var scrollViewHeight = MediaQuery.of(context).size.height -
+    appBarHeight ??= 0.0;
+    navBarHeight ??= 0.0;
+    var scrollViewHeight = 0.0;
+    if (appBarHeight > 0) {
+      //有标题栏 说明context获取的高度是内容区的高度，非整屏
+      if (_keyboardHeight > 0) {
+        //弹出了键盘
+        scrollViewHeight = (MediaQuery.of(context).size.height + navBarHeight) -
+            _keyboardHeight;
+      } else {
+        //没弹出键盘
+        scrollViewHeight = MediaQuery.of(context).size.height -
+            MediaQuery.of(context).padding.top -
+            appBarHeight -
+            navBarHeight;
+      }
+      return scrollViewHeight;
+    }
+    //其下是没有标题栏，即context是全屏
+    scrollViewHeight = (MediaQuery.of(context).size.height + 50) -
         MediaQuery.of(context).padding.top -
         MediaQuery.of(context).padding.bottom -
-        size -
+        appBarHeight -
+        navBarHeight -
         _keyboardHeight;
+
     return scrollViewHeight;
   }
 }

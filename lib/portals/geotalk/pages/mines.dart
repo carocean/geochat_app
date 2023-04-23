@@ -42,7 +42,7 @@ class _MinesPageState extends State<MinesPage>
         elevation: 0,
         title: Opacity(
           opacity: _opacity,
-          child: Text(
+          child: const Text(
             '大道至简',
             style: TextStyle(
               fontSize: 16,
@@ -64,10 +64,10 @@ class _MinesPageState extends State<MinesPage>
               children: <Widget>[
                 Column(
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 70,
                       height: 70,
                       child: CircleAvatar(
@@ -76,17 +76,17 @@ class _MinesPageState extends State<MinesPage>
                         ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 15,
                     ),
-                    Text(
+                    const Text(
                       '大道至简',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 15,
                     ),
                     Text(
@@ -96,7 +96,7 @@ class _MinesPageState extends State<MinesPage>
                         color: Colors.grey[600],
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Row(
@@ -116,7 +116,7 @@ class _MinesPageState extends State<MinesPage>
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 25,
                 ),
                 Column(
@@ -127,7 +127,7 @@ class _MinesPageState extends State<MinesPage>
                         Text.rich(
                           TextSpan(
                             text: '微信  ',
-                            children: [
+                            children: const [
                               TextSpan(
                                 text: '已绑定',
                                 style: TextStyle(
@@ -145,7 +145,7 @@ class _MinesPageState extends State<MinesPage>
                         Text.rich(
                           TextSpan(
                             text: '支付宝  ',
-                            children: [
+                            children: const [
                               TextSpan(
                                 text: '已绑定',
                                 style: TextStyle(
@@ -162,7 +162,7 @@ class _MinesPageState extends State<MinesPage>
                         ),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 25,
                     ),
                   ],
@@ -171,16 +171,17 @@ class _MinesPageState extends State<MinesPage>
             ),
           ),
           Container(
-            padding: EdgeInsets.only(
-              left: 10,
-              right: 10,
+            padding: const EdgeInsets.only(
+              left: 5,
+              right: 5,
             ),
             child: Column(
               children: [
-                _renderPanel(
+                SimpleCardView(
                   items: [
-                    _renderItem(
-                      image: Icon(
+                    SimpleCardViewItem(
+                      title: '服务',
+                      icon: const Icon(
                         IconData(
                           0xe61c,
                           fontFamily: 'mines',
@@ -188,22 +189,17 @@ class _MinesPageState extends State<MinesPage>
                         color: Color(0xFFb41703),
                         size: 24,
                       ),
-                      title: Text(
-                        '服务',
-                        style: TextStyle(
-                          fontSize: 16,
-                        ),
-                      ),
                     ),
                   ],
                 ),
-                SizedBox(
-                  height: 10,
+                const SizedBox(
+                  height: 15,
                 ),
-                _renderPanel(
+                SimpleCardView(
                   items: [
-                    _renderItem(
-                      image: Icon(
+                    SimpleCardViewItem(
+                      title: '收付款',
+                      icon: const Icon(
                         IconData(
                           0xe647,
                           fontFamily: 'mines',
@@ -211,19 +207,10 @@ class _MinesPageState extends State<MinesPage>
                         color: Color(0xFFb36644),
                         size: 24,
                       ),
-                      title: Text(
-                        '收付款',
-                        style: TextStyle(
-                          fontSize: 16,
-                        ),
-                      ),
                     ),
-                    Divider(
-                      height: 1,
-                      indent: 50,
-                    ),
-                    _renderItem(
-                      image: Icon(
+                    SimpleCardViewItem(
+                      title: '钱包',
+                      icon: const Icon(
                         IconData(
                           0xe649,
                           fontFamily: 'mines',
@@ -231,19 +218,10 @@ class _MinesPageState extends State<MinesPage>
                         color: Color(0xFF515151),
                         size: 24,
                       ),
-                      title: Text(
-                        '钱包',
-                        style: TextStyle(
-                          fontSize: 16,
-                        ),
-                      ),
                     ),
-                    Divider(
-                      height: 1,
-                      indent: 50,
-                    ),
-                    _renderItem(
-                      image: Icon(
+                    SimpleCardViewItem(
+                      title: '券包',
+                      icon: const Icon(
                         IconData(
                           0xe6c2,
                           fontFamily: 'mines',
@@ -251,19 +229,10 @@ class _MinesPageState extends State<MinesPage>
                         color: Color(0xFF11b01e),
                         size: 24,
                       ),
-                      title: Text(
-                        '券包',
-                        style: TextStyle(
-                          fontSize: 16,
-                        ),
-                      ),
                     ),
-                    Divider(
-                      height: 1,
-                      indent: 50,
-                    ),
-                    _renderItem(
-                      image: Icon(
+                    SimpleCardViewItem(
+                      title: '账单',
+                      icon: const Icon(
                         IconData(
                           0xe736,
                           fontFamily: 'mines',
@@ -271,22 +240,17 @@ class _MinesPageState extends State<MinesPage>
                         color: Color(0xFF3d4ca1),
                         size: 24,
                       ),
-                      title: Text(
-                        '账单',
-                        style: TextStyle(
-                          fontSize: 16,
-                        ),
-                      ),
                     ),
                   ],
                 ),
-                SizedBox(
-                  height: 10,
+                const SizedBox(
+                  height: 15,
                 ),
-                _renderPanel(
+                SimpleCardView(
                   items: [
-                    _renderItem(
-                      image: Icon(
+                    SimpleCardViewItem(
+                      title: '收藏',
+                      icon: const Icon(
                         IconData(
                           0xe8b9,
                           fontFamily: 'mines',
@@ -294,19 +258,10 @@ class _MinesPageState extends State<MinesPage>
                         color: Color(0xFF515151),
                         size: 24,
                       ),
-                      title: Text(
-                        '收藏',
-                        style: TextStyle(
-                          fontSize: 16,
-                        ),
-                      ),
                     ),
-                    Divider(
-                      height: 1,
-                      indent: 50,
-                    ),
-                    _renderItem(
-                      image: Icon(
+                    SimpleCardViewItem(
+                      title: '表情',
+                      icon: const Icon(
                         IconData(
                           0xe659,
                           fontFamily: 'mines',
@@ -314,19 +269,10 @@ class _MinesPageState extends State<MinesPage>
                         color: Color(0xFFd28b23),
                         size: 24,
                       ),
-                      title: Text(
-                        '表情',
-                        style: TextStyle(
-                          fontSize: 16,
-                        ),
-                      ),
                     ),
-                    Divider(
-                      height: 1,
-                      indent: 50,
-                    ),
-                    _renderItem(
-                      image: Icon(
+                    SimpleCardViewItem(
+                      title: '地微风格',
+                      icon: const Icon(
                         IconData(
                           0xee33,
                           fontFamily: 'mines',
@@ -334,31 +280,20 @@ class _MinesPageState extends State<MinesPage>
                         color: Color(0xFFc94586),
                         size: 24,
                       ),
-                      title: Text(
-                        '地微风格',
-                        style: TextStyle(
-                          fontSize: 16,
-                        ),
-                      ),
                     ),
                   ],
                 ),
-                SizedBox(
-                  height: 10,
+                const SizedBox(
+                  height: 15,
                 ),
-                _renderPanel(
+                SimpleCardView(
                   items: [
-                    _renderItem(
-                      image: Icon(
+                    SimpleCardViewItem(
+                      title: '设置',
+                      icon: const Icon(
                         Icons.settings,
                         size: 24,
                         color: Colors.grey,
-                      ),
-                      title: Text(
-                        '设置',
-                        style: TextStyle(
-                          fontSize: 16,
-                        ),
                       ),
                     ),
                   ],
@@ -366,7 +301,7 @@ class _MinesPageState extends State<MinesPage>
               ],
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 76,
           ),
         ],
@@ -374,49 +309,4 @@ class _MinesPageState extends State<MinesPage>
     );
   }
 
-  Widget _renderPanel({required List<Widget> items}) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: [
-          BoxShadow(
-            color: Color(0xFFefefef),
-            blurRadius: 2,
-            spreadRadius: 2,
-          ),
-        ],
-      ),
-      child: Column(
-        children: items,
-      ),
-    );
-  }
-
-  Widget _renderItem({required Widget image, required Widget title}) {
-    return Padding(
-      padding: EdgeInsets.only(
-        top: 15,
-        bottom: 15,
-        left: 10,
-        right: 10,
-      ),
-      child: Row(
-        children: [
-          image,
-          SizedBox(
-            width: 10,
-          ),
-          Expanded(
-            child: title,
-          ),
-          Icon(
-            Icons.arrow_forward_ios,
-            size: 16,
-            color: Color(0xFFc3c3c4),
-          ),
-        ],
-      ),
-    );
-  }
 }

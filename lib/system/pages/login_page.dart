@@ -71,8 +71,8 @@ class _LoginPageState extends State<LoginPage> {
       appBar: appBar,
       body: BallisticSingleChildScrollView(
         parentContext: context,
-        display: display!,
-        appBar: appBar,
+        display: display,
+        appBarHeight: appBar.preferredSize.height,
         isPushContentWhenKeyboardShow: true,
         positioneds: [
           Positioned(

@@ -53,7 +53,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
         parentContext: context,
         display: display!,
         isPushContentWhenKeyboardShow: true,
-        appBar: appBar,
+        appBarHeight: appBar.preferredSize.height,
         positioneds: [
           Positioned(
             left: 15,
