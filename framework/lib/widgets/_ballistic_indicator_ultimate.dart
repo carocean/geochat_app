@@ -31,7 +31,9 @@ class HeaderSettings
 
   HeaderSettings({
     this.scrollMode = IndicatorScrollMode.interact,
+    ///头部预定的下滑高度
     this.reservePixels = 50.00,
+    ///头部扩展的高度。该高度大于reservePixels才生效
     this.expandPixels,
     this.buildChild,
     this.onRefresh,
@@ -80,7 +82,9 @@ class FooterSettings
 
   FooterSettings({
     this.scrollMode = IndicatorScrollMode.interact,
+    ///尾部预定的上滑高度
     this.reservePixels = 50.00,
+    ///尾部可扩展高度。只有大于reservePixels时才生效
     this.expandPixels,
     this.buildChild,
     this.onLoad,
