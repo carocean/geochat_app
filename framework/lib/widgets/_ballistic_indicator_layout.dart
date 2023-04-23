@@ -108,9 +108,11 @@ abstract class BallisticIndicatorLayout<T extends StatefulWidget>
       return const SizedBox.shrink();
     }
   }
-  Widget _empty(){
+
+  Widget _empty() {
     return const Positioned(child: SizedBox.shrink());
   }
+
   Widget _buildHeaderView() {
     if (indicatorSettings.scrollDirection == Axis.vertical) {
       return ValueListenableBuilder(
@@ -118,15 +120,35 @@ abstract class BallisticIndicatorLayout<T extends StatefulWidget>
         builder: (BuildContext context, value, Widget? child) {
           value as HeaderNotifier;
           var pixels = value.position?.pixels ?? 0.0;
-          if(pixels>=(value.position?.maxScrollExtent??0.0)){
+          if (pixels >= (value.position?.maxScrollExtent ?? 0.0)) {
             return _empty();
           }
+
+          var builder = indicatorSettings.headerSettings?.buildChild;
+
+          if ((value.expandPixels ?? 0) > value.reservePixels) {
+            Widget childWidget;
+            if (builder == null) {
+              throw FlutterError('当expandPixels>reservePixels为抽屉模式，头不能为空.');
+            }
+            childWidget = builder(indicatorSettings.headerSettings, value,
+                indicatorSettings.scrollDirection);
+            return Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              height: value.expandPixels,
+              child: childWidget,
+            );
+          }
+
           var reservePixels = value.reservePixels;
           var height = max(reservePixels / 2, pixels.abs());
-          var builder = indicatorSettings.headerSettings?.buildChild;
+
           Widget childWidget;
           if (builder != null) {
-            childWidget = builder(indicatorSettings.headerSettings, value,indicatorSettings.scrollDirection);
+            childWidget = builder(indicatorSettings.headerSettings, value,
+                indicatorSettings.scrollDirection);
           } else {
             childWidget = SimpleHeaderView(
               headerNotifier: value,
@@ -153,16 +175,35 @@ abstract class BallisticIndicatorLayout<T extends StatefulWidget>
       builder: (BuildContext context, value, Widget? child) {
         value as HeaderNotifier;
         var pixels = value.position?.pixels ?? 0.0;
-        if(pixels>=(value.position?.maxScrollExtent??0.0)){
+        if (pixels >= (value.position?.maxScrollExtent ?? 0.0)) {
           return _empty();
         }
+
+        var builder = indicatorSettings.headerSettings?.buildChild;
+
+        if ((value.expandPixels ?? 0) > value.reservePixels) {
+          Widget childWidget;
+          if (builder == null) {
+            throw FlutterError('当expandPixels>reservePixels为抽屉模式，头不能为空.');
+          }
+          childWidget = builder(indicatorSettings.headerSettings, value,
+              indicatorSettings.scrollDirection);
+          return Positioned(
+            top: 0,
+            left: 0,
+            bottom: 0,
+            width: value.expandPixels,
+            child: childWidget,
+          );
+        }
+
         var reservePixels = value.reservePixels;
         var width = max(reservePixels / 2, pixels.abs());
 
-        var builder = indicatorSettings.headerSettings?.buildChild;
         Widget childWidget;
         if (builder != null) {
-          childWidget = builder(indicatorSettings.headerSettings, value,indicatorSettings.scrollDirection);
+          childWidget = builder(indicatorSettings.headerSettings, value,
+              indicatorSettings.scrollDirection);
         } else {
           childWidget = SimpleHeaderView(
             headerNotifier: value,
@@ -201,18 +242,38 @@ abstract class BallisticIndicatorLayout<T extends StatefulWidget>
         builder: (BuildContext context, value, Widget? child) {
           value as FooterNotifier;
           var pixels = value.position?.pixels ?? 0.0;
-          if(pixels<=0) {
+          if (pixels <= 0) {
             return _empty();
           }
+
+          var builder = indicatorSettings.footerSettings?.buildChild;
+
+          if ((value.expandPixels ?? 0) > value.reservePixels) {
+            Widget childWidget;
+            if (builder == null) {
+              throw FlutterError(
+                  '当expandPixels>reservePixels为抽屉模式，footer不能为空.');
+            }
+            childWidget = builder(indicatorSettings.footerSettings, value,
+                indicatorSettings.scrollDirection);
+            return Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              height: value.expandPixels,
+              child: childWidget,
+            );
+          }
+
           var reservePixels = value.reservePixels;
           var maxScrollExtent = (value.position?.maxScrollExtent ?? 0.0).abs();
           var height =
               max(reservePixels / 2, (pixels.abs() - maxScrollExtent).abs());
 
-          var builder = indicatorSettings.footerSettings?.buildChild;
           Widget childWidget;
           if (builder != null) {
-            childWidget = builder(indicatorSettings.footerSettings, value,indicatorSettings.scrollDirection);
+            childWidget = builder(indicatorSettings.footerSettings, value,
+                indicatorSettings.scrollDirection);
           } else {
             childWidget = SimpleFooterView(
               scrollDirection: indicatorSettings.scrollDirection,
@@ -239,15 +300,35 @@ abstract class BallisticIndicatorLayout<T extends StatefulWidget>
       builder: (BuildContext context, value, Widget? child) {
         value as FooterNotifier;
         var pixels = value.position?.pixels ?? 0.0;
-        if(pixels<=0) {
+        if (pixels <= 0) {
           return _empty();
+        }
+
+        var builder = indicatorSettings.footerSettings?.buildChild;
+
+        if ((value.expandPixels ?? 0) > value.reservePixels) {
+          Widget childWidget;
+          if (builder == null) {
+            throw FlutterError('当expandPixels>reservePixels为抽屉模式，footer不能为空.');
+          }
+          childWidget = builder(indicatorSettings.footerSettings, value,
+              indicatorSettings.scrollDirection);
+          return Positioned(
+            bottom: 0,
+            right: 0,
+            top: 0,
+            width: value.expandPixels,
+            child: Container(
+              child: childWidget,
+            ),
+          );
         }
         var reservePixels = value.reservePixels;
         var width = max(reservePixels / 2, pixels.abs());
-        var builder = indicatorSettings.footerSettings?.buildChild;
         Widget childWidget;
         if (builder != null) {
-          childWidget = builder(indicatorSettings.footerSettings, value,indicatorSettings.scrollDirection);
+          childWidget = builder(indicatorSettings.footerSettings, value,
+              indicatorSettings.scrollDirection);
         } else {
           childWidget = SimpleFooterView(
             scrollDirection: indicatorSettings.scrollDirection,

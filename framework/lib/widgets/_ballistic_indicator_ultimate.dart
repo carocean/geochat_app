@@ -348,19 +348,21 @@ class HeaderNotifier extends IndicatorNotifier {
       _processRefresh().then((value) async {
         this.scrollState = ScrollState.underScrollRefreshDone;
         notifyListeners();
-        //为了看清状态delayed后再收起
-        await Future.delayed(
-          const Duration(milliseconds: 500),
-        );
-        this.scrollState = ScrollState.underScrollCollapsing;
-        notifyListeners();
-        await scrollController?.animateTo(
-          position.minScrollExtent,
-          curve: Curves.bounceInOut,
-          duration: const Duration(milliseconds: 400),
-        );
-        this.scrollState = ScrollState.underScrollCollapseDone;
-        notifyListeners();
+        if(reservePixels>=(expandPixels??0)) {
+          //为了看清状态delayed后再收起
+          await Future.delayed(
+            const Duration(milliseconds: 500),
+          );
+          this.scrollState = ScrollState.underScrollCollapsing;
+          notifyListeners();
+          await scrollController?.animateTo(
+            position.minScrollExtent,
+            curve: Curves.bounceInOut,
+            duration: const Duration(milliseconds: 400),
+          );
+          this.scrollState = ScrollState.underScrollCollapseDone;
+          notifyListeners();
+        }
       });
     }
   }
@@ -431,21 +433,23 @@ class FooterNotifier extends IndicatorNotifier {
       _processLoad().then((value) async {
         this.scrollState = ScrollState.overScrollLoadDone;
         notifyListeners();
-        //为了看清状态delayed后再收起
-        await Future.delayed(
-          const Duration(
-            milliseconds: 200,
-          ),
-        );
-        this.scrollState = ScrollState.overScrollCollapsing;
-        notifyListeners();
-        await scrollController?.animateTo(
-          scrollController?.position.maxScrollExtent ?? 0.0,
-          curve: Curves.bounceInOut,
-          duration: const Duration(milliseconds: 500),
-        );
-        this.scrollState = ScrollState.overScrollCollapseDone;
-        notifyListeners();
+        if(reservePixels>=(expandPixels??0)) {
+          //为了看清状态delayed后再收起
+          await Future.delayed(
+            const Duration(
+              milliseconds: 200,
+            ),
+          );
+          this.scrollState = ScrollState.overScrollCollapsing;
+          notifyListeners();
+          await scrollController?.animateTo(
+            scrollController?.position.maxScrollExtent ?? 0.0,
+            curve: Curves.bounceInOut,
+            duration: const Duration(milliseconds: 500),
+          );
+          this.scrollState = ScrollState.overScrollCollapseDone;
+          notifyListeners();
+        }
       });
     }
   }

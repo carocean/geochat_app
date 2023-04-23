@@ -183,9 +183,26 @@ class IndicatorScrollPhysics extends ScrollPhysics {
           position, ScrollState.underScrollEnd, position.pixels);
       return null;
     }
+    if (headerNotifier.scrollMode == IndicatorScrollMode.interact &&
+        (headerNotifier.expandPixels ?? 0) > headerNotifier.reservePixels &&
+        position.pixels == -(headerNotifier.expandPixels ?? 0)) {
+      //抽屉头部已到达边界
+      headerNotifier.updatePosition(
+          position, ScrollState.underScrollEnd, position.pixels);
+      return null;
+    }
     if (footerNotifier.scrollMode == IndicatorScrollMode.interact &&
         position.pixels ==
             position.maxScrollExtent + footerNotifier.reservePixels) {
+      footerNotifier.updatePosition(
+          position, ScrollState.overScrollEnd, position.pixels);
+      return null;
+    }
+    if (footerNotifier.scrollMode == IndicatorScrollMode.interact &&
+        (footerNotifier.expandPixels ?? 0) > footerNotifier.reservePixels &&
+        position.pixels ==
+            position.maxScrollExtent + (footerNotifier.expandPixels ?? 0)) {
+      //抽屉尾部已到达边界
       footerNotifier.updatePosition(
           position, ScrollState.overScrollEnd, position.pixels);
       return null;
@@ -218,7 +235,10 @@ class IndicatorScrollPhysics extends ScrollPhysics {
         break;
     }
 
+    //velocity：下滑为负，上滑为正
+    //拉的太过回弹到边界处
     if (headerNotifier.scrollMode == IndicatorScrollMode.interact &&
+        headerNotifier.reservePixels >= (headerNotifier.expandPixels ?? 0) &&
         position.pixels < -headerNotifier.reservePixels) {
       return BouncingScrollSimulation(
         spring: spring,
@@ -231,7 +251,43 @@ class IndicatorScrollPhysics extends ScrollPhysics {
       );
     }
 
+    //如果是抽屉
+    // 此是头部。
+    // velocity正值是上滑，负值下滑
+    //velocity小于一定的值让手势有涨力
+    if (headerNotifier.scrollMode == IndicatorScrollMode.interact &&
+        headerNotifier.reservePixels < (headerNotifier.expandPixels ?? 0) &&
+        position.pixels < 0 /*表示仅作用于头部*/ &&
+        (velocity <= 2000)) {
+      //让过预备区有粘度
+      if (position.pixels > -headerNotifier.reservePixels) {
+        return BouncingScrollSimulation(
+          spring: spring,
+          position: position.pixels,
+          velocity: velocity,
+          leadingExtent: position.minScrollExtent,
+          trailingExtent: position.maxScrollExtent,
+          tolerance: tolerance,
+          constantDeceleration: constantDeceleration,
+        );
+      }
+      //没到达边界，滚动到边界处
+      velocity = -3000.00;
+      return BouncingScrollSimulation(
+        spring: spring,
+        position: position.pixels,
+        velocity: velocity,
+        leadingExtent: -(headerNotifier.expandPixels??0),
+        trailingExtent: position.maxScrollExtent,
+        tolerance: tolerance,
+        constantDeceleration: constantDeceleration,
+      );
+    }
+
+    //velocity：下滑为负，上滑为正
+    //拉的太过回弹到边界处
     if (footerNotifier.scrollMode == IndicatorScrollMode.interact &&
+        footerNotifier.reservePixels >= (footerNotifier.expandPixels ?? 0) &&
         position.pixels >
             position.maxScrollExtent + footerNotifier.reservePixels) {
       return BouncingScrollSimulation(
@@ -244,7 +300,40 @@ class IndicatorScrollPhysics extends ScrollPhysics {
         constantDeceleration: constantDeceleration,
       );
     }
-
+    //如果是抽屉
+    // 此是尾部。
+    // velocity正值是上滑，负值下滑
+    //velocity小于一定的值让手势有涨力
+    if (footerNotifier.scrollMode == IndicatorScrollMode.interact &&
+        footerNotifier.reservePixels < (footerNotifier.expandPixels ?? 0) &&
+        position.pixels > 0 /*表示仅作用于尾部*/ &&
+        (velocity >= -2000)) {
+      //让过预备区有粘度
+      if (position.pixels <
+          position.maxScrollExtent + footerNotifier.reservePixels) {
+        return BouncingScrollSimulation(
+          spring: spring,
+          position: position.pixels,
+          velocity: velocity,
+          leadingExtent: position.minScrollExtent,
+          trailingExtent: position.maxScrollExtent,
+          tolerance: tolerance,
+          constantDeceleration: constantDeceleration,
+        );
+      }
+      //没到达边界，滚动到边界处
+      velocity = 3000.00;
+      return BouncingScrollSimulation(
+        spring: spring,
+        position: position.pixels,
+        velocity: velocity,
+        leadingExtent: position.minScrollExtent,
+        trailingExtent:
+            position.maxScrollExtent + (footerNotifier.expandPixels ?? 0),
+        tolerance: tolerance,
+        constantDeceleration: constantDeceleration,
+      );
+    }
     return BouncingScrollSimulation(
       spring: spring,
       position: position.pixels,

@@ -22,6 +22,7 @@ class _ContactsPageState extends State<ContactsPage>
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
     return BallisticIndicatorSingleChildScrollView(
       parentContext: context,
       isPushContentWhenKeyboardShow: true,
@@ -30,17 +31,25 @@ class _ContactsPageState extends State<ContactsPage>
       navBarHeight: 50,
       headerSettings: HeaderSettings(
         scrollMode: IndicatorScrollMode.interact,
+        expandPixels: _scrollDirection == Axis.vertical
+            ? size.height - 160
+            : size.width - 40,
         reservePixels: 40,
-        // buildChild: (settings, notify,scrollDirection) {
-        //   return const Text('我来了');
-        // },
         buildChild: (settings, notify, scrollDirection) {
-          return DotHeaderView(
-            scrollDirection: scrollDirection,
-            headerSettings: settings,
-            headerNotifier: notify,
+          return Container(
+            color: Colors.red,
+            child: const Center(
+              child: Text('我来了'),
+            ),
           );
         },
+        // buildChild: (settings, notify, scrollDirection) {
+        //   return DotHeaderView(
+        //     scrollDirection: scrollDirection,
+        //     headerSettings: settings,
+        //     headerNotifier: notify,
+        //   );
+        // },
         onRefresh: () async {
           await Future.delayed(
             const Duration(
@@ -53,9 +62,17 @@ class _ContactsPageState extends State<ContactsPage>
       ),
       footerSettings: FooterSettings(
         // scrollMode: IndicatorScrollMode.bouncing,
+        // expandPixels: _scrollDirection == Axis.vertical
+        //     ? size.height - 160
+        //     : size.width - 40,
         reservePixels: 40,
-        // buildChild: (settings, notify) {
-        //   return const Text('我来了');
+        // buildChild: (settings, notify, scrollDirection) {
+        //   return Container(
+        //     color: Colors.amber,
+        //     child: const Center(
+        //       child: Text('我来了'),
+        //     ),
+        //   );
         // },
         buildChild: (settings, notify, scrollDirection) {
           return DotFooterView(
