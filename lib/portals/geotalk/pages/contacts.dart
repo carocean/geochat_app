@@ -1,6 +1,14 @@
+import 'dart:convert';
+
+import 'package:azlistview/azlistview.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:framework/framework.dart';
-import 'package:framework/widgets/_ballistic_indicator_ultimate.dart';
+import 'package:lpinyin/lpinyin.dart';
+
+import '../../../common/azlistview/models.dart';
+import '../../../common/azlistview/utils.dart';
 
 class ContactsPage extends StatefulWidget {
   final PageContext context;
@@ -13,156 +21,118 @@ class ContactsPage extends StatefulWidget {
 
 class _ContactsPageState extends State<ContactsPage>
     with AutomaticKeepAliveClientMixin {
-  double _opacity = 1;
-  Axis? _scrollDirection = Axis.vertical;
+  List<ContactInfo> contactList = [];
+  List<ContactInfo> topList = [];
 
   @override
   // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 
   @override
-  Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-    return BallisticIndicatorSingleChildScrollView(
-      parentContext: context,
-      isPushContentWhenKeyboardShow: true,
-      scrollDirection: _scrollDirection,
-      appBarHeight: 80,
-      navBarHeight: 50,
-      headerSettings: HeaderSettings(
-        scrollMode: IndicatorScrollMode.interact,
-        expandPixels: _scrollDirection == Axis.vertical
-            ? size.height - 160
-            : size.width - 40,
-        reservePixels: 40,
-        buildChild: (settings, notify, scrollDirection) {
-          return Container(
-            color: Colors.red,
-            child: const Center(
-              child: Text('我来了'),
-            ),
-          );
-        },
-        // buildChild: (settings, notify, scrollDirection) {
-        //   return DotHeaderView(
-        //     scrollDirection: scrollDirection,
-        //     headerSettings: settings,
-        //     headerNotifier: notify,
-        //   );
-        // },
-        onRefresh: () async {
-          await Future.delayed(
-            const Duration(
-              milliseconds: 4000,
-            ),
-          ).then((value) {
-            print('========header refresh done.');
-          });
-        },
-      ),
-      footerSettings: FooterSettings(
-        // scrollMode: IndicatorScrollMode.bouncing,
-        // expandPixels: _scrollDirection == Axis.vertical
-        //     ? size.height - 160
-        //     : size.width - 40,
-        reservePixels: 40,
-        // buildChild: (settings, notify, scrollDirection) {
-        //   return Container(
-        //     color: Colors.amber,
-        //     child: const Center(
-        //       child: Text('我来了'),
-        //     ),
-        //   );
-        // },
-        buildChild: (settings, notify, scrollDirection) {
-          return DotFooterView(
-            scrollDirection: scrollDirection,
-            footerNotifier: notify,
-            footerSettings: settings,
-          );
-        },
-        onLoad: () async {
-          await Future.delayed(
-            Duration(
-              milliseconds: 4000,
-            ),
-          ).then((value) {
-            print('========footer load done.');
-          });
-        },
-      ),
-      opacityListener: OpacityListener(
-          opacityEvent: (opacity) {
-            if (mounted) {
-              setState(() {
-                _opacity = opacity;
-              });
-            }
-          },
-          scrollHeight: 96,
-          beginIsOpacity: _opacity == 1 ? false : true),
-      display: Container(
-        color: Colors.yellow,
-        child: Column(
-          children: _rendText(),
-        ),
-      ),
-      positioneds: [
-        Positioned(
-          bottom: 0,
-          left: 0,
-          right: 0,
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.green,
-            ),
-            height: 10,
-          ),
-        ),
-      ],
-    );
+  void initState() {
+    super.initState();
+    topList.add(ContactInfo(
+        name: '新的朋友',
+        tagIndex: '↑',
+        bgColor: Colors.orange,
+        iconData: Icons.person_add));
+    topList.add(ContactInfo(
+        name: '群聊',
+        tagIndex: '↑',
+        bgColor: Colors.green,
+        iconData: Icons.people));
+    topList.add(ContactInfo(
+        name: '广播',
+        tagIndex: '↑',
+        bgColor: Colors.teal,
+        iconData: FontAwesomeIcons.towerBroadcast));
+    topList.add(ContactInfo(
+        name: '现实',
+        tagIndex: '↑',
+        bgColor: Colors.green,
+        iconData: FontAwesomeIcons.streetView));
+    topList.add(ContactInfo(
+        name: '标签',
+        tagIndex: '↑',
+        bgColor: Colors.blue,
+        iconData: Icons.local_offer));
+    loadData();
+  }
+  void loadData() async {
+    //加载联系人列表
+    rootBundle.loadString('lib/common/azlistview/data/car_models.json').then((value) {
+      List list = json.decode(value);
+      list.forEach((v) {
+        contactList.add(ContactInfo.fromJson(v));
+      });
+      _handleList(contactList);
+    });
   }
 
-  _rendText() {
-    List<Widget> items = [];
-    items.add(SizedBox(
-      height: 40,
-    ));
-    items.add(
-      InkWell(
-        onTap: () {
-          setState(() {
-            _scrollDirection = _scrollDirection == Axis.vertical
-                ? Axis.horizontal
-                : Axis.vertical;
-          });
-        },
-        child: Text('排列：${_scrollDirection == Axis.vertical ? '垂直' : '水平'}'),
-      ),
-    );
-    items.add(SizedBox(
-      height: 40,
-    ));
-    for (int i = 0; i < 10; i++) {
-      items.add(Container(
-        color: Colors.red.withOpacity(_opacity),
-        child: Text('是一行:$i'),
-      ));
+  void _handleList(List<ContactInfo> list) {
+    if (list.isEmpty) return;
+    for (int i = 0, length = list.length; i < length; i++) {
+      String pinyin = PinyinHelper.getPinyinE(list[i].name);
+      String tag = pinyin.substring(0, 1).toUpperCase();
+      list[i].namePinyin = pinyin;
+      if (RegExp("[A-Z]").hasMatch(tag)) {
+        list[i].tagIndex = tag;
+      } else {
+        list[i].tagIndex = "#";
+      }
     }
-    items.add(
-      SizedBox(
-        width: 200,
-        child: TextField(
-          decoration: InputDecoration(
-            hintText: '输入',
+    // A-Z sort.
+    SuspensionUtil.sortListBySuspensionTag(contactList);
+
+    // show sus tag.
+    SuspensionUtil.setShowSuspensionStatus(contactList);
+
+    // add topList.
+    contactList.insertAll(0, topList);
+
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AzListView(
+      data: contactList,
+      itemCount: contactList.length,
+      itemBuilder: (BuildContext context, int index) {
+        ContactInfo model = contactList[index];
+        return Utils.getWeChatListItem(
+          context,
+          model,
+          defHeaderBgColor: Color(0xFFE5E5E5),
+        );
+      },
+      physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+      susItemBuilder: (BuildContext context, int index) {
+        ContactInfo model = contactList[index];
+        if ('↑' == model.getSuspensionTag()) {
+          return Container();
+        }
+        return Utils.getSusItem(context, model.getSuspensionTag());
+      },
+      indexBarData: ['↑', '☆', ...kIndexBarData],
+      indexBarOptions: IndexBarOptions(
+        needRebuild: true,
+        ignoreDragCancel: true,
+        downTextStyle: TextStyle(fontSize: 12, color: Colors.white),
+        downItemDecoration:
+        BoxDecoration(shape: BoxShape.circle, color: Colors.green),
+        indexHintWidth: 120 / 2,
+        indexHintHeight: 100 / 2,
+        indexHintDecoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(Utils.getImgPath('ic_index_bar_bubble_gray')),
+            fit: BoxFit.contain,
           ),
         ),
+        indexHintAlignment: Alignment.centerRight,
+        indexHintChildAlignment: Alignment(-0.25, 0.0),
+        indexHintOffset: Offset(-20, 0),
       ),
     );
-    items.add(Container(
-      height: 40,
-      color: Colors.grey,
-    ));
-    return items;
   }
 }

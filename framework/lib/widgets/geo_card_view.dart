@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:framework/core_lib/_ultimate.dart';
 
@@ -15,7 +14,7 @@ class SimpleCardView extends StatelessWidget {
       valueListenable: _items,
       builder: (context, value, child) {
         if (value.isEmpty) {
-          return SizedBox.shrink();
+          return const SizedBox.shrink();
         }
         var items = <Widget>[];
         for (var i = 0; i < value.length; i++) {
@@ -23,7 +22,7 @@ class SimpleCardView extends StatelessWidget {
           items.add(_rendRow(row));
           if (i < value.length - 1) {
             items.add(
-              Divider(
+              const Divider(
                 height: 1,
                 indent: 50,
               ),
@@ -31,14 +30,14 @@ class SimpleCardView extends StatelessWidget {
           }
         }
         return Container(
-          margin: EdgeInsets.only(
+          margin: const EdgeInsets.only(
             left: 10,
             right: 10,
           ),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(10),
-            boxShadow: [
+            boxShadow: const [
               BoxShadow(
                 color: Color(0xFFefefef),
                 blurRadius: 2,
@@ -56,7 +55,7 @@ class SimpleCardView extends StatelessWidget {
 
   Widget _rendRow(SimpleCardViewItem e) {
     return Padding(
-      padding: EdgeInsets.only(
+      padding: const EdgeInsets.only(
         top: 15,
         bottom: 15,
         left: 10,
@@ -65,7 +64,7 @@ class SimpleCardView extends StatelessWidget {
       child: Row(
         children: [
           e.icon,
-          SizedBox(
+          const SizedBox(
             width: 15,
           ),
           Expanded(
@@ -73,10 +72,10 @@ class SimpleCardView extends StatelessWidget {
               children: _renderRowContent(e),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
-          Icon(
+          const Icon(
             Icons.arrow_forward_ios,
             size: 14,
             color: Color(0xFFc3c3c4),
@@ -94,7 +93,7 @@ class SimpleCardView extends StatelessWidget {
         Expanded(
           child: Text(
             e.title,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 16,
             ),
           ),
@@ -105,7 +104,7 @@ class SimpleCardView extends StatelessWidget {
         Text(e.title),
       );
       items.add(
-        SizedBox(
+        const SizedBox(
           width: 10,
         ),
       );
