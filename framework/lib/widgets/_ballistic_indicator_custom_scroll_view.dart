@@ -15,10 +15,10 @@ class BallisticIndicatorCustomScrollView extends StatefulWidget {
   FooterSettings? footerSettings;
   SliverAppBar? appBar;
   Widget? upDisplay;
+
   ///低部导航栏高度
   double? navBarHeight;
   final BallisticSliverPersistentHeader? persistentHeader;
-
 
   ///当键盘在输入框聚焦弹出时，是否上推内容
   late bool? isPushContentWhenKeyboardShow;
@@ -40,11 +40,14 @@ class BallisticIndicatorCustomScrollView extends StatefulWidget {
     this.headerSettings,
     this.footerSettings,
   }) : super(key: key);
+
   @override
-  State<BallisticIndicatorCustomScrollView> createState() => _BallisticIndicatorCustomScrollViewState();
+  State<BallisticIndicatorCustomScrollView> createState() =>
+      _BallisticIndicatorCustomScrollViewState();
 }
 
-class _BallisticIndicatorCustomScrollViewState extends BallisticIndicatorLayout<BallisticIndicatorCustomScrollView> {
+class _BallisticIndicatorCustomScrollViewState
+    extends BallisticIndicatorLayout<BallisticIndicatorCustomScrollView> {
   @override
   void initState() {
     super.initState();
@@ -52,7 +55,25 @@ class _BallisticIndicatorCustomScrollViewState extends BallisticIndicatorLayout<
         .bindHeaderSettings(widget.headerSettings)
         .bindFooterSettings(widget.footerSettings)
         .bindScrollDirection(widget.scrollDirection)
-        .build(widget.scrollController);
+        .build(
+          scrollController: widget.scrollController,
+          footerExpandPanelStateEvent: (state) {
+            if ((state == ExpandPanelState.opened ||
+                state == ExpandPanelState.closed)) {
+              if (mounted) {
+                setState(() {});
+              }
+            }
+          },
+          headerExpandPanelStateEvent: (state) {
+            if ((state == ExpandPanelState.opened ||
+                state == ExpandPanelState.closed)) {
+              if (mounted) {
+                setState(() {});
+              }
+            }
+          },
+        );
     super.isPushContentWhenKeyboardShow = widget.isPushContentWhenKeyboardShow;
     widget.opacityListener
         ?.setScrollController(indicatorSettings.scrollController);
@@ -92,15 +113,30 @@ class _BallisticIndicatorCustomScrollViewState extends BallisticIndicatorLayout<
     }
     super.didUpdateWidget(oldWidget);
   }
+
   @override
   Widget build(BuildContext context) {
     List<Widget> children = [];
     Widget content = buildContent();
     Widget header = buildHeaderView();
     Widget footer = buildFooterView();
-    children.add(header);
-    children.add(footer);
-    children.add(content);
+    var headerState = indicatorSettings.headerNotifier.expandPanelState;
+    var footerState = indicatorSettings.footerNotifier.expandPanelState;
+    // print(':::::headerState=$headerState');
+    // print(':::::footerState=$footerState');
+    if (headerState == ExpandPanelState.opened) {
+      children.add(footer);
+      children.add(content);
+      children.add(header);
+    } else if (footerState == ExpandPanelState.opened) {
+      children.add(header);
+      children.add(content);
+      children.add(footer);
+    } else {
+      children.add(header);
+      children.add(footer);
+      children.add(content);
+    }
     return SizedBox.expand(
       child: Stack(
         fit: StackFit.passthrough,
@@ -114,6 +150,7 @@ class _BallisticIndicatorCustomScrollViewState extends BallisticIndicatorLayout<
       behavior: indicatorSettings.scrollBehavior,
       child: SizedBox.expand(
         child: CustomScrollView(
+          key: scrollViewKey,
           scrollDirection: indicatorSettings.scrollDirection,
           controller: indicatorSettings.scrollController,
           slivers: [
@@ -126,18 +163,18 @@ class _BallisticIndicatorCustomScrollViewState extends BallisticIndicatorLayout<
             ),
             widget.persistentHeader == null
                 ? const SliverToBoxAdapter(
-              child: SizedBox.shrink(),
-            )
+                    child: SizedBox.shrink(),
+                  )
                 : SliverPersistentHeader(
-              delegate: BallisticSliverPersistentHeaderDelegate(
-                buildPersistentHeader:
-                widget.persistentHeader!.buildPersistentHeader,
-                maxExtent: widget.persistentHeader!.maxExtent,
-                minExtent: widget.persistentHeader!.minExtent,
-              ),
-              floating: widget.persistentHeader!.floating ?? false,
-              pinned: widget.persistentHeader!.pinned ?? true,
-            ),
+                    delegate: BallisticSliverPersistentHeaderDelegate(
+                      buildPersistentHeader:
+                          widget.persistentHeader!.buildPersistentHeader,
+                      maxExtent: widget.persistentHeader!.maxExtent,
+                      minExtent: widget.persistentHeader!.minExtent,
+                    ),
+                    floating: widget.persistentHeader!.floating ?? false,
+                    pinned: widget.persistentHeader!.pinned ?? true,
+                  ),
             SliverLayoutBuilder(
               builder: (cxt, constraints) {
                 return SliverToBoxAdapter(

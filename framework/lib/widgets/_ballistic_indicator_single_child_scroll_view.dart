@@ -45,6 +45,7 @@ class BallisticIndicatorSingleChildScrollView extends StatefulWidget {
 
 class _BallisticIndicatorSingleChildScrollViewState
     extends BallisticIndicatorLayout<BallisticIndicatorSingleChildScrollView> {
+
   @override
   void initState() {
     super.initState();
@@ -52,7 +53,25 @@ class _BallisticIndicatorSingleChildScrollViewState
         .bindHeaderSettings(widget.headerSettings)
         .bindFooterSettings(widget.footerSettings)
         .bindScrollDirection(widget.scrollDirection)
-        .build(widget.scrollController);
+        .build(
+          scrollController: widget.scrollController,
+          footerExpandPanelStateEvent: (state) {
+            if ((state == ExpandPanelState.opened ||
+                state == ExpandPanelState.closed)) {
+              if (mounted) {
+                setState(() {});
+              }
+            }
+          },
+          headerExpandPanelStateEvent: (state) {
+            if ((state == ExpandPanelState.opened ||
+                state == ExpandPanelState.closed)) {
+              if (mounted) {
+                setState(() {});
+              }
+            }
+          },
+        );
 
     super.isPushContentWhenKeyboardShow = widget.isPushContentWhenKeyboardShow;
     widget.opacityListener
@@ -104,9 +123,22 @@ class _BallisticIndicatorSingleChildScrollViewState
     Widget content = buildContent();
     Widget header = buildHeaderView();
     Widget footer = buildFooterView();
-    children.add(header);
-    children.add(footer);
-    children.add(content);
+
+    var headerState = indicatorSettings.headerNotifier.expandPanelState;
+    var footerState = indicatorSettings.footerNotifier.expandPanelState;
+    if (headerState == ExpandPanelState.opened) {
+      children.add(footer);
+      children.add(content);
+      children.add(header);
+    } else if (footerState == ExpandPanelState.opened) {
+      children.add(header);
+      children.add(content);
+      children.add(footer);
+    } else {
+      children.add(header);
+      children.add(footer);
+      children.add(content);
+    }
     return SizedBox.expand(
       child: Stack(
         fit: StackFit.passthrough,
@@ -120,6 +152,7 @@ class _BallisticIndicatorSingleChildScrollViewState
       behavior: indicatorSettings.scrollBehavior,
       child: SizedBox.expand(
         child: SingleChildScrollView(
+          key: scrollViewKey,
           scrollDirection: indicatorSettings.scrollDirection,
           controller: indicatorSettings.scrollController,
           child: ConstrainedBox(

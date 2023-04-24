@@ -57,7 +57,25 @@ class _BallisticIndicatorNestedScrollViewState
         .bindHeaderSettings(widget.headerSettings)
         .bindFooterSettings(widget.footerSettings)
         .bindScrollDirection(widget.scrollDirection)
-        .build(widget.scrollController);
+        .build(
+      scrollController:  widget.scrollController,
+      footerExpandPanelStateEvent: (state) {
+        if ((state == ExpandPanelState.opened ||
+            state == ExpandPanelState.closed)) {
+          if (mounted) {
+            setState(() {});
+          }
+        }
+      },
+      headerExpandPanelStateEvent: (state) {
+        if ((state == ExpandPanelState.opened ||
+            state == ExpandPanelState.closed)) {
+          if (mounted) {
+            setState(() {});
+          }
+        }
+      },
+    );
     _nestedScrollController = ScrollController();
     indicatorSettings.scrollController.addListener(() {
       //内容不足屏时有冲突，没容出屏时正常，当上拉加载时整屏上移了，导致内容区域变化，下边界触不到，一种可设高上边界，一种可在此设置手热触摸才上滚：indicatorSettings.userOffsetNotifier
@@ -159,9 +177,24 @@ class _BallisticIndicatorNestedScrollViewState
     Widget content = buildContent();
     Widget header = buildHeaderView();
     Widget footer = buildFooterView();
-    children.add(header);
-    children.add(footer);
-    children.add(content);
+    var headerState = indicatorSettings.headerNotifier.expandPanelState;
+    var footerState = indicatorSettings.footerNotifier.expandPanelState;
+    // print(':::::headerState=$headerState');
+    // print(':::::footerState=$footerState');
+    if (headerState == ExpandPanelState.opened) {
+      children.add(footer);
+      children.add(content);
+      children.add(header);
+    } else if (footerState == ExpandPanelState.opened) {
+      children.add(header);
+      children.add(content);
+      children.add(footer);
+    } else {
+      children.add(header);
+      children.add(footer);
+      children.add(content);
+    }
+
     return SizedBox.expand(
       child: Stack(
         fit: StackFit.passthrough,
@@ -175,6 +208,7 @@ class _BallisticIndicatorNestedScrollViewState
       behavior: indicatorSettings.scrollBehavior,
       child: SizedBox.expand(
         child: SingleChildScrollView(
+          key: scrollViewKey,
           scrollDirection: indicatorSettings.scrollDirection,
           controller: indicatorSettings.scrollController,
           child: ConstrainedBox(

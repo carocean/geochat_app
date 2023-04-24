@@ -3,12 +3,13 @@
 ///
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:framework/core_lib/_ultimate.dart';
 
 import '_ballistic_indicator_scroll_behavior_physics.dart';
 
-typedef BuildHeaderChild = Widget Function(
-    HeaderSettings? settings, HeaderNotifier headerNotifier,Axis scrollDirection);
+typedef BuildHeaderChild = Widget Function(HeaderSettings? settings,
+    HeaderNotifier headerNotifier, Axis scrollDirection);
 
 enum IndicatorScrollMode {
   ///边界固定不动
@@ -31,8 +32,10 @@ class HeaderSettings
 
   HeaderSettings({
     this.scrollMode = IndicatorScrollMode.interact,
+
     ///头部预定的下滑高度
     this.reservePixels = 50.00,
+
     ///头部扩展的高度。该高度大于reservePixels才生效
     this.expandPixels,
     this.buildChild,
@@ -69,8 +72,8 @@ class HeaderSettings
   }
 }
 
-typedef BuildFooterChild = Widget Function(
-    FooterSettings? settings, FooterNotifier footerNotifier,Axis scrollDirection);
+typedef BuildFooterChild = Widget Function(FooterSettings? settings,
+    FooterNotifier footerNotifier, Axis scrollDirection);
 
 class FooterSettings
     implements IEqualable<FooterSettings>, ICopyable<FooterSettings> {
@@ -82,8 +85,10 @@ class FooterSettings
 
   FooterSettings({
     this.scrollMode = IndicatorScrollMode.interact,
+
     ///尾部预定的上滑高度
     this.reservePixels = 50.00,
+
     ///尾部可扩展高度。只有大于reservePixels时才生效
     this.expandPixels,
     this.buildChild,
@@ -173,7 +178,10 @@ class IndicatorSettings implements IDisposable, IEqualable<IndicatorSettings> {
     return this;
   }
 
-  IndicatorSettings build(ScrollController? scrollController) {
+  IndicatorSettings build(
+      {ScrollController? scrollController,
+      ExpandPanelStateEvent headerExpandPanelStateEvent,
+      ExpandPanelStateEvent footerExpandPanelStateEvent}) {
     this.scrollController = scrollController ?? ScrollController();
 
     headerNotifier = HeaderNotifier(
@@ -184,6 +192,7 @@ class IndicatorSettings implements IDisposable, IEqualable<IndicatorSettings> {
       userOffsetNotifier: userOffsetNotifier,
       onRefresh: headerSettings?.onRefresh,
       scrollState: ScrollState.underScrollInit,
+      expandPanelStateEvent: headerExpandPanelStateEvent,
     );
 
     footerNotifier = FooterNotifier(
@@ -194,6 +203,7 @@ class IndicatorSettings implements IDisposable, IEqualable<IndicatorSettings> {
       userOffsetNotifier: userOffsetNotifier,
       onLoad: footerSettings?.onLoad,
       scrollState: ScrollState.overScrollInit,
+      expandPanelStateEvent: footerExpandPanelStateEvent,
     );
 
     var scrollPhysics = IndicatorScrollPhysics(
@@ -301,7 +311,17 @@ enum ScrollState {
   hitBottomEdge,
 }
 
+enum ExpandPanelState {
+  init,
+  invalid,
+  opening,
+  opened,
+  closing,
+  closed,
+}
+
 typedef HeaderOnRefresh = Future<void> Function();
+typedef ExpandPanelStateEvent = Function(ExpandPanelState? state)?;
 
 class HeaderNotifier extends IndicatorNotifier {
   double reservePixels;
@@ -313,6 +333,8 @@ class HeaderNotifier extends IndicatorNotifier {
   HeaderOnRefresh? onRefresh;
   final ScrollController? scrollController;
   final ValueNotifier<bool> userOffsetNotifier;
+  ExpandPanelState? expandPanelState;
+  ExpandPanelStateEvent expandPanelStateEvent;
 
   HeaderNotifier({
     this.reservePixels = 0.0,
@@ -324,6 +346,8 @@ class HeaderNotifier extends IndicatorNotifier {
     this.onRefresh,
     this.scrollController,
     required this.userOffsetNotifier,
+    this.expandPanelState = ExpandPanelState.init,
+    this.expandPanelStateEvent,
   });
 
   void updatePosition(
@@ -345,14 +369,31 @@ class HeaderNotifier extends IndicatorNotifier {
         this.scrollState = scrollState;
       }
     }
-    notifyListeners();
+
+    //处理抽屉模式
+    if (position.pixels <= position.minScrollExtent &&
+        (expandPixels ?? 0) > reservePixels) {
+      _translateToExpandState(position, scrollState, value);
+      if (expandPanelStateEvent != null) {
+        SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+          expandPanelStateEvent!(expandPanelState);
+        });
+      }
+    }
+
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+      notifyListeners();
+    });
+
     if (scrollState == ScrollState.underScrollEnd) {
       this.scrollState = ScrollState.underScrollRefreshing;
-      notifyListeners();
+      SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+        notifyListeners();
+      });
       _processRefresh().then((value) async {
         this.scrollState = ScrollState.underScrollRefreshDone;
         notifyListeners();
-        if(reservePixels>=(expandPixels??0)) {
+        if (reservePixels >= (expandPixels ?? 0)) {
           //为了看清状态delayed后再收起
           await Future.delayed(
             const Duration(milliseconds: 500),
@@ -368,6 +409,45 @@ class HeaderNotifier extends IndicatorNotifier {
           notifyListeners();
         }
       });
+    }
+  }
+
+  void _translateToExpandState(
+      ScrollMetrics position, ScrollState state, double value) {
+    switch (state) {
+      case ScrollState.underScrollInit:
+        expandPanelState = ExpandPanelState.init;
+        break;
+      case ScrollState.underScrolling:
+        expandPanelState = ExpandPanelState.opening;
+        break;
+      case ScrollState.underScrollEnd:
+        expandPanelState = ExpandPanelState.opened;
+        break;
+      case ScrollState.underScrollCollapsing:
+        expandPanelState = ExpandPanelState.closing;
+        break;
+      case ScrollState.underScrollCollapseDone:
+        expandPanelState = ExpandPanelState.closed;
+        break;
+      case ScrollState.sliding:
+        expandPanelState ??= ExpandPanelState.init;
+        if (expandPanelState == ExpandPanelState.closed ||
+            expandPanelState == ExpandPanelState.init ||
+            expandPanelState == ExpandPanelState.invalid) {
+          expandPanelState = ExpandPanelState.opening;
+          break;
+        }
+        if (expandPanelState == ExpandPanelState.opened) {
+          expandPanelState = ExpandPanelState.closing;
+          break;
+        }
+        if (expandPanelState == ExpandPanelState.opening &&
+            value == position.minScrollExtent) {
+          expandPanelState = ExpandPanelState.invalid;
+          break;
+        }
+        break;
     }
   }
 
@@ -398,6 +478,8 @@ class FooterNotifier extends IndicatorNotifier {
   FooterOnLoad? onLoad;
   final ScrollController? scrollController;
   final ValueNotifier<bool> userOffsetNotifier;
+  ExpandPanelState? expandPanelState;
+  ExpandPanelStateEvent expandPanelStateEvent;
 
   FooterNotifier({
     this.reservePixels = 0.0,
@@ -409,6 +491,8 @@ class FooterNotifier extends IndicatorNotifier {
     this.onLoad,
     this.scrollController,
     required this.userOffsetNotifier,
+    this.expandPanelState = ExpandPanelState.init,
+    this.expandPanelStateEvent,
   });
 
   void updatePosition(
@@ -430,14 +514,30 @@ class FooterNotifier extends IndicatorNotifier {
         this.scrollState = scrollState;
       }
     }
-    notifyListeners();
+    //抽屉模式
+    if (position.pixels >= position.maxScrollExtent &&
+        (expandPixels ?? 0) > reservePixels) {
+      _translateToExpandState(position, scrollState, value);
+      if (expandPanelStateEvent != null) {
+        SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+          expandPanelStateEvent!(expandPanelState);
+        });
+      }
+    }
+
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+      notifyListeners();
+    });
+
     if (scrollState == ScrollState.overScrollEnd) {
       this.scrollState = ScrollState.overScrollLoading;
-      notifyListeners();
+      SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+        notifyListeners();
+      });
       _processLoad().then((value) async {
         this.scrollState = ScrollState.overScrollLoadDone;
         notifyListeners();
-        if(reservePixels>=(expandPixels??0)) {
+        if (reservePixels >= (expandPixels ?? 0)) {
           //为了看清状态delayed后再收起
           await Future.delayed(
             const Duration(
@@ -455,6 +555,45 @@ class FooterNotifier extends IndicatorNotifier {
           notifyListeners();
         }
       });
+    }
+  }
+
+  void _translateToExpandState(
+      ScrollMetrics position, ScrollState state, double value) {
+    switch (state) {
+      case ScrollState.overScrollInit:
+        expandPanelState = ExpandPanelState.init;
+        break;
+      case ScrollState.overScrolling:
+        expandPanelState = ExpandPanelState.opening;
+        break;
+      case ScrollState.overScrollEnd:
+        expandPanelState = ExpandPanelState.opened;
+        break;
+      case ScrollState.overScrollCollapsing:
+        expandPanelState = ExpandPanelState.closing;
+        break;
+      case ScrollState.overScrollCollapseDone:
+        expandPanelState = ExpandPanelState.closed;
+        break;
+      case ScrollState.sliding:
+        expandPanelState ??= ExpandPanelState.init;
+        if (expandPanelState == ExpandPanelState.closed ||
+            expandPanelState == ExpandPanelState.init ||
+            expandPanelState == ExpandPanelState.invalid) {
+          expandPanelState = ExpandPanelState.opening;
+          break;
+        }
+        if (expandPanelState == ExpandPanelState.opened) {
+          expandPanelState = ExpandPanelState.closing;
+          break;
+        }
+        if (expandPanelState == ExpandPanelState.opening &&
+            value == position.maxScrollExtent) {
+          expandPanelState = ExpandPanelState.invalid;
+          break;
+        }
+        break;
     }
   }
 

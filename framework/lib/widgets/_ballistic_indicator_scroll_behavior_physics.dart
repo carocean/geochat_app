@@ -207,6 +207,36 @@ class IndicatorScrollPhysics extends ScrollPhysics {
           position, ScrollState.overScrollEnd, position.pixels);
       return null;
     }
+
+    //判断expand的收缩过程
+    if ((headerNotifier.expandPixels??0) > headerNotifier.reservePixels) {
+      if (velocity > 0 && position.pixels < position.minScrollExtent) {
+        //收缩中
+        headerNotifier.updatePosition(
+            position, ScrollState.underScrollCollapsing, position.pixels);
+      }
+      if (position.pixels == position.minScrollExtent &&
+          headerNotifier.expandPanelState == ExpandPanelState.closing) {
+        //收缩完成
+        headerNotifier.updatePosition(
+            position, ScrollState.underScrollCollapseDone, position.pixels);
+      }
+    }
+    //判断expand的收缩过程
+    if ((footerNotifier.expandPixels??0) > footerNotifier.reservePixels) {
+      if (velocity < 0 && position.pixels > position.maxScrollExtent) {
+        //收缩中
+        footerNotifier.updatePosition(
+            position, ScrollState.overScrollCollapsing, position.pixels);
+      }
+      if (position.pixels == position.maxScrollExtent &&
+          footerNotifier.expandPanelState == ExpandPanelState.closing) {
+        //收缩完成
+        footerNotifier.updatePosition(
+            position, ScrollState.overScrollCollapseDone, position.pixels);
+      }
+    }
+
     final Tolerance tolerance = this.tolerance;
     if (!position.outOfRange) {
       if (velocity.abs() < tolerance.velocity) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:framework/core_lib/_page_context.dart';
 import 'package:geochat_app/portals/geotalk/parts/bottom_navigation_bar.dart';
 import 'package:geochat_app/portals/geotalk/parts/geotalk_part_view.dart';
@@ -69,6 +70,18 @@ class _GeotalkWorkBenchState extends State<GeotalkWorkBench> {
           ),
           centerTitle: true,
           elevation: 0,
+          actions: [
+            IconButton(
+              onPressed: () {},
+              icon: const FaIcon(
+                FontAwesomeIcons.magnifyingGlass,
+              ),
+            ),
+            IconButton(
+              onPressed: () {},
+              icon: const FaIcon(FontAwesomeIcons.userPlus),
+            ),
+          ],
         ),
         bottom: GeoBottomNavigationBarItem(
           icon: const IconData(

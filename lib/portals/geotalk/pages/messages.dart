@@ -1,5 +1,9 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:framework/framework.dart';
+import 'package:framework/widgets/_ballistic_indicator_ultimate.dart';
 import 'package:intl/intl.dart';
 
 import '../../../common/message_session.dart';
@@ -19,23 +23,61 @@ class _MessagesPageState extends State<MessagesPage>
   @override
   // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
+  ScrollController? _scrollController;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _scrollController = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    _scrollController?.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return BallisticSingleChildScrollView(
+    return BallisticIndicatorSingleChildScrollView(
       parentContext: context,
-      display: Column(
-        children: [
-          _rendSearcher(),
-          SizedBox(
-            height: 10,
-          ),
-          _rendTopMessageSessionPanel(),
-          SizedBox(
-            height: 10,
-          ),
-          _rendBodyMessageSessionPanel(),
-        ],
+      scrollController: _scrollController,
+      navBarHeight: 80,
+      appBarHeight: 50 + 34,
+      headerSettings: HeaderSettings(
+          reservePixels: 50,
+          expandPixels: MediaQuery.of(context).size.height - 130,
+          buildChild: (settings, notify, direction) {
+            return _renderExpandPanel();
+          }),
+      footerSettings: FooterSettings(
+          reservePixels: 50.00,
+          // onLoad: ()async{
+          //
+          // },
+          buildChild: (settings, notify, direction) {
+            return DotFooterView(
+              footerSettings: settings,
+              scrollDirection: direction,
+              footerNotifier: notify,
+            );
+          }),
+      display: Container(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        child: Column(
+          children: [
+            _rendSearcher(),
+            SizedBox(
+              height: 10,
+            ),
+            _rendTopMessageSessionPanel(),
+            SizedBox(
+              height: 10,
+            ),
+            _rendBodyMessageSessionPanel(),
+          ],
+        ),
       ),
       positioneds: const [],
     );
@@ -360,8 +402,8 @@ class _MessagesPageState extends State<MessagesPage>
       padding: EdgeInsets.only(
         left: 10,
         right: 10,
-        bottom: 8,
-        top: 8,
+        bottom: 10,
+        top: 10,
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -414,12 +456,12 @@ class _MessagesPageState extends State<MessagesPage>
                         messageSession.text,
                         maxLines: 2,
                         style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey,
+                          fontSize: 12,
+                          color: Colors.grey[400],
                         ),
                         overflow: TextOverflow.ellipsis,
                         strutStyle: StrutStyle(
-                          height: 1.35,
+                          height: 1.20,
                         ),
                       ),
                     ),
@@ -439,6 +481,56 @@ class _MessagesPageState extends State<MessagesPage>
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _renderExpandPanel() {
+    return  Column(
+      children: [
+        Expanded(
+          child: _renderExpandContent(),
+        ),
+        GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onVerticalDragStart: (details) {
+            _scrollController?.animateTo(
+              _scrollController?.position.minScrollExtent??0,
+              duration: const Duration(
+                milliseconds: 300,
+              ),
+              curve: Curves.linear,
+            );
+          },
+
+          child: Container(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            constraints: const BoxConstraints.tightFor(width: double.infinity),
+            alignment: Alignment.center,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 10,bottom: 10,),
+              child: FaIcon(
+                FontAwesomeIcons.circleArrowUp,
+                color: Color(0xFFcecece),
+                size: 16,
+              ),
+            ),
+          ),
+        )
+      ],
+    );
+  }
+
+  _renderExpandContent() {
+    return Container(
+      color: Theme.of(context).scaffoldBackgroundColor,
+      alignment: Alignment.center,
+      child: TextButton(
+        style: const ButtonStyle(foregroundColor: MaterialStatePropertyAll(Colors.grey),),
+        child: Text('测试'),
+        onPressed: (){
+          print(':::::test');
+        },
       ),
     );
   }
