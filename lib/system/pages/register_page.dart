@@ -24,9 +24,8 @@ class _RegisterPageState extends State<RegisterPage> {
       body: BallisticSingleChildScrollView(
         parentContext: context,
         isPushContentWhenKeyboardShow: true,
-        appBarHeight: appBar.preferredSize.height,
         display: Padding(
-          padding: EdgeInsets.only(
+          padding: const EdgeInsets.only(
             left: 15,
             right: 15,
           ),

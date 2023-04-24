@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:framework/widgets/_ballistic_indicator_ultimate.dart';
 import 'package:uuid/uuid.dart';
 
@@ -10,10 +9,8 @@ import '_ballistic_indicator_views.dart';
 ///惯性布局;键盘上推；刷新指示器；抽屉；
 abstract class BallisticIndicatorLayout<T extends StatefulWidget>
     extends State<T> with WidgetsBindingObserver {
-  double _keyboardHeight = 0.0;
   bool? isPushContentWhenKeyboardShow;
 
-  double get keyboardHeight => _keyboardHeight;
 
   late IndicatorSettings _indicatorSettings;
 
@@ -53,58 +50,15 @@ abstract class BallisticIndicatorLayout<T extends StatefulWidget>
             WidgetsBinding.instance.window.devicePixelRatio)
         .bottom;
 
-    // if (kDebugMode) {
-    //   print(viewInsetsBottom);
-    // }
-
-    if (mounted) {
-      setState(() {
-        _keyboardHeight = viewInsetsBottom;
-        SchedulerBinding.instance.addPostFrameCallback((_) {
-          //build完成后的回调
-          var scrollController = _indicatorSettings.scrollController;
-          scrollController.animateTo(
-            scrollController.position.maxScrollExtent,
-            //滚动到底部
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeOut,
-          );
-        });
-      });
+    if(viewInsetsBottom>0) {
+      var scrollController = _indicatorSettings.scrollController;
+      scrollController.animateTo(
+        scrollController.position.maxScrollExtent,
+        //滚动到底部
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
     }
-  }
-
-  ///这里除去了状态栏、和键盘，但如有标题栏和底部导航栏则要除去。
-  double scrollViewHeight(double? appBarHeight, double? navBarHeight,
-      {BuildContext? parentContext}) {
-    var context = parentContext ?? this.context;
-    appBarHeight ??= 0.0;
-    navBarHeight ??= 0.0;
-    var scrollViewHeight = 0.0;
-    if (appBarHeight > 0) {
-      //有标题栏 说明context获取的高度是内容区的高度，非整屏
-      if (_keyboardHeight > 0) {
-        //弹出了键盘
-        scrollViewHeight = (MediaQuery.of(context).size.height + navBarHeight) -
-            _keyboardHeight;
-      } else {
-        //没弹出键盘
-        scrollViewHeight = MediaQuery.of(context).size.height -
-            MediaQuery.of(context).padding.top -
-            appBarHeight -
-            navBarHeight;
-      }
-      return scrollViewHeight;
-    }
-    //其下是没有标题栏，即context是全屏
-    scrollViewHeight = (MediaQuery.of(context).size.height + 50) -
-        MediaQuery.of(context).padding.top -
-        MediaQuery.of(context).padding.bottom -
-        appBarHeight -
-        navBarHeight -
-        _keyboardHeight;
-
-    return scrollViewHeight;
   }
 
   Widget buildHeaderView() {

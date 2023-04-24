@@ -13,12 +13,6 @@ class BallisticIndicatorSingleChildScrollView extends StatefulWidget {
   HeaderSettings? headerSettings;
   FooterSettings? footerSettings;
 
-  ///标题栏高度
-  double? appBarHeight;
-
-  ///低部导航栏高度
-  double? navBarHeight;
-
   ///当键盘在输入框聚焦弹出时，是否上推内容
   late bool? isPushContentWhenKeyboardShow;
   Axis? scrollDirection;
@@ -27,8 +21,6 @@ class BallisticIndicatorSingleChildScrollView extends StatefulWidget {
     Key? key,
     required this.parentContext,
     this.scrollController,
-    this.appBarHeight,
-    this.navBarHeight,
     required this.display,
     this.scrollDirection,
     this.positioneds = const <Positioned>[],
@@ -45,7 +37,6 @@ class BallisticIndicatorSingleChildScrollView extends StatefulWidget {
 
 class _BallisticIndicatorSingleChildScrollViewState
     extends BallisticIndicatorLayout<BallisticIndicatorSingleChildScrollView> {
-
   @override
   void initState() {
     super.initState();
@@ -86,9 +77,6 @@ class _BallisticIndicatorSingleChildScrollViewState
 
   @override
   void didUpdateWidget(BallisticIndicatorSingleChildScrollView oldWidget) {
-    if (oldWidget.appBarHeight != widget.appBarHeight) {
-      oldWidget.appBarHeight = widget.appBarHeight;
-    }
     if (oldWidget.headerSettings == widget.headerSettings) {
       oldWidget.headerSettings = widget.headerSettings;
     }
@@ -151,25 +139,27 @@ class _BallisticIndicatorSingleChildScrollViewState
     var child = ScrollConfiguration(
       behavior: indicatorSettings.scrollBehavior,
       child: SizedBox.expand(
-        child: SingleChildScrollView(
-          key: scrollViewKey,
-          scrollDirection: indicatorSettings.scrollDirection,
-          controller: indicatorSettings.scrollController,
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              minHeight: scrollViewHeight(
-                  widget.appBarHeight ?? 96, widget.navBarHeight ?? 50,
-                  parentContext: widget.parentContext),
-              minWidth: MediaQuery.of(context).size.width,
-            ),
-            child: Stack(
-              fit: StackFit.passthrough,
-              children: [
-                widget.display,
-                ...widget.positioneds ?? [],
-              ],
-            ),
-          ),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              key: scrollViewKey,
+              scrollDirection: indicatorSettings.scrollDirection,
+              controller: indicatorSettings.scrollController,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: constraints.maxHeight,
+                  minWidth: constraints.maxWidth,
+                ),
+                child: Stack(
+                  fit: StackFit.passthrough,
+                  children: [
+                    widget.display,
+                    ...widget.positioneds ?? [],
+                  ],
+                ),
+              ),
+            );
+          },
         ),
       ),
     );

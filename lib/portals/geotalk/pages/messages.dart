@@ -43,8 +43,6 @@ class _MessagesPageState extends State<MessagesPage>
     return BallisticIndicatorSingleChildScrollView(
       parentContext: context,
       scrollController: _scrollController,
-      navBarHeight: 80,
-      appBarHeight: 50 + 34,
       headerSettings: HeaderSettings(
           reservePixels: 50,
           expandPixels: MediaQuery.of(context).size.height - 130,

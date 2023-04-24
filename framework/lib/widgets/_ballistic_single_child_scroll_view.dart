@@ -9,21 +9,18 @@ class BallisticSingleChildScrollView extends StatefulWidget {
   Widget display;
   List<Positioned>? positioneds;
   OpacityListener? opacityListener;
-  double? appBarHeight;
-  double? navBarHeight;
-
+  ScrollController? scrollController;
   ///当键盘在输入框聚焦弹出时，是否上推内容
   late bool? isPushContentWhenKeyboardShow;
 
   BallisticSingleChildScrollView({
     Key? key,
     required this.parentContext,
-    this.appBarHeight,
-    this.navBarHeight,
     required this.display,
     this.positioneds = const <Positioned>[],
     this.opacityListener,
     this.isPushContentWhenKeyboardShow = false,
+    this.scrollController,
   }) : super(key: key);
 
   @override
@@ -37,9 +34,12 @@ class _BallisticSingleChildScrollViewState
   void initState() {
     super.initState();
     super.isPushContentWhenKeyboardShow = widget.isPushContentWhenKeyboardShow;
-    widget.opacityListener?.setScrollController(scrollController);
+    widget.opacityListener?.setScrollController(scrollController!);
   }
-
+  @override
+  ScrollController createScrollController() {
+    return widget.scrollController??super.createScrollController();
+  }
   @override
   void dispose() {
     widget.opacityListener?.removeScrollController();
@@ -48,12 +48,6 @@ class _BallisticSingleChildScrollViewState
 
   @override
   void didUpdateWidget(BallisticSingleChildScrollView oldWidget) {
-    if (oldWidget.appBarHeight != widget.appBarHeight) {
-      oldWidget.appBarHeight = widget.appBarHeight;
-    }
-    if (oldWidget.navBarHeight != widget.navBarHeight) {
-      oldWidget.navBarHeight = widget.navBarHeight;
-    }
     if (oldWidget.display != widget.display) {
       oldWidget.display = widget.display;
     }
@@ -68,25 +62,27 @@ class _BallisticSingleChildScrollViewState
   @override
   Widget build(BuildContext context) {
     return SizedBox.expand(
-      child: SingleChildScrollView(
-        controller: scrollController,
-        physics: const AlwaysScrollableScrollPhysics(
-            parent: BouncingScrollPhysics()),
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            minHeight: scrollViewHeight(
-                widget.appBarHeight, widget.navBarHeight,
-                parentContext: widget.parentContext),
-            minWidth: MediaQuery.of(context).size.width,
-          ),
-          child: Stack(
-            fit: StackFit.passthrough,
-            children: [
-              widget.display,
-              ...widget.positioneds ?? [],
-            ],
-          ),
-        ),
+      child: LayoutBuilder(
+        builder: (context,constraints){
+          return SingleChildScrollView(
+            controller: scrollController,
+            physics: const AlwaysScrollableScrollPhysics(
+                parent: BouncingScrollPhysics()),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: constraints.maxHeight,
+                minWidth: constraints.maxWidth,
+              ),
+              child: Stack(
+                fit: StackFit.passthrough,
+                children: [
+                  widget.display,
+                  ...widget.positioneds ?? [],
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }

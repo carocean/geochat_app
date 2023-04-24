@@ -20,8 +20,6 @@ class _DiscoveriesPageState extends State<DiscoveriesPage>
   Widget build(BuildContext context) {
     return BallisticSingleChildScrollView(
       parentContext: context,
-      appBarHeight: 80+34,
-      navBarHeight: 50,
       display: Padding(
         padding: EdgeInsets.only(left: 5,right: 5),
         child: Column(

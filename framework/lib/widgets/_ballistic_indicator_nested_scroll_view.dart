@@ -16,8 +16,6 @@ class BallisticIndicatorNestedScrollView extends StatefulWidget {
   SliverAppBar? appBar;
   Widget? upDisplay;
 
-  ///低部导航栏高度
-  double? navBarHeight;
   final BallisticSliverPersistentHeader? persistentHeader;
 
   ///当键盘在输入框聚焦弹出时，是否上推内容
@@ -33,7 +31,6 @@ class BallisticIndicatorNestedScrollView extends StatefulWidget {
     this.appBar,
     this.persistentHeader,
     this.scrollDirection,
-    this.navBarHeight,
     this.positioneds = const <Positioned>[],
     this.opacityListener,
     this.isPushContentWhenKeyboardShow = false,
@@ -58,24 +55,24 @@ class _BallisticIndicatorNestedScrollViewState
         .bindFooterSettings(widget.footerSettings)
         .bindScrollDirection(widget.scrollDirection)
         .build(
-      scrollController:  widget.scrollController,
-      footerExpandPanelStateEvent: (state) {
-        if ((state == ExpandPanelState.opened ||
-            state == ExpandPanelState.closed)) {
-          if (mounted) {
-            setState(() {});
-          }
-        }
-      },
-      headerExpandPanelStateEvent: (state) {
-        if ((state == ExpandPanelState.opened ||
-            state == ExpandPanelState.closed)) {
-          if (mounted) {
-            setState(() {});
-          }
-        }
-      },
-    );
+          scrollController: widget.scrollController,
+          footerExpandPanelStateEvent: (state) {
+            if ((state == ExpandPanelState.opened ||
+                state == ExpandPanelState.closed)) {
+              if (mounted) {
+                setState(() {});
+              }
+            }
+          },
+          headerExpandPanelStateEvent: (state) {
+            if ((state == ExpandPanelState.opened ||
+                state == ExpandPanelState.closed)) {
+              if (mounted) {
+                setState(() {});
+              }
+            }
+          },
+        );
     _nestedScrollController = ScrollController();
     indicatorSettings.scrollController.addListener(() {
       //内容不足屏时有冲突，没容出屏时正常，当上拉加载时整屏上移了，导致内容区域变化，下边界触不到，一种可设高上边界，一种可在此设置手热触摸才上滚：indicatorSettings.userOffsetNotifier
@@ -207,25 +204,27 @@ class _BallisticIndicatorNestedScrollViewState
     var child = ScrollConfiguration(
       behavior: indicatorSettings.scrollBehavior,
       child: SizedBox.expand(
-        child: SingleChildScrollView(
-          key: scrollViewKey,
-          scrollDirection: indicatorSettings.scrollDirection,
-          controller: indicatorSettings.scrollController,
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              minHeight: scrollViewHeight(widget.appBar?.collapsedHeight ?? 24,
-                  widget.navBarHeight ?? 0.0,
-                  parentContext: widget.parentContext),
-              minWidth: MediaQuery.of(context).size.width,
-            ),
-            child: Stack(
-              fit: StackFit.passthrough,
-              children: [
-                widget.display,
-                ...widget.positioneds ?? [],
-              ],
-            ),
-          ),
+        child: LayoutBuilder(
+          builder: (context, constrains) {
+            return SingleChildScrollView(
+              key: scrollViewKey,
+              scrollDirection: indicatorSettings.scrollDirection,
+              controller: indicatorSettings.scrollController,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: constrains.maxHeight,
+                  minWidth: constrains.maxWidth,
+                ),
+                child: Stack(
+                  fit: StackFit.passthrough,
+                  children: [
+                    widget.display,
+                    ...widget.positioneds ?? [],
+                  ],
+                ),
+              ),
+            );
+          },
         ),
       ),
     );
