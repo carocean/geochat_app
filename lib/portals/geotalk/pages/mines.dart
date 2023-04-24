@@ -21,7 +21,6 @@ class _MinesPageState extends State<MinesPage>
   @override
   Widget build(BuildContext context) {
     return BallisticCustomScrollView(
-      parentContext: context,
       opacityListener: OpacityListener(
         opacityEvent: (opacity) {
           if (mounted) {

@@ -245,6 +245,14 @@ class IndicatorInheritedWidget extends InheritedWidget {
     required Widget child,
   }) : super(key: key, child: child);
 
+//定义一个便捷方法，方便子树中的widget获取共享数据
+  static IndicatorInheritedWidget? of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<IndicatorInheritedWidget>();
+    // return context
+    //     .getElementForInheritedWidgetOfExactType<IndicatorInheritedWidget>()!
+    //     .widget as IndicatorInheritedWidget?;
+  }
+
   @override
   bool updateShouldNotify(covariant IndicatorInheritedWidget oldWidget) =>
       indicatorSettings != oldWidget.indicatorSettings;

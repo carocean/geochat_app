@@ -22,7 +22,6 @@ class _RegisterPageState extends State<RegisterPage> {
     return Scaffold(
       appBar: appBar,
       body: BallisticSingleChildScrollView(
-        parentContext: context,
         isPushContentWhenKeyboardShow: true,
         display: Padding(
           padding: const EdgeInsets.only(

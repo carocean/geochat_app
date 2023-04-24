@@ -38,7 +38,6 @@ class RegisterHomePage extends StatelessWidget {
         appBar: appBar,
         backgroundColor: Colors.transparent,
         body: BallisticSingleChildScrollView(
-          parentContext: context,
           display: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

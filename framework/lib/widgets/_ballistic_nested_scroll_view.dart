@@ -8,7 +8,6 @@ import '_opacity_listener.dart';
 class BallisticNestedScrollView extends StatefulWidget {
   BallisticNestedScrollView({
     Key? key,
-    required this.parentContext,
     this.appBar,
     this.upDisplay,
     this.persistentHeader,
@@ -21,7 +20,6 @@ class BallisticNestedScrollView extends StatefulWidget {
   }
 
   SliverAppBar? appBar;
-  final BuildContext parentContext;
   Widget? upDisplay;
   final BallisticSliverPersistentHeader? persistentHeader;
   Widget display;

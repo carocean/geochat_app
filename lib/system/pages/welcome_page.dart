@@ -26,7 +26,6 @@ class _WelcomePageState extends State<WelcomePage> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: BallisticSingleChildScrollView(
-          parentContext: context,
           display: Container(
             height: 200,
           ),

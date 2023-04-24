@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:framework/framework.dart';
 import 'package:framework/widgets/_ballistic_indicator_ultimate.dart';
@@ -40,12 +41,33 @@ class _MessagesPageState extends State<MessagesPage>
 
   @override
   Widget build(BuildContext context) {
-    return BallisticIndicatorSingleChildScrollView(
-      parentContext: context,
+    return BallisticIndicatorCustomScrollView(
       scrollController: _scrollController,
+      appBar: SliverAppBar(
+        title: Text(
+          '地微',
+          style: TextStyle(
+            fontSize: 16,
+          ),
+        ),
+        pinned: true,
+        floating: false,
+        centerTitle: true,
+        elevation: 0,
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(
+              Icons.add_circle_outline_sharp,
+              size: 24,
+            ),
+          ),
+        ],
+      ),
+
       headerSettings: HeaderSettings(
           reservePixels: 50,
-          expandPixels: MediaQuery.of(context).size.height - 130,
+          expandPixels: MediaQuery.of(context).size.height - 50,
           buildChild: (settings, notify, direction) {
             return _renderExpandPanel();
           }),
@@ -484,7 +506,7 @@ class _MessagesPageState extends State<MessagesPage>
   }
 
   Widget _renderExpandPanel() {
-    return  Column(
+    return Column(
       children: [
         Expanded(
           child: _renderExpandContent(),
@@ -493,20 +515,22 @@ class _MessagesPageState extends State<MessagesPage>
           behavior: HitTestBehavior.opaque,
           onVerticalDragStart: (details) {
             _scrollController?.animateTo(
-              _scrollController?.position.minScrollExtent??0,
+              _scrollController?.position.minScrollExtent ?? 0,
               duration: const Duration(
                 milliseconds: 300,
               ),
               curve: Curves.linear,
             );
           },
-
           child: Container(
-            color: Theme.of(context).scaffoldBackgroundColor,
             constraints: const BoxConstraints.tightFor(width: double.infinity),
             alignment: Alignment.center,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 10,bottom: 10,),
+            color: Theme.of(context).scaffoldBackgroundColor,
+            child: const Padding(
+              padding: EdgeInsets.only(
+                top: 10,
+                bottom: 10,
+              ),
               child: FaIcon(
                 FontAwesomeIcons.circleArrowUp,
                 color: Color(0xFFcecece),
@@ -521,12 +545,14 @@ class _MessagesPageState extends State<MessagesPage>
 
   _renderExpandContent() {
     return Container(
-      color: Theme.of(context).scaffoldBackgroundColor,
+      color: Color(0xFF999999),
       alignment: Alignment.center,
       child: TextButton(
-        style: const ButtonStyle(foregroundColor: MaterialStatePropertyAll(Colors.grey),),
+        style: const ButtonStyle(
+          foregroundColor: MaterialStatePropertyAll(Colors.grey),
+        ),
         child: Text('测试'),
-        onPressed: (){
+        onPressed: () {
           print(':::::test');
         },
       ),

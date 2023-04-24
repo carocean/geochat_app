@@ -36,10 +36,6 @@ class OpacityListener {
     _initValue = _opacity;
   }
 
-  static double getAppBarHeight(AppBar appBar) {
-    return appBar.preferredSize.height;
-  }
-
   void setScrollController(ScrollController scrollController) {
     _scrollController = scrollController;
     _scrollController.addListener(listen);

@@ -6,7 +6,6 @@ import '_ballistic_indicator_ultimate.dart';
 import '_opacity_listener.dart';
 
 class BallisticIndicatorCustomScrollView extends StatefulWidget {
-  final BuildContext parentContext;
   ScrollController? scrollController;
   Widget display;
   List<Positioned>? positioneds;
@@ -16,8 +15,6 @@ class BallisticIndicatorCustomScrollView extends StatefulWidget {
   SliverAppBar? appBar;
   Widget? upDisplay;
 
-  ///低部导航栏高度
-  double? navBarHeight;
   final BallisticSliverPersistentHeader? persistentHeader;
 
   ///当键盘在输入框聚焦弹出时，是否上推内容
@@ -26,13 +23,11 @@ class BallisticIndicatorCustomScrollView extends StatefulWidget {
 
   BallisticIndicatorCustomScrollView({
     Key? key,
-    required this.parentContext,
     this.scrollController,
     required this.display,
     this.upDisplay,
     this.appBar,
     this.persistentHeader,
-    this.navBarHeight,
     this.scrollDirection,
     this.positioneds = const <Positioned>[],
     this.opacityListener,

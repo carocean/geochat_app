@@ -5,7 +5,6 @@ import '_ballistic_indicator_layout.dart';
 import '_opacity_listener.dart';
 
 class BallisticIndicatorSingleChildScrollView extends StatefulWidget {
-  final BuildContext parentContext;
   ScrollController? scrollController;
   Widget display;
   List<Positioned>? positioneds;
@@ -19,7 +18,6 @@ class BallisticIndicatorSingleChildScrollView extends StatefulWidget {
 
   BallisticIndicatorSingleChildScrollView({
     Key? key,
-    required this.parentContext,
     this.scrollController,
     required this.display,
     this.scrollDirection,

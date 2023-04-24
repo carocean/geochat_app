@@ -32,25 +32,6 @@ class _GeotalkWorkBenchState extends State<GeotalkWorkBench> {
   List<GeotalkPartView> buildPartViews(BuildContext context) {
     return [
       GeotalkPartView(
-        appBar: AppBar(
-          title: const Text(
-            '地微',
-            style: TextStyle(
-              fontSize: 16,
-            ),
-          ),
-          centerTitle: true,
-          elevation: 0,
-          actions: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.add_circle_outline_sharp,
-                size: 24,
-              ),
-            ),
-          ],
-        ),
         bottom: GeoBottomNavigationBarItem(
           icon: const IconData(
             0xe62d,

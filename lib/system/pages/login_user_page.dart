@@ -50,7 +50,6 @@ class _UserLoginPageState extends State<UserLoginPage> {
     return Scaffold(
       appBar: appBar,
       body: BallisticSingleChildScrollView(
-        parentContext: context,
         display: display!,
         isPushContentWhenKeyboardShow: true,
         positioneds: [

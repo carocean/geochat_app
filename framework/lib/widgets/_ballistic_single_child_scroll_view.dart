@@ -5,7 +5,6 @@ import '_opacity_listener.dart';
 
 ///惯性布局，控件化。增加透明度事件
 class BallisticSingleChildScrollView extends StatefulWidget {
-  final BuildContext parentContext;
   Widget display;
   List<Positioned>? positioneds;
   OpacityListener? opacityListener;
@@ -15,7 +14,6 @@ class BallisticSingleChildScrollView extends StatefulWidget {
 
   BallisticSingleChildScrollView({
     Key? key,
-    required this.parentContext,
     required this.display,
     this.positioneds = const <Positioned>[],
     this.opacityListener,

@@ -19,7 +19,6 @@ class _DiscoveriesPageState extends State<DiscoveriesPage>
   @override
   Widget build(BuildContext context) {
     return BallisticSingleChildScrollView(
-      parentContext: context,
       display: Padding(
         padding: EdgeInsets.only(left: 5,right: 5),
         child: Column(

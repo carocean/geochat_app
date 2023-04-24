@@ -16,7 +16,6 @@ class _UserCandidatesPageState extends State<UserCandidatesPage> {
     return Scaffold(
       body: BallisticSingleChildScrollView(
         display: _renderContent(),
-        parentContext: context,
         positioneds: [
           Positioned(
               left: 15,

@@ -13,7 +13,6 @@ typedef BuildPersistentHeader = Widget Function(
 
 class BallisticCustomScrollView extends StatefulWidget {
   SliverAppBar? appBar;
-  final BuildContext parentContext;
   Widget? upDisplay;
   final BallisticSliverPersistentHeader? persistentHeader;
   Widget display;
@@ -25,7 +24,6 @@ class BallisticCustomScrollView extends StatefulWidget {
 
   BallisticCustomScrollView({
     Key? key,
-    required this.parentContext,
     this.appBar,
     this.upDisplay,
     this.persistentHeader,
