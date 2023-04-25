@@ -9,6 +9,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:uuid/uuid.dart';
 
 ///惯性布局,需自己实现布局规则；键盘弹出上推；
 abstract class BallisticLayout<T extends StatefulWidget> extends State<T>
@@ -25,6 +26,7 @@ abstract class BallisticLayout<T extends StatefulWidget> extends State<T>
 
   @override
   void initState() {
+    _scrollViewKey=PageStorageKey(const Uuid().toString());
     _scrollController = createScrollController();
     WidgetsBinding.instance.addObserver(this);
     super.initState();
@@ -80,6 +82,7 @@ abstract class BallisticSliverLayout<T extends StatefulWidget> extends State<T>
 
   @override
   void initState() {
+    _scrollViewKey=PageStorageKey(const Uuid().toString());
     _scrollController = ScrollController();
     WidgetsBinding.instance.addObserver(this);
     super.initState();

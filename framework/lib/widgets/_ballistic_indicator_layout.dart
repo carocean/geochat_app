@@ -24,7 +24,7 @@ abstract class BallisticIndicatorLayout<T extends StatefulWidget>
 
   @override
   void initState() {
-    _scrollViewKey=PageStorageKey(Uuid().toString());
+    _scrollViewKey=PageStorageKey(const Uuid().toString());
     _indicatorSettings = IndicatorSettings();
     WidgetsBinding.instance.addObserver(this);
     super.initState();
