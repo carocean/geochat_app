@@ -50,10 +50,10 @@ class _MessagesPageState extends State<MessagesPage>
             fontSize: 16,
           ),
         ),
-        pinned: true,
-        floating: false,
         centerTitle: true,
         elevation: 0,
+        pinned: true,
+        floating: false,
         actions: [
           IconButton(
             onPressed: () {},
@@ -64,9 +64,8 @@ class _MessagesPageState extends State<MessagesPage>
           ),
         ],
       ),
-
       headerSettings: HeaderSettings(
-          reservePixels: 50,
+          reservePixels: 100,
           expandPixels: MediaQuery.of(context).size.height - 50,
           buildChild: (settings, notify, direction) {
             return _renderExpandPanel();
@@ -525,7 +524,15 @@ class _MessagesPageState extends State<MessagesPage>
           child: Container(
             constraints: const BoxConstraints.tightFor(width: double.infinity),
             alignment: Alignment.center,
-            color: Theme.of(context).scaffoldBackgroundColor,
+            decoration: BoxDecoration(
+              color: Theme.of(context).scaffoldBackgroundColor,
+              border: Border(
+                bottom: BorderSide(
+                  color: Colors.blueGrey,
+                  width: 4,
+                ),
+              ),
+            ),
             child: const Padding(
               padding: EdgeInsets.only(
                 top: 10,
@@ -545,17 +552,258 @@ class _MessagesPageState extends State<MessagesPage>
 
   _renderExpandContent() {
     return Container(
-      color: Color(0xFF999999),
+      color: Theme.of(context).scaffoldBackgroundColor,
       alignment: Alignment.center,
-      child: TextButton(
-        style: const ButtonStyle(
-          foregroundColor: MaterialStatePropertyAll(Colors.grey),
+      child: BallisticSingleChildScrollView(
+        display: Column(
+          children: [
+            Container(
+              padding: EdgeInsets.only(
+                top: 24,
+              ),
+              height: 80,
+              alignment: Alignment.center,
+              child: Text(
+                '便夹',
+                style: TextStyle(
+                  fontSize: 18,
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(
+                left: 30,
+                right: 30,
+              ),
+              child: Column(
+                children: [
+                  Container(
+                    child: Text(
+                      '便捷服务',
+                      style: TextStyle(
+                        color: Colors.black54,
+                        fontSize: 12,
+                      ),
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Wrap(
+                    spacing: 40,
+                    runSpacing: 30,
+                    alignment: WrapAlignment.start,
+                    children: [
+                      _rendItem(
+                        title: '扫一扫',
+                        iconData: IconData(
+                          0xe8b5,
+                          fontFamily: 'discoveries',
+                        ),
+                        color: Colors.brown,
+                      ),
+                      _rendItem(
+                          iconData: IconData(
+                            0xe647,
+                            fontFamily: 'mines',
+                          ),
+                          color: Color(0xFFb36644),
+                          title: '收付款'),
+                      _rendItem(
+                        title: '钱包',
+                        iconData: IconData(
+                          0xe649,
+                          fontFamily: 'mines',
+                        ),
+                        color: Color(0xFF515151),
+                      ),
+                      _rendItem(
+                        iconData: IconData(
+                          0xe6c2,
+                          fontFamily: 'mines',
+                        ),
+                        title: '券包',
+                        color: Color(0xFF11b01e),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 40,
+            ),
+            Padding(
+              padding: EdgeInsets.only(
+                left: 30,
+                right: 30,
+              ),
+              child: Column(
+                children: [
+                  Container(
+                    child: Text(
+                      '最近使用的小程序',
+                      style: TextStyle(
+                        color: Colors.black54,
+                        fontSize: 12,
+                      ),
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Wrap(
+                    spacing: 40,
+                    runSpacing: 30,
+                    alignment: WrapAlignment.start,
+                    children: [
+                      _rendItem(
+                        title: '扫一扫',
+                        iconData: IconData(
+                          0xe8b5,
+                          fontFamily: 'discoveries',
+                        ),
+                        color: Colors.brown,
+                      ),
+                      _rendItem(
+                          iconData: IconData(
+                            0xe647,
+                            fontFamily: 'mines',
+                          ),
+                          color: Color(0xFFb36644),
+                          title: '收付款'),
+                      _rendItem(
+                        title: '钱包',
+                        iconData: IconData(
+                          0xe649,
+                          fontFamily: 'mines',
+                        ),
+                        color: Color(0xFF515151),
+                      ),
+                      _rendItem(
+                        iconData: IconData(
+                          0xe6c2,
+                          fontFamily: 'mines',
+                        ),
+                        title: '券包',
+                        color: Color(0xFF11b01e),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 40,
+            ),
+            Padding(
+              padding: EdgeInsets.only(
+                left: 30,
+                right: 30,
+              ),
+              child: Column(
+                children: [
+                  Container(
+                    child: Text(
+                      '我的小程序',
+                      style: TextStyle(
+                        color: Colors.black54,
+                        fontSize: 12,
+                      ),
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Wrap(
+                    spacing: 40,
+                    runSpacing: 30,
+                    alignment: WrapAlignment.start,
+                    children: [
+                      _rendItem(
+                        title: '扫一扫',
+                        iconData: IconData(
+                          0xe8b5,
+                          fontFamily: 'discoveries',
+                        ),
+                        color: Colors.brown,
+                      ),
+                      _rendItem(
+                          iconData: IconData(
+                            0xe647,
+                            fontFamily: 'mines',
+                          ),
+                          color: Color(0xFFb36644),
+                          title: '收付款'),
+                      _rendItem(
+                        title: '钱包',
+                        iconData: IconData(
+                          0xe649,
+                          fontFamily: 'mines',
+                        ),
+                        color: Color(0xFF515151),
+                      ),
+                      _rendItem(
+                        iconData: IconData(
+                          0xe6c2,
+                          fontFamily: 'mines',
+                        ),
+                        title: '券包',
+                        color: Color(0xFF11b01e),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
-        child: Text('测试'),
-        onPressed: () {
-          print(':::::test');
-        },
+        positioneds: [
+          Positioned(
+            bottom: 30,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: Text(
+                '你的浏览痕迹将在此显示',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.black26,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
+    );
+  }
+
+  _rendItem(
+      {required IconData iconData,
+      required String title,
+      required Color color}) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Icon(
+          iconData,
+          size: 40,
+          color: color,
+        ),
+        const SizedBox(
+          height: 5,
+        ),
+        Text(
+          title,
+          style: const TextStyle(
+            fontSize: 12,
+          ),
+        ),
+      ],
     );
   }
 }
