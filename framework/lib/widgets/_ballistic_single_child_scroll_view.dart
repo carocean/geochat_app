@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 import '_ballistic_layout.dart';
 import '_opacity_listener.dart';
@@ -56,14 +57,13 @@ class _BallisticSingleChildScrollViewState
     }
     super.didUpdateWidget(oldWidget);
   }
-
+  var _kk=PageStorageKey(Uuid().toString());
   @override
   Widget build(BuildContext context) {
     return SizedBox.expand(
       child: LayoutBuilder(
         builder: (context,constraints){
           return SingleChildScrollView(
-            key: scrollViewKey,
             controller: scrollController,
             physics: const AlwaysScrollableScrollPhysics(
                 parent: BouncingScrollPhysics()),

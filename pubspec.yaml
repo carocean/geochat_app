@@ -43,6 +43,7 @@ dependencies:
   intl: ^0.17.0
   azlistview: ^2.0.0
   lpinyin: ^2.0.2  #latest version
+  cached_network_image: ^3.2.3
 dev_dependencies:
   flutter_test:
     sdk: flutter

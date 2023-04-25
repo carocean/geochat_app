@@ -92,7 +92,6 @@ class _BallisticNestedScrollViewState
           child: LayoutBuilder(
             builder: (context, constraints) {
               return SingleChildScrollView(
-                key: scrollViewKey,
                 controller: scrollController,
                 physics: const AlwaysScrollableScrollPhysics(
                     parent: BouncingScrollPhysics()),

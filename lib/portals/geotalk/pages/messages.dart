@@ -570,6 +570,7 @@ class _MessagesPageState extends State<MessagesPage>
                 ),
               ),
             ),
+            SizedBox(height: 20,),
             Padding(
               padding: EdgeInsets.only(
                 left: 30,
