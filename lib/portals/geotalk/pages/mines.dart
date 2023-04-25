@@ -13,7 +13,26 @@ class MinesPage extends StatefulWidget {
 class _MinesPageState extends State<MinesPage>
     with AutomaticKeepAliveClientMixin {
   double _opacity = 0.0;
-
+  late OpacityListener _opacityListener;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _opacityListener=OpacityListener(
+      opacityEvent: (opacity) {
+        if (mounted) {
+          setState(() {
+            _opacity = opacity;
+            print('******${_opacity}');
+          });
+        }
+      },
+      scrollHeight: 150,
+      startEdgeSize: 100,
+      endEdgeSize: 0,
+      beginIsOpacity: _opacity == 0 ? true : false,
+    );
+  }
   @override
   // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
@@ -21,20 +40,7 @@ class _MinesPageState extends State<MinesPage>
   @override
   Widget build(BuildContext context) {
     return BallisticCustomScrollView(
-      opacityListener: OpacityListener(
-        opacityEvent: (opacity) {
-          if (mounted) {
-            setState(() {
-              _opacity = opacity;
-              print('******${_opacity}');
-            });
-          }
-        },
-        scrollHeight: 150,
-        startEdgeSize: 100,
-        endEdgeSize: 0,
-        beginIsOpacity: _opacity == 0 ? true : false,
-      ),
+      opacityListener: _opacityListener,
       appBar: SliverAppBar(
         pinned: true,
         floating: true,

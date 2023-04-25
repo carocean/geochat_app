@@ -27,8 +27,11 @@ class PortalMarketPage extends StatelessWidget {
             centerTitle: true,
           ),
           body: BallisticSingleChildScrollView(
-            display: Column(
-              children: _renderPortals(),
+            display: Padding(
+              padding: EdgeInsets.only(left: 5,right: 5),
+              child: Column(
+                children: _renderPortals(context),
+              ),
             ),
           ),
         );
@@ -36,8 +39,12 @@ class PortalMarketPage extends StatelessWidget {
     );
   }
 
-  List<Widget> _renderPortals() {
-    var items = <Widget>[];
+  List<Widget> _renderPortals(BuildContext context) {
+    var items = <Widget>[
+      SizedBox(
+        height: 20,
+      ),
+    ];
     var data = _notifier.data;
     for (int i = 0; i < data.length; i++) {
       var portal = data[i];
@@ -67,7 +74,7 @@ class PortalMarketPage extends StatelessWidget {
           height: 10,
         ),
       );
-      items.add(_renderOtherPortal(portal));
+      items.add(_renderOtherPortal(portal,context));
       items.add(
         SizedBox(
           height: 120,
@@ -202,7 +209,7 @@ class PortalMarketPage extends StatelessWidget {
     );
   }
 
-  Widget _renderOtherPortal(PortalInfo portal) {
+  Widget _renderOtherPortal(PortalInfo portal,BuildContext context) {
     return BlankCardView(
       padding: EdgeInsets.only(
         top: 10,
@@ -273,7 +280,9 @@ class PortalMarketPage extends StatelessWidget {
                           MaterialStatePropertyAll(Colors.lightGreen),
                       alignment: Alignment.center,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Pageis.of(context)?.current.forward('/desktop',clearHistoryByPagePath: '/',scene: 'geophone');
+                    },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

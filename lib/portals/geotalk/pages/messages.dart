@@ -24,7 +24,7 @@ class _MessagesPageState extends State<MessagesPage>
   @override
   // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
-  ScrollController? _scrollController;
+  ScrollController? _scrollController;//滚动控制在基类中会被失放，此类不用再释放
 
   @override
   void initState() {
@@ -35,7 +35,6 @@ class _MessagesPageState extends State<MessagesPage>
 
   @override
   void dispose() {
-    _scrollController?.dispose();
     super.dispose();
   }
 
