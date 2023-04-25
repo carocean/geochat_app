@@ -15,6 +15,7 @@ import '_shared_preferences.dart';
 import '_system.dart';
 import '_theme.dart';
 import '_ultimate.dart';
+import '_window_task.dart';
 
 
 typedef BuildRoute = ModalRoute Function(
@@ -179,19 +180,23 @@ class DefaultAppSurface implements IAppSurface, IServiceProvider {
     var dio = Dio(options); //使用base配置可以通
 
     _shareServiceContainer = ShareServiceContainer(this);
+
+    var principal = DefaultPrincipal();
+    var widowTask=WindowTask();
+
+    _shareServiceContainer.addServices(<String, dynamic>{
+      '@.principal': principal,
+      '@.http': dio,
+      '@.app.creator': creator,
+      '@.window.task':widowTask,
+    });
+
     _sharedPreferences = DefaultSharedPreferences();
     await _sharedPreferences.init(_shareServiceContainer);
 
     _appDecorator = (ctx, widget) {
       return creator.appDecorator(ctx, widget!, _shareServiceContainer);
     };
-    var principal = DefaultPrincipal();
-
-    _shareServiceContainer.addServices(<String, dynamic>{
-      '@.principal': principal,
-      '@.http': dio,
-      '@.app.creator': creator,
-    });
 
     await _buildExternalServices(creator.buildServices);
     await _buildSystem(creator.buildSystem);
@@ -201,7 +206,6 @@ class DefaultAppSurface implements IAppSurface, IServiceProvider {
   Future<void> _buildExternalServices(BuildServices buildServices) async {
     _externalServiceProvider = ExternalServiceContainer(null);
     var services = await buildServices(_shareServiceContainer);
-    services ??= <String, dynamic>{};
     _externalServiceProvider.addServices(services);
     await _externalServiceProvider.initServices(services);
   }

@@ -1,8 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:framework/framework.dart';
 import 'package:geochat_app/system/system.dart';
-import 'package:localization/generated/l10n.dart';
 
 import 'portals/portals.dart';
 void main() => platformRun(
@@ -21,36 +18,16 @@ void main() => platformRun(
 
           ///以下可装饰窗口区，比如在device连接状态改变时提醒用户
           appDecorator: (ctx, viewport, site) {
-            return viewport;
-            // return Window(
-            //   viewport: viewport,
-            //   site: site,
-            // );
+           var windowTask= site.getService('@.window.task');
+            // return viewport;
+            return Window(
+              viewport: viewport,
+              windowTask: windowTask,
+            );
           }),
     );
 
-class Window extends StatefulWidget {
-  final Widget viewport;
-  final IServiceProvider site;
 
-  const Window({super.key, required this.viewport, required this.site});
-
-  @override
-  State<Window> createState() => _WindowState();
-}
-
-class _WindowState extends State<Window> {
-  @override
-  Widget build(BuildContext context) {
-    var items = <Widget>[
-      widget.viewport,
-    ];
-    return Stack(
-      fit: StackFit.loose,
-      children: items,
-    );
-  }
-}
 
 class DefaultLocalPrincipal implements ILocalPrincipal {
   late ILocalPrincipalVisitor _visitor;
