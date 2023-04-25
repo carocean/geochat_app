@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:framework/core_lib/_page.dart';
 import 'package:framework/core_lib/_page_context.dart';
 
 class Entrypoint extends StatefulWidget {
@@ -36,7 +37,7 @@ class _EntrypointState extends State<Entrypoint> {
           widget.context.forward('/public/login/candidates', clearHistoryByPagePath: '.');
           break;
         default: //进入桌面
-          widget.context.forward('/workbench',
+          Pageis.of(context)?.current.forward('/workbench',
               clearHistoryByPagePath: '/public', scene: 'geotalk');
           break;
       }

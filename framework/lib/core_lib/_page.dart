@@ -42,3 +42,17 @@ class LogicPage {
 
   Map<String, Object> get parameters => _parameters;
 }
+
+class Pageis extends InheritedWidget{
+  Pageis({required super.child,required this.current,});
+  PageContext current;
+  @override
+  bool updateShouldNotify(covariant InheritedWidget oldWidget) {
+    oldWidget as Pageis;
+    return current != oldWidget.current;
+  }
+
+  static Pageis? of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<Pageis>();
+  }
+}

@@ -173,7 +173,7 @@ class _MessagesPageState extends State<MessagesPage>
           SizedBox(
             child: Divider(
               height: 1,
-              indent: 70,
+              indent: 65,
             ),
           ),
           _renderMessageSessionView(
@@ -226,7 +226,7 @@ class _MessagesPageState extends State<MessagesPage>
           SizedBox(
             child: Divider(
               height: 1,
-              indent: 70,
+              indent: 65,
             ),
           ),
           _renderMessageSessionView(
@@ -260,7 +260,7 @@ class _MessagesPageState extends State<MessagesPage>
           SizedBox(
             child: Divider(
               height: 1,
-              indent: 75,
+              indent: 65,
             ),
           ),
           _renderMessageSessionView(
@@ -277,7 +277,7 @@ class _MessagesPageState extends State<MessagesPage>
           SizedBox(
             child: Divider(
               height: 1,
-              indent: 75,
+              indent: 65,
             ),
           ),
           _renderMessageSessionView(
@@ -294,7 +294,7 @@ class _MessagesPageState extends State<MessagesPage>
           SizedBox(
             child: Divider(
               height: 1,
-              indent: 75,
+              indent: 65,
             ),
           ),
           _renderMessageSessionView(
@@ -311,7 +311,7 @@ class _MessagesPageState extends State<MessagesPage>
           SizedBox(
             child: Divider(
               height: 1,
-              indent: 75,
+              indent: 65,
             ),
           ),
           _renderMessageSessionView(
@@ -328,7 +328,7 @@ class _MessagesPageState extends State<MessagesPage>
           SizedBox(
             child: Divider(
               height: 1,
-              indent: 75,
+              indent: 65,
             ),
           ),
           _renderMessageSessionView(
@@ -345,7 +345,7 @@ class _MessagesPageState extends State<MessagesPage>
           SizedBox(
             child: Divider(
               height: 1,
-              indent: 75,
+              indent: 65,
             ),
           ),
           _renderMessageSessionView(
@@ -362,7 +362,7 @@ class _MessagesPageState extends State<MessagesPage>
           SizedBox(
             child: Divider(
               height: 1,
-              indent: 75,
+              indent: 65,
             ),
           ),
           _renderMessageSessionView(
@@ -379,7 +379,7 @@ class _MessagesPageState extends State<MessagesPage>
           SizedBox(
             child: Divider(
               height: 1,
-              indent: 75,
+              indent: 65,
             ),
           ),
           _renderMessageSessionView(
@@ -559,14 +559,14 @@ class _MessagesPageState extends State<MessagesPage>
           children: [
             Container(
               padding: EdgeInsets.only(
-                top: 24,
+                top: 34,
               ),
               height: 80,
               alignment: Alignment.center,
               child: Text(
                 '便夹',
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 16,
                 ),
               ),
             ),

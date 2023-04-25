@@ -115,7 +115,6 @@ class DefaultScene implements IScene, IServiceProvider {
         throw FlutterErrorDetails(exception: Exception('已存在主题:${_theme_.url}'));
       }
       var styles = _theme_.buildStyle(_sceneServiceContainer);
-      styles = styles ?? <Style>[];
       var index = <String, Style>{};
       for (var style in styles) {
         if (index.containsKey(style.url)) {
@@ -132,7 +131,7 @@ class DefaultScene implements IScene, IServiceProvider {
       _themeStyles[_theme_.url] = theme;
     }
     if (StringUtil.isEmpty(defaultTheme) && themeStyles.isNotEmpty) {
-      defaultTheme = themeStyles.first?.url ?? '';
+      defaultTheme = themeStyles.first.url ;
     }
     _defaultTheme = defaultTheme;
 
@@ -142,7 +141,7 @@ class DefaultScene implements IScene, IServiceProvider {
     }
     _sceneServiceContainer.initServices(services);
 
-    return null;
+    return ;
   }
 
   @override
@@ -160,8 +159,15 @@ class DefaultScene implements IScene, IServiceProvider {
             sourceTheme: theme,
             site: _sceneServiceContainer,
             context: context);
+        //支持两种构建页的api。
+        //一种是传统方式，页组件要在构造中传入 pageContext
+        //一种是通过 PageIs.of 的方式该问 pageContext
         var p = page.buildPage!(pageContext);
-        return p;
+        var pageis=Pageis(
+          current: pageContext,
+          child: p,
+        );
+        return pageis;
       };
     }
     return map;
@@ -173,8 +179,8 @@ class DefaultScene implements IScene, IServiceProvider {
 
   @override
   void dispose() {
-    _pages?.clear();
-    _themeStyles?.clear();
+    _pages.clear();
+    _themeStyles.clear();
   }
 
   @override

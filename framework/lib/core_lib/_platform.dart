@@ -88,9 +88,9 @@ class __PlatformAppState extends State<_PlatformApp> {
         return true;
       },
       child: MaterialApp(
-        title: _appSurface?.title ?? '',
+        title: _appSurface.title ?? '',
         builder: _appSurface.appDecorator,
-        routes: _appSurface?.routes ?? {},
+        routes: _appSurface.routes ?? {},
         initialRoute: _appSurface.initialRoute,
         debugShowCheckedModeBanner: false,
         onGenerateRoute: onGenerateRoute,

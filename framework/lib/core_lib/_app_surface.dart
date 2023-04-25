@@ -165,7 +165,7 @@ class DefaultAppSurface implements IAppSurface, IServiceProvider {
     if (name.startsWith('@.prop.')) {
       return _props[name];
     }
-    return _externalServiceProvider?.getService(name);
+    return _externalServiceProvider.getService(name);
   }
 
   @override
@@ -236,7 +236,7 @@ class DefaultAppSurface implements IAppSurface, IServiceProvider {
       defaultTheme: system.defaultTheme,
       site: _shareServiceContainer,
       pages: pages??[],
-      services: sceneServices ?? <String, dynamic>{},
+      services: sceneServices ,
       themeStyles: themeStyles??[],
     );
   }
@@ -272,7 +272,7 @@ class DefaultAppSurface implements IAppSurface, IServiceProvider {
         site: _shareServiceContainer,
         pages: pages,
         themeStyles: themeStyles,
-        services: sceneServices ?? <String, dynamic>{},
+        services: sceneServices ,
       );
     }
   }
