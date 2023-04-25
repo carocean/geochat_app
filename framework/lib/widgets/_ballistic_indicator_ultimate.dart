@@ -142,6 +142,7 @@ class IndicatorSettings implements IDisposable, IEqualable<IndicatorSettings> {
   late ScrollBehavior _scrollBehavior;
   HeaderSettings? headerSettings;
   FooterSettings? footerSettings;
+  bool _isInnerCreateScrollController = true;
 
   ScrollBehavior get scrollBehavior => _scrollBehavior;
 
@@ -158,7 +159,9 @@ class IndicatorSettings implements IDisposable, IEqualable<IndicatorSettings> {
 
   @override
   void dispose() {
-    scrollController.dispose();
+    if (_isInnerCreateScrollController) {
+      scrollController.dispose();
+    }
     headerNotifier.dispose();
     footerNotifier.dispose();
   }
@@ -182,6 +185,7 @@ class IndicatorSettings implements IDisposable, IEqualable<IndicatorSettings> {
       {ScrollController? scrollController,
       ExpandPanelStateEvent headerExpandPanelStateEvent,
       ExpandPanelStateEvent footerExpandPanelStateEvent}) {
+    _isInnerCreateScrollController = (scrollController == null ? true : false);
     this.scrollController = scrollController ?? ScrollController();
 
     headerNotifier = HeaderNotifier(
@@ -247,7 +251,8 @@ class IndicatorInheritedWidget extends InheritedWidget {
 
 //定义一个便捷方法，方便子树中的widget获取共享数据
   static IndicatorInheritedWidget? of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<IndicatorInheritedWidget>();
+    return context
+        .dependOnInheritedWidgetOfExactType<IndicatorInheritedWidget>();
     // return context
     //     .getElementForInheritedWidgetOfExactType<IndicatorInheritedWidget>()!
     //     .widget as IndicatorInheritedWidget?;

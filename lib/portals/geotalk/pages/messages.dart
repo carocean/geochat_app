@@ -35,6 +35,7 @@ class _MessagesPageState extends State<MessagesPage>
 
   @override
   void dispose() {
+    _scrollController?.dispose();
     super.dispose();
   }
 

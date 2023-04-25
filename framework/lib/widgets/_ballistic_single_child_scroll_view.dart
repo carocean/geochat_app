@@ -10,6 +10,7 @@ class BallisticSingleChildScrollView extends StatefulWidget {
   List<Positioned>? positioneds;
   OpacityListener? opacityListener;
   ScrollController? scrollController;
+
   ///当键盘在输入框聚焦弹出时，是否上推内容
   late bool? isPushContentWhenKeyboardShow;
 
@@ -35,10 +36,12 @@ class _BallisticSingleChildScrollViewState
     super.isPushContentWhenKeyboardShow = widget.isPushContentWhenKeyboardShow;
     widget.opacityListener?.setScrollController(scrollController!);
   }
+
   @override
-  ScrollController createScrollController() {
-    return widget.scrollController??super.createScrollController();
+  ScrollController? createScrollController() {
+    return widget.scrollController;
   }
+
   @override
   void dispose() {
     widget.opacityListener?.removeScrollController();
@@ -57,12 +60,12 @@ class _BallisticSingleChildScrollViewState
     }
     super.didUpdateWidget(oldWidget);
   }
-  var _kk=PageStorageKey(Uuid().toString());
+
   @override
   Widget build(BuildContext context) {
     return SizedBox.expand(
       child: LayoutBuilder(
-        builder: (context,constraints){
+        builder: (context, constraints) {
           return SingleChildScrollView(
             controller: scrollController,
             physics: const AlwaysScrollableScrollPhysics(

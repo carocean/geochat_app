@@ -16,23 +16,29 @@ abstract class BallisticLayout<T extends StatefulWidget> extends State<T>
     with WidgetsBindingObserver {
   late ScrollController? _scrollController;
   bool? isPushContentWhenKeyboardShow;
+
   ScrollController? get scrollController => _scrollController;
+  bool _isInnerCreateScrollController = false;
 
   @override
   void initState() {
     _scrollController = createScrollController();
+    if (_scrollController == null) {
+      _isInnerCreateScrollController = true;
+      _scrollController = ScrollController();
+    }
     WidgetsBinding.instance.addObserver(this);
     super.initState();
   }
 
   @protected
-  ScrollController createScrollController() {
-    return ScrollController();
-  }
+  ScrollController? createScrollController();
 
   @override
   void dispose() {
-    _scrollController?.dispose();
+    if(_isInnerCreateScrollController) {
+      _scrollController?.dispose();
+    }
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
@@ -65,6 +71,7 @@ abstract class BallisticSliverLayout<T extends StatefulWidget> extends State<T>
     with WidgetsBindingObserver {
   late ScrollController _scrollController;
   bool? isPushContentWhenKeyboardShow;
+
   ScrollController get scrollController => _scrollController;
 
   @override
@@ -90,8 +97,8 @@ abstract class BallisticSliverLayout<T extends StatefulWidget> extends State<T>
     //对于非sliver组件只能用此计算高度，sliver组件则采用另外一套机制：SliverLayoutBuilder。这是因为LayoutBuilder中的约束不能得到组件可绘高度
     // 键盘高度
     final double viewInsetsBottom = EdgeInsets.fromWindowPadding(
-        WidgetsBinding.instance.window.viewInsets,
-        WidgetsBinding.instance.window.devicePixelRatio)
+            WidgetsBinding.instance.window.viewInsets,
+            WidgetsBinding.instance.window.devicePixelRatio)
         .bottom;
 
     if (viewInsetsBottom > 0) {
