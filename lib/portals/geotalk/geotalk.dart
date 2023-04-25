@@ -9,6 +9,7 @@ import 'package:geochat_app/portals/geotalk/pages/contacts.dart';
 import 'package:geochat_app/portals/geotalk/pages/discoveries.dart';
 import 'package:geochat_app/portals/geotalk/pages/messages.dart';
 import 'package:geochat_app/portals/geotalk/pages/mines.dart';
+import 'package:geochat_app/portals/geotalk/pages/mines/portal_market.dart';
 import 'package:geochat_app/portals/geotalk/workbench.dart';
 
 import 'styles/grey-styles.dart';
@@ -122,6 +123,12 @@ class GeotalkPortal {
           buildPage: (PageContext pageContext) => MinesPage(
             context: pageContext,
           ),
+        ),
+        LogicPage(
+          title: '地微风格',
+          subtitle: '',
+          url: '/market/portal',
+          buildPage: (PageContext pageContext) => PortalMarketPage(),
         ),
       ],
     );

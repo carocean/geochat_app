@@ -271,6 +271,9 @@ class _MinesPageState extends State<MinesPage>
                     ),
                     SimpleCardViewItem(
                       title: '地微风格',
+                      onTap: (){
+                        Pageis.of(context)?.current.forward('/market/portal');
+                      },
                       icon: const Icon(
                         IconData(
                           0xee33,

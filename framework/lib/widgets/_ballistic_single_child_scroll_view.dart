@@ -63,6 +63,7 @@ class _BallisticSingleChildScrollViewState
       child: LayoutBuilder(
         builder: (context,constraints){
           return SingleChildScrollView(
+            key: scrollViewKey,
             controller: scrollController,
             physics: const AlwaysScrollableScrollPhysics(
                 parent: BouncingScrollPhysics()),

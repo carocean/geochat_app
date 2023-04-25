@@ -84,6 +84,7 @@ class _BallisticCustomScrollViewState
   Widget build(BuildContext context) {
     return SizedBox.expand(
       child: CustomScrollView(
+        key: scrollViewKey,
         controller: scrollController,
         physics: const AlwaysScrollableScrollPhysics(
             parent: BouncingScrollPhysics()),

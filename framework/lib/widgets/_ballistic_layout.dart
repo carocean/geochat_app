@@ -15,7 +15,12 @@ abstract class BallisticLayout<T extends StatefulWidget> extends State<T>
     with WidgetsBindingObserver {
   late ScrollController? _scrollController;
   bool? isPushContentWhenKeyboardShow;
+//保持住滚动的位置状态。必须设定它到scrollview，原因是：当改变stack内容和头脚的层次时会导致重绘，而重绘会使scrollview失去位置状态而反回到初始态0，这个问题很奇怪，并不是每次都会失去位置状态。
+  //但为了万无一失，为滚动组件指定PageStorageKey
+  late PageStorageKey _scrollViewKey;
 
+  ///派生类的scrollview必须设置该key，否则在stack内容切换时滚动控件会回到原位
+  PageStorageKey get scrollViewKey => _scrollViewKey;
   ScrollController? get scrollController => _scrollController;
 
   @override
@@ -65,7 +70,12 @@ abstract class BallisticSliverLayout<T extends StatefulWidget> extends State<T>
     with WidgetsBindingObserver {
   late ScrollController _scrollController;
   bool? isPushContentWhenKeyboardShow;
+//保持住滚动的位置状态。必须设定它到scrollview，原因是：当改变stack内容和头脚的层次时会导致重绘，而重绘会使scrollview失去位置状态而反回到初始态0，这个问题很奇怪，并不是每次都会失去位置状态。
+  //但为了万无一失，为滚动组件指定PageStorageKey
+  late PageStorageKey _scrollViewKey;
 
+  ///派生类的scrollview必须设置该key，否则在stack内容切换时滚动控件会回到原位
+  PageStorageKey get scrollViewKey => _scrollViewKey;
   ScrollController get scrollController => _scrollController;
 
   @override

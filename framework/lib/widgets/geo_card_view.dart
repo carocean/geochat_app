@@ -54,33 +54,36 @@ class SimpleCardView extends StatelessWidget {
   }
 
   Widget _rendRow(SimpleCardViewItem e) {
-    return Padding(
-      padding: const EdgeInsets.only(
-        top: 15,
-        bottom: 15,
-        left: 10,
-        right: 10,
-      ),
-      child: Row(
-        children: [
-          e.icon,
-          const SizedBox(
-            width: 15,
-          ),
-          Expanded(
-            child: Row(
-              children: _renderRowContent(e),
+    return InkWell(
+      onTap: e.onTap,
+      child: Padding(
+        padding: const EdgeInsets.only(
+          top: 15,
+          bottom: 15,
+          left: 10,
+          right: 10,
+        ),
+        child: Row(
+          children: [
+            e.icon,
+            const SizedBox(
+              width: 15,
             ),
-          ),
-          const SizedBox(
-            width: 10,
-          ),
-          const Icon(
-            Icons.arrow_forward_ios,
-            size: 14,
-            color: Color(0xFFc3c3c4),
-          ),
-        ],
+            Expanded(
+              child: Row(
+                children: _renderRowContent(e),
+              ),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            const Icon(
+              Icons.arrow_forward_ios,
+              size: 14,
+              color: Color(0xFFc3c3c4),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -125,6 +128,6 @@ class SimpleCardViewItem {
   final Widget icon;
   final String title;
   String? tips;
-
-  SimpleCardViewItem({required this.icon, required this.title, this.tips});
+  Function()? onTap;
+  SimpleCardViewItem({required this.icon, required this.title, this.tips,this.onTap});
 }
