@@ -164,7 +164,7 @@ class DefaultScene implements IScene, IServiceProvider {
         //一种是通过 PageIs.of 的方式该问 pageContext
         var p = page.buildPage!(pageContext);
         var pageis=Pageis(
-          current: pageContext,
+          $: pageContext,
           child: p,
         );
         return pageis;

@@ -1,0 +1,20 @@
+[
+  {
+    "id": "desk-0",
+    "title": "桌面1",
+    "order": 0,
+    "pid": "$root"
+  },
+  {
+    "id": "desk-1",
+    "title": "桌面2",
+    "order": 1,
+    "pid": "$root"
+  },
+  {
+    "id": "desk-2",
+    "title": "桌面3",
+    "order": 2,
+    "pid": "$root"
+  }
+]

@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:framework/framework.dart';
 
-import '../../stores/models/portal_info.dart';
+import '../../stores/portal/ol/portal_info.dart';
+
 
 class PortalMarketPage extends StatelessWidget {
   PortalMarketPage({Key? key})
@@ -281,7 +281,7 @@ class PortalMarketPage extends StatelessWidget {
                       alignment: Alignment.center,
                     ),
                     onPressed: () {
-                      Pageis.of(context)?.current.forward('/desktop',clearHistoryByPagePath: '/',scene: 'geophone');
+                      Pageis.of(context)?.$.forward('/workbench',clearHistoryByPagePath: '/',scene: 'geophone');
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,

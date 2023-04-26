@@ -84,8 +84,12 @@ class PageContext {
       sourceTheme: currentTheme(),
       sourceScene: currentScene(),
     );
-    Widget widget = page.buildPage!(pageContext2);
-    return widget;
+    Widget p = page.buildPage!(pageContext2);
+    var pageis=Pageis(
+      $: pageContext2,
+      child: p,
+    );
+    return pageis;
   }
 
   _parseQuerystringAndFillParams(qs, arguments) {

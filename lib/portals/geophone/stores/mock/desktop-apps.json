@@ -1,0 +1,93 @@
+[
+  {
+    "id": "geotalk",
+    "title": "聊天",
+    "src": "",
+    "order": 0,
+    "folder": "desk-0"
+  },
+  {
+    "id": "geomotion",
+    "title": "地微运动",
+    "src": "",
+    "order": 0,
+    "folder": "desk-0"
+  },
+  {
+    "id": "scans",
+    "title": "扫一扫",
+    "src": "",
+    "order": 0,
+    "folder": "desk-0"
+  },
+  {
+    "id": "shoufukuan",
+    "title": "收付款",
+    "src": "",
+    "order": 0,
+    "folder": "desk-0"
+  },
+  {
+    "id": "mingpian",
+    "title": "二维码名片",
+    "src": "",
+    "order": 0,
+    "folder": "desk-0"
+  },
+  {
+    "id": "quanbao",
+    "title": "券包",
+    "src": "",
+    "order": 0,
+    "folder": "desk-1"
+  },
+  {
+    "id": "fulizhongxin",
+    "title": "福利中心",
+    "src": "",
+    "order": 0,
+    "folder": "desk-1"
+  },
+  {
+    "id": "wenjian",
+    "title": "文件",
+    "src": "",
+    "order": 0,
+    "folder": "desk-1"
+  },
+  {
+    "id": "shitikaihu",
+    "title": "实体店开户申请",
+    "src": "",
+    "order": 0,
+    "folder": "desk-1"
+  },
+  {
+    "id": "wpsoffice",
+    "title": "WPS OFFICE",
+    "src": "",
+    "order": 0,
+    "folder": "desk-2"
+  },
+  {
+    "id": "ruixingkafei",
+    "title": "瑞幸咖啡",
+    "src": "",
+    "order": 0,
+    "folder": "desk-2"
+  },
+  {
+    "id": "bosszhipin",
+    "title": "BOSS直聘",
+    "src": "",
+    "order": 0,
+    "folder": "desk-2"
+  },
+  {
+    "id": "tengxuehuiyi",
+    "title": "腾讯会议",
+    "src": "",
+    "order": 0,
+    "folder": "desk-2"
+  }
+]

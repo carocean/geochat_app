@@ -6,8 +6,7 @@ import 'package:framework/core_lib/_portal.dart';
 import 'package:framework/core_lib/_theme.dart';
 import 'package:framework/core_lib/_ultimate.dart';
 import 'package:geochat_app/portals/geophone/pages/desktop.dart';
-import 'package:geochat_app/portals/geotalk/pages/messages.dart';
-import 'package:localization/generated/l10n.dart';
+import 'package:geochat_app/portals/geophone/workbench.dart';
 
 import 'styles/grey-styles.dart';
 
@@ -79,13 +78,18 @@ class GeophonePortal {
       ],
       buildPages: (IServiceProvider site) => [
         LogicPage(
-          title: '效率风格首页',
+          title: '效率风格工作台',
+          subtitle: '',
+          icon: Icons.add,
+          url: '/workbench',
+          buildPage: (PageContext pageContext) => GeophoneWorkbenchPage(),
+        ),
+        LogicPage(
+          title: '效率风格桌面',
           subtitle: '',
           icon: Icons.add,
           url: '/desktop',
-          buildPage: (PageContext pageContext) => DesktopPage(
-            context: pageContext,
-          ),
+          buildPage: (PageContext pageContext)=>DesktopPage(),
         ),
       ],
     );

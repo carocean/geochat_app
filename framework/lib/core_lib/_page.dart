@@ -44,12 +44,12 @@ class LogicPage {
 }
 
 class Pageis extends InheritedWidget{
-  Pageis({required super.child,required this.current,});
-  PageContext current;
+  Pageis({required super.child,required this.$,});
+  PageContext $;
   @override
   bool updateShouldNotify(covariant InheritedWidget oldWidget) {
     oldWidget as Pageis;
-    return current != oldWidget.current;
+    return $ != oldWidget.$;
   }
 
   static Pageis? of(BuildContext context) {
