@@ -18,7 +18,7 @@ class NavBar extends StatelessWidget {
           value as NavBarNotifier;
           var dots = <Widget>[];
           if (value.showButtom) {
-            dots.add(_renderButtom());
+            dots.add(_renderButtom(context));
           } else {
             for (var i = 0; i < value.count; i++) {
               if (i == value.index) {
@@ -64,32 +64,41 @@ class NavBar extends StatelessWidget {
     );
   }
 
-  Widget _renderButtom() {
-    return Padding(
-      padding: EdgeInsets.only(
-        left: 10,
-        right: 10,
-        top: 5,
-        bottom: 5,
-      ),
-      child: Row(
-        children: [
-          Icon(
-            Icons.search_sharp,
-            size: 10,
-            color: Colors.white,
+  Widget _renderButtom(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('这是搜索'),
           ),
-          SizedBox(
-            width: 5,
-          ),
-          Text(
-            '搜索',
-            style: TextStyle(
-              fontSize: 10,
+        );
+      },
+      child: Padding(
+        padding: EdgeInsets.only(
+          left: 10,
+          right: 10,
+          top: 5,
+          bottom: 5,
+        ),
+        child: Row(
+          children: [
+            Icon(
+              Icons.search_sharp,
+              size: 12,
               color: Colors.white,
             ),
-          ),
-        ],
+            SizedBox(
+              width: 5,
+            ),
+            Text(
+              '搜索',
+              style: TextStyle(
+                fontSize: 10,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
