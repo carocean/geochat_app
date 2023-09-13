@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '_language.dart';
 import '_page.dart';
 import '_page_context.dart';
 import '_principal.dart';
@@ -22,6 +23,8 @@ mixin IScene implements IDisposable {
 
   IServiceProvider get site;
 
+  Locale? get locale;
+
   Map<String, Widget Function(BuildContext)> get pages;
 
   ThemeData? getActivedThemeData(BuildContext context);
@@ -39,6 +42,8 @@ mixin IScene implements IDisposable {
   bool containsPage(String? path);
 
   LogicPage? getPage(String? path);
+
+  Future<void> switchLanguage(String languageCode, String? countryCode);
 }
 
 class DefaultScene implements IScene, IServiceProvider {
@@ -55,6 +60,12 @@ class DefaultScene implements IScene, IServiceProvider {
   DefaultScene({
     required this.name,
   });
+
+  @override
+  Locale? get locale {
+    var language = getService('@.language') as ILanguage;
+    return language?.current;
+  }
 
   @override
   IServiceProvider get site => this;
@@ -131,7 +142,7 @@ class DefaultScene implements IScene, IServiceProvider {
       _themeStyles[_theme_.url] = theme;
     }
     if (StringUtil.isEmpty(defaultTheme) && themeStyles.isNotEmpty) {
-      defaultTheme = themeStyles.first.url ;
+      defaultTheme = themeStyles.first.url;
     }
     _defaultTheme = defaultTheme;
 
@@ -141,7 +152,7 @@ class DefaultScene implements IScene, IServiceProvider {
     }
     _sceneServiceContainer.initServices(services);
 
-    return ;
+    return;
   }
 
   @override
@@ -163,7 +174,7 @@ class DefaultScene implements IScene, IServiceProvider {
         //一种是传统方式，页组件要在构造中传入 pageContext
         //一种是通过 PageIs.of 的方式该问 pageContext
         var p = page.buildPage!(pageContext);
-        var pageis=Pageis(
+        var pageis = Pageis(
           $: pageContext,
           child: p,
         );
@@ -213,6 +224,12 @@ class DefaultScene implements IScene, IServiceProvider {
         parentSite.getService('@.sharedPreferences');
     await sharedPreferences.setString(_THEME_STORE_KEY, theme,
         person: principal.openId, scene: name);
+  }
+
+  @override
+  Future<void> switchLanguage(String languageCode, String? countryCode) async {
+    ILanguage language = getService('@.language');
+    language.setLanguage(languageCode,countryCode);
   }
 
   @override

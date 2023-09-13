@@ -5,10 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:framework/framework.dart';
+import 'package:geochat_app/widgets/azlistview/models.dart';
 import 'package:lpinyin/lpinyin.dart';
 
-import '../../../common/azlistview/models.dart';
-import '../../../common/azlistview/utils.dart';
+import '../../../widgets/azlistview/utils.dart';
+
 
 class ContactsPage extends StatefulWidget {
   final PageContext context;
@@ -60,7 +61,7 @@ class _ContactsPageState extends State<ContactsPage>
   }
   void loadData() async {
     //加载联系人列表
-    rootBundle.loadString('lib/common/azlistview/data/car_models.json').then((value) {
+    rootBundle.loadString('lib/widgets/azlistview/data/car_models.json').then((value) {
       List list = json.decode(value);
       list.forEach((v) {
         contactList.add(ContactInfo.fromJson(v));

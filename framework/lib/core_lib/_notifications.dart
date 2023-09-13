@@ -19,3 +19,12 @@ class SwitchThemeNotification extends Notification {
     required this.theme,
   });
 }
+
+class SwitchLanguageNotification extends Notification {
+  final String languageCode;
+  final String? countryCode;
+  SwitchLanguageNotification({
+    required this.languageCode,
+    this.countryCode,
+  });
+}

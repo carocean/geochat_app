@@ -40,7 +40,6 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   font_awesome_flutter: ^10.4.0
-  intl: ^0.17.0
   azlistview: ^2.0.0
   lpinyin: ^2.0.2  #latest version
   cached_network_image: ^3.2.3
@@ -115,7 +114,7 @@ flutter:
         - asset: lib/portals/geotalk/fonts/discoveries-iconfont.ttf
   assets:
     - lib/system/images/entrypoint_bk.jpg
-    - lib/common/images/geochat_op.png
+    - lib/widgets/images/geochat_op.png
     - lib/system/images/avatar.jpg
     - lib/system/images/avatar1.jpg
     - lib/system/images/avatar2.jpg
@@ -133,8 +132,10 @@ flutter:
     - lib/portals/geotalk/images/examples/shandong.jpeg
     - lib/portals/geotalk/images/examples/shandong.jpg
     - lib/portals/geophone/images/wallpaper-glass.jpg
-    - lib/common/azlistview/data/car_models.json
-    - lib/common/azlistview/images/ic_index_bar_bubble_gray.png
-    - lib/common/azlistview/images/ic_index_bar_bubble_white.png
+    - lib/widgets/azlistview/data/car_models.json
+    - lib/widgets/azlistview/images/ic_index_bar_bubble_gray.png
+    - lib/widgets/azlistview/images/ic_index_bar_bubble_white.png
     - lib/portals/geophone/stores/mock/desktop-folders.json
     - lib/portals/geophone/stores/mock/desktop-apps.json
+flutter_intl:
+  enabled: false # Required. Must be set to true to activate the package. Default: false

@@ -5,7 +5,7 @@ import 'models.dart';
 
 class Utils {
   static String getImgPath(String name, {String format: 'png'}) {
-    return 'lib/common/azlistview/images/$name.$format';
+    return 'lib/widgets/azlistview/images/$name.$format';
   }
 
   static void showSnackBar(BuildContext context, String msg) {

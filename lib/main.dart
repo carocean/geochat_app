@@ -6,6 +6,13 @@ void main() => platformRun(
       AppCreator(
           title: '地微',
           entrypoint: '/public/entrypoint',
+          debugPaintSizeEnabled: false,
+          languageNameMapping:{
+            "en":"English",
+            "en_US":"English USA",
+            "zh":"中文",
+            "zh_CN":"中文简体",
+          },
           props: {
             ///默认应用，即终端未指定应用号时登录或注册的目标应用
           },

@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:azlistview/azlistview.dart';
 import 'package:flutter/material.dart';
 
-
 class CityModel extends ISuspensionBean {
   String name;
   String? tagIndex;
@@ -18,11 +17,11 @@ class CityModel extends ISuspensionBean {
   CityModel.fromJson(Map<String, dynamic> json) : name = json['name'];
 
   Map<String, dynamic> toJson() => {
-    'name': name,
+        'name': name,
 //        'tagIndex': tagIndex,
 //        'namePinyin': namePinyin,
 //        'isShowSuspension': isShowSuspension
-  };
+      };
 
   @override
   String getSuspensionTag() => tagIndex!;
@@ -62,13 +61,13 @@ class ContactInfo extends ISuspensionBean {
 
   Map<String, dynamic> toJson() => {
 //        'id': id,
-    'name': name,
-    'img': img,
+        'name': name,
+        'img': img,
 //        'firstletter': firstletter,
 //        'tagIndex': tagIndex,
 //        'namePinyin': namePinyin,
 //        'isShowSuspension': isShowSuspension
-  };
+      };
 
   @override
   String getSuspensionTag() => tagIndex!;

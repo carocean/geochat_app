@@ -85,7 +85,7 @@ class PageContext {
       sourceScene: currentScene(),
     );
     Widget p = page.buildPage!(pageContext2);
-    var pageis=Pageis(
+    var pageis = Pageis(
       $: pageContext2,
       child: p,
     );
@@ -137,7 +137,7 @@ class PageContext {
   ///                     注意：如果该参数非空将不能传递result参数给前页
   ///@result 放入返回给前页的结果
   bool backward({
-     String? clearHistoryPageUrl,
+    String? clearHistoryPageUrl,
     result,
   }) {
     NavigatorState state = Navigator.of(context);
@@ -224,6 +224,21 @@ class PageContext {
 
   void switchTheme(String url) {
     SwitchThemeNotification(theme: url).dispatch(context);
+  }
+
+  void switchLanguage(String language) {
+    int pos = language.indexOf("_");
+    String languageCode = '';
+    String countryCode = '';
+    if (pos < 0) {
+      languageCode = language;
+    } else {
+      languageCode = language.substring(0, pos);
+      countryCode = language.substring(pos + 1);
+    }
+    SwitchLanguageNotification(
+            languageCode: languageCode, countryCode: countryCode)
+        .dispatch(context);
   }
 
   RoutePredicate _checkHistoryRoute(String url) {

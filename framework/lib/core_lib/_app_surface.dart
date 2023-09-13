@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
@@ -6,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import '_exceptions.dart';
+import '_language.dart';
 import '_page.dart';
 import '_portal.dart';
 import '_principal.dart';
@@ -17,7 +17,6 @@ import '_theme.dart';
 import '_ultimate.dart';
 import '_window_task.dart';
 
-
 typedef BuildRoute = ModalRoute Function(
     RouteSettings settings, LogicPage page, IServiceProvider site);
 typedef AppDecorator = Widget Function(
@@ -28,6 +27,7 @@ typedef OnGenerateTitle = String Function(BuildContext);
 class AppCreator {
   final String title;
   final String entrypoint;
+  final String? defaultScene;
   final BuildSystem buildSystem;
   final BuildPortals buildPortals;
   final BuildServices buildServices;
@@ -36,50 +36,54 @@ class AppCreator {
   final Map<String, dynamic> props;
   final ILocalPrincipal localPrincipal;
   final AppDecorator appDecorator;
-
+  final bool? debugPaintSizeEnabled;
+  final Map<String,String>? languageNameMapping;
   AppCreator({
     required this.title,
     required this.entrypoint,
+    this.defaultScene,
     required this.buildSystem,
     required this.buildPortals,
     required this.buildServices,
     this.onloading,
     this.onloaded,
     required this.props,
-    required  this.localPrincipal,
+    required this.localPrincipal,
     required this.appDecorator,
+    this.debugPaintSizeEnabled,
+    this.languageNameMapping,
   });
 }
 
-
 mixin IAppSurface {
-  IScene? get current ;
+  IScene? get current;
 
   TransitionBuilder? get appDecorator;
 
-  Map<String, Widget Function(BuildContext)>? get routes ;
+  Map<String, Widget Function(BuildContext)>? get routes;
 
   String get initialRoute;
 
-  OnGenerateRoute get onGenerateRoute ;
+  OnGenerateRoute get onGenerateRoute;
 
-  OnGenerateTitle? get onGenerateTitle ;
+  OnGenerateTitle? get onGenerateTitle;
 
   Route<dynamic> Function(RouteSettings)? get onUnknownRoute;
 
   ThemeData? themeData(BuildContext context);
 
-  Widget? get home ;
+  Widget? get home;
 
-  String? get title ;
+  String? get title;
 
-  Future<void> load(AppCreator creator) ;
+  Future<void> load(AppCreator creator);
 
   Future<void> switchScene(String scene, String pageUrl);
 
-  Future<void> switchTheme(String theme) ;
-}
+  Future<void> switchTheme(String theme);
 
+  Future<void> switchLanguage(String languageCode, String? countryCode);
+}
 
 class DefaultAppSurface implements IAppSurface, IServiceProvider {
   late String _title;
@@ -104,7 +108,7 @@ class DefaultAppSurface implements IAppSurface, IServiceProvider {
   String get title => _title;
 
   @override
-  Widget? get home =>null;
+  Widget? get home => null;
 
   @override
   ThemeData? themeData(BuildContext context) {
@@ -124,7 +128,7 @@ class DefaultAppSurface implements IAppSurface, IServiceProvider {
       if (StringUtil.isEmpty(path)) {
         return null;
       }
-      if (!(current?.containsPage(path)??false)) {
+      if (!(current?.containsPage(path) ?? false)) {
         return null;
       }
       LogicPage? page = current?.getPage(path);
@@ -134,7 +138,6 @@ class DefaultAppSurface implements IAppSurface, IServiceProvider {
       return page?.buildRoute!(settings, page, _shareServiceContainer);
     };
   }
-
 
   @override
   Route Function(RouteSettings) get onUnknownRoute {
@@ -152,7 +155,7 @@ class DefaultAppSurface implements IAppSurface, IServiceProvider {
   String get initialRoute => _entrypoint;
 
   @override
-  Map<String, Widget Function(BuildContext)> get routes => current?.pages??{};
+  Map<String, Widget Function(BuildContext)> get routes => current?.pages ?? {};
 
   @override
   getService(String name) {
@@ -182,13 +185,15 @@ class DefaultAppSurface implements IAppSurface, IServiceProvider {
     _shareServiceContainer = ShareServiceContainer(this);
 
     var principal = DefaultPrincipal();
-    var widowTask=WindowTask();
+    var widowTask = WindowTask();
 
+    var language = DefaultLanguage(languageNames: creator.languageNameMapping);
     _shareServiceContainer.addServices(<String, dynamic>{
       '@.principal': principal,
       '@.http': dio,
       '@.app.creator': creator,
-      '@.window.task':widowTask,
+      '@.window.task': widowTask,
+      '@.language': language,
     });
 
     _sharedPreferences = DefaultSharedPreferences();
@@ -197,6 +202,12 @@ class DefaultAppSurface implements IAppSurface, IServiceProvider {
     _appDecorator = (ctx, widget) {
       return creator.appDecorator(ctx, widget!, _shareServiceContainer);
     };
+
+    var defaultScene = creator.defaultScene;
+    if (StringUtil.isEmpty(defaultScene)) {
+      defaultScene = IScene.DEFAULT_SCENE_NAME;
+    }
+    _currentScene = defaultScene!;
 
     await _buildExternalServices(creator.buildServices);
     await _buildSystem(creator.buildSystem);
@@ -211,8 +222,6 @@ class DefaultAppSurface implements IAppSurface, IServiceProvider {
   }
 
   Future<void> _buildSystem(BuildSystem buildSystem) async {
-    _currentScene = IScene.DEFAULT_SCENE_NAME;
-
     IScene scene = DefaultScene(
       name: _currentScene,
     );
@@ -235,9 +244,9 @@ class DefaultAppSurface implements IAppSurface, IServiceProvider {
     await scene.init(
       defaultTheme: system.defaultTheme,
       site: _shareServiceContainer,
-      pages: pages??[],
-      services: sceneServices ,
-      themeStyles: themeStyles??[],
+      pages: pages ?? [],
+      services: sceneServices,
+      themeStyles: themeStyles ?? [],
     );
   }
 
@@ -272,7 +281,7 @@ class DefaultAppSurface implements IAppSurface, IServiceProvider {
         site: _shareServiceContainer,
         pages: pages,
         themeStyles: themeStyles,
-        services: sceneServices ,
+        services: sceneServices,
       );
     }
   }
@@ -280,7 +289,7 @@ class DefaultAppSurface implements IAppSurface, IServiceProvider {
   @override
   Future<void> switchScene(String scene, String pageUrl) async {
     if (!_scenes.containsKey(scene)) {
-      throw FlutterError('切换的场景不存在:$scene}');
+      throw FlutterError('The switched scene does not exist: $scene}');
     }
     _currentScene = scene;
     await switchTheme(current?.theme);
@@ -290,5 +299,11 @@ class DefaultAppSurface implements IAppSurface, IServiceProvider {
   Future<void> switchTheme(String? theme) async {
     IScene? scene = current;
     await scene?.switchTheme(theme!);
+  }
+
+  @override
+  Future<void> switchLanguage(String languageCode, String? countryCode) async {
+    IScene? scene = current;
+    await scene?.switchLanguage(languageCode,countryCode);
   }
 }

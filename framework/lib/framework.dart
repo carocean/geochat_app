@@ -24,3 +24,4 @@ export 'widgets/_ballistic_indicator_nested_scroll_view.dart';
 export 'widgets/_ballistic_indicator_custom_scroll_view.dart';
 
 export 'widgets/geo_card_view.dart';
+export 'widgets/_smooth_layout.dart';

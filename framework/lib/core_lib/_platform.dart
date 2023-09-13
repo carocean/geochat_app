@@ -2,8 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:framework/core_lib/_language.dart';
 import 'package:localization/generated/l10n.dart';
 
 import '_app_surface.dart';
@@ -15,6 +17,7 @@ final IAppSurface _appSurface = DefaultAppSurface();
 
 void platformRun(AppCreator creator) async {
   WidgetsFlutterBinding.ensureInitialized();
+
   if (!kIsWeb && Platform.isAndroid) {
     SystemUiOverlayStyle systemUiOverlayStyle = const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -35,11 +38,15 @@ void platformRun(AppCreator creator) async {
     creator.onloaded!();
   }
   runApp(
-    _PlatformApp(),
+    _PlatformApp(debugPaintSizeEnabled: creator.debugPaintSizeEnabled),
   );
 }
 
 class _PlatformApp extends StatefulWidget {
+  bool? debugPaintSizeEnabled;
+
+  _PlatformApp({this.debugPaintSizeEnabled});
+
   @override
   __PlatformAppState createState() => __PlatformAppState();
 }
@@ -62,16 +69,25 @@ class __PlatformAppState extends State<_PlatformApp> {
   }
 
   @override
+  void didUpdateWidget(covariant _PlatformApp oldWidget) {
+    if (oldWidget.debugPaintSizeEnabled != widget.debugPaintSizeEnabled) {
+      oldWidget.debugPaintSizeEnabled = widget.debugPaintSizeEnabled;
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
   Widget build(BuildContext context) {
+    debugPaintSizeEnabled = widget.debugPaintSizeEnabled ?? false;
     return NotificationListener(
       onNotification: (notification) {
         if (notification is SwitchSceneNotification) {
           _appSurface
               .switchScene(notification.scene, notification.pageUrl)
               ?.then((v) {
-              WidgetsBinding.instance.addPostFrameCallback((d) {
-                notification.ondone();
-              });
+            WidgetsBinding.instance.addPostFrameCallback((d) {
+              notification.ondone();
+            });
             setState(() {});
           });
           return false;
@@ -79,6 +95,19 @@ class __PlatformAppState extends State<_PlatformApp> {
         if (notification is SwitchThemeNotification) {
           if (!StringUtil.isEmpty(notification.theme)) {
             _appSurface.switchTheme(notification.theme)?.then((v) {
+              setState(() {});
+            });
+          } else {
+            setState(() {});
+          }
+          return false;
+        }
+        if (notification is SwitchLanguageNotification) {
+          if (!StringUtil.isEmpty(notification.languageCode)) {
+            _appSurface
+                .switchLanguage(
+                    notification.languageCode, notification.countryCode)
+                .then((v) {
               setState(() {});
             });
           } else {
@@ -102,6 +131,19 @@ class __PlatformAppState extends State<_PlatformApp> {
         navigatorObservers: [
           _appNavigatorObserver!,
         ],
+        locale: _appSurface.current?.locale,
+        localeResolutionCallback: (locale, supportedLocales) {
+          IServiceProvider provider = _appSurface.current as IServiceProvider;
+          var language = provider.getService('@.language') as ILanguage;
+          language.load(supportedLocales);
+
+          var result = supportedLocales
+              .where((element) => element.languageCode == locale?.languageCode);
+          if (result.isNotEmpty) {
+            return locale;
+          }
+          return const Locale('en');
+        },
         localizationsDelegates: const [
           S.delegate,
           GlobalMaterialLocalizations.delegate,
@@ -112,7 +154,6 @@ class __PlatformAppState extends State<_PlatformApp> {
       ),
     );
   }
-  Route<dynamic>? onGenerateRoute(RouteSettings settings){
 
-  }
+  Route<dynamic>? onGenerateRoute(RouteSettings settings) {}
 }

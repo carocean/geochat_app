@@ -56,7 +56,7 @@ class RegisterHomePage extends StatelessWidget {
                       decoration: BoxDecoration(
                         image: const DecorationImage(
                             image: AssetImage(
-                              'lib/common/images/geochat_op.png',
+                              'lib/widgets/images/geochat_op.png',
                             ),
                             fit: BoxFit.contain),
                         color: Colors.yellow,

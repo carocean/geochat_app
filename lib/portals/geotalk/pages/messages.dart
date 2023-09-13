@@ -7,8 +7,8 @@ import 'package:framework/framework.dart';
 import 'package:framework/widgets/_ballistic_indicator_ultimate.dart';
 import 'package:intl/intl.dart';
 
-import '../../../common/message_session.dart';
-import '../../../common/timer_util.dart';
+import '../../../widgets/message_session.dart';
+import '../../../widgets/timer_util.dart';
 
 class MessagesPage extends StatefulWidget {
   final PageContext context;

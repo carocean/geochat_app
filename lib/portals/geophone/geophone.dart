@@ -37,13 +37,6 @@ class GeophonePortal {
               brightness: Brightness.light,
               appBarTheme: AppBarTheme.of(context).copyWith(
                 color: const Color(0xFFF5F5f5),
-                textTheme: TextTheme(
-                  titleMedium: TextStyle(
-                    color: Colors.grey[800],
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
                 actionsIconTheme: IconThemeData(
                   color: Colors.grey[700],
                   opacity: 1,
@@ -55,7 +48,19 @@ class GeophonePortal {
                   size: 20,
                 ),
                 elevation: 1.0,
-                systemOverlayStyle: SystemUiOverlayStyle.dark,
+                systemOverlayStyle: SystemUiOverlayStyle.dark, toolbarTextStyle: TextTheme(
+                  titleMedium: TextStyle(
+                    color: Colors.grey[800],
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ).bodyText2, titleTextStyle: TextTheme(
+                  titleMedium: TextStyle(
+                    color: Colors.grey[800],
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ).headline6,
               ),
               primarySwatch: const MaterialColor(
                 0xFFF5F5f5,
