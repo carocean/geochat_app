@@ -37,10 +37,10 @@ class _EntrypointState extends State<Entrypoint> {
           widget.context.forward('/public/login/candidates', clearHistoryByPagePath: '.');
           break;
         default: //进入桌面
-          Pageis.of(context)?.$.forward('/workbench',
-              clearHistoryByPagePath: '/public', scene: 'geotalk');
-        // Pageis.of(context)?.$.forward('/workbench',
-        //     clearHistoryByPagePath: '/public', scene: 'geophone');
+          // Pageis.of(context)?.$.forward('/workbench',
+          //     clearHistoryByPagePath: '/public', scene: 'geotalk');
+        Pageis.of(context)?.$.forward('/workbench',
+            clearHistoryByPagePath: '/public', scene: 'geophone');
           break;
       }
     });
