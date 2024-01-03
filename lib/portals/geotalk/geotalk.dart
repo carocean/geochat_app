@@ -79,6 +79,7 @@ class GeotalkPortal {
                   900: Color(0xFF212121),
                 },
               )).copyWith(background: const Color(0xFFF2F1F6)),
+              dividerColor: Color(0xFFECEBEC),dividerTheme:DividerThemeData(color: Color(0xFFECEBEC),),
             );
           },
         ),

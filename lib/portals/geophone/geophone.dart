@@ -77,6 +77,7 @@ class GeophonePortal {
                   900: Color(0xFF212121),
                 },
               ),
+              dividerColor: Color(0xFFECEBEC),dividerTheme:DividerThemeData(color: Color(0xFFECEBEC),),
             );
           },
         ),
